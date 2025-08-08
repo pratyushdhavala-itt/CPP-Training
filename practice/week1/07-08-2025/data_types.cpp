@@ -32,6 +32,14 @@ int main() {
 
     short num1 = 127; // size: 8 bits, range: -128 to 127
     int num2 = 32767; //size: 32 bits, range: -32768 to 32767
-    long long num2 = 100000000000; //size: 64 bits, range: huge
+    long long num3 = 100000000000; //size: 64 bits, range: huge
+
+
+    std::cout << sizeof(short) << std::endl;
+    std::cout << sizeof(int) << std::endl;
+    std::cout << sizeof(long) << std::endl;
+    std::cout << sizeof(long long) << std::endl;
+
+    
 
 }
