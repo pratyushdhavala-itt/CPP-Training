@@ -12,6 +12,7 @@ int main() {
     std::cout << "Please enter a number: " << std::endl;
     char num[10];
     std:: cin.getline(num, 9);
+    std::cout << '\n';
 
     // checks for wrong input and asks for another input
     while(isNan(num)) {
@@ -27,6 +28,7 @@ int main() {
 void takeInput(char num[]) {
     std::cout << "Wrong input! Please enter only a number: " << std::endl;
     std:: cin.getline(num, 9);
+    std::cout << '\n';
 }
 
 // function to check if any character is not a number
@@ -92,37 +94,43 @@ void pattern(char str[]) {
 
     int num = charToNum(str);
 
-    int k = 0;
+    int printSlots = 0; // variable for how many numbers can be printed in each side (left, right)
 
-    for (int i = 0; i < num; i++) {
+    // outer loop for columns
+    for (int col = 0; col < num; col++) {
 
-        if (num % 2 != 0 && i <= num / 2) {
-            k++;
-        } else if (num % 2 == 0 && i < num / 2) {
-            k++;
-        } else {
-            k--;
+        // if num is odd & col in first half, then increment blankSpace
+        if (num % 2 != 0 && col <= num / 2) {
+            printSlots++;
+        } else if (num % 2 == 0 && col < num / 2) { // if num is even
+            printSlots++;
+        } else { // if col is in second half, then decrement blankSpace
+            printSlots--;
         }
         
-        for (int j = 0; j < num; j++) {
+        // inner loop for rows
+        for (int row = 0; row < num; row++) {
 
-            if (j >= k && j < num - k) {
+
+            // if row is greater or lesser than printSlots, then just print blank 
+            if (row >= printSlots && row < num - printSlots) {
                 std::cout << "  ";
                 continue;
             }
 
-            if (j <= num / 2) {
-                if (j % 2 == 0) {
+            // if row is in the left side
+            if (row <= num / 2) {
+                if (row % 2 == 0) {
                     std::cout << "1 ";
                 } else {
                     std::cout << "0 ";
                 }
-            } else {
-                if (i % 2 == 0 && j % 2 == 0) {
+            } else { // if row is in the right side
+                if (col % 2 == 0 && row % 2 == 0) {
                     std::cout << "1 ";
-                } else if (i % 2 == 0 && j % 2 != 0) {
+                } else if (col % 2 == 0 && row % 2 != 0) {
                     std::cout << "0 ";
-                } else if (j % 2 == 0) {
+                } else if (row % 2 == 0) {
                     std::cout << "0 ";
                 } else {
                     std::cout << "1 ";
