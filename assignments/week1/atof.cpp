@@ -1,31 +1,31 @@
 #include <iostream>
 
-double atofCopy(const char* str);
-double pow(double base, double exponent);
-int charArraySize(const char* str);
-int noOfWhitespaces(const char *str);
-bool startsWithAlpha(const char *str);
-bool isNan(char c);
-void trim(char arr[]);
+double atofCopy(const char* input);
+double findPower(double base, double exponent);
+int calculateArrayLength(const char* str);
+int noOfLeadingWhitespaces(const char *str);
+bool startsWithAlphabets(const char *str);
+bool isNotANumber(char c);
+void trimWhitespaces(char arr[]);
 int findPreDecimalLength(const char *str, int length);
-int lengthAfterRemovingAlpha(const char* str);
+int lengthAfterRemovingAlphabets(const char* str);
 bool checkForNegative(const char *str);
 
 int main() {
 
     while(true) {
 
-        char str[100];
+        char input[100];
         std::cout << "Please enter the number: " << std::endl;
-        std::cin.getline(str, 100);
-        double result_one = atofCopy(str);
-        std::cout << "Result: " << result_one << '\n';
+        std::cin.getline(input, 100);
+        double result = atofCopy(input);
+        std::cout << "Result: " << result << '\n';
 
         char continueOrNot[100];
         std::cout << "Enter (Y/y) if you want to continue, or any other key to exit!" << '\n';
         std::cin.getline(continueOrNot, 100);
 
-        trim(continueOrNot);
+        trimWhitespaces(continueOrNot);
 
         if (continueOrNot[0] != 'Y' && continueOrNot[0] != 'y') {
             std::cout << "Thank you for using atof() ! You have exited the program." << '\n';
@@ -34,50 +34,49 @@ int main() {
     }
 }
 
-double atofCopy(const char* str) {
+double atofCopy(const char* input) {
 
-    int w = noOfWhitespaces(str);
-    str = str + w;
+    int leadingWhitespaces = noOfLeadingWhitespaces(input);
+    input = input + leadingWhitespaces;
 
-    if (startsWithAlpha(str)) {
+    if (startsWithAlphabets(input)) {
         return 0;
     }
 
-    bool isNegative = checkForNegative(str);
+    bool isNegative = checkForNegative(input);
     if (isNegative) {
-        str += 1;
+        input += 1;
     }
 
     double result = 0.0;
     
-    int length = lengthAfterRemovingAlpha(str);
+    int length = lengthAfterRemovingAlphabets(input);
 
-    int preDecimalLength = findPreDecimalLength(str, length);
+    int preDecimalLength = findPreDecimalLength(input, length);
     int postDecimalLength = length - preDecimalLength - 1;
 
     bool isBeforeDecimal = true;
 
     for (int i = 0; i < length; i++) {
 
-        if (isNan(str[i])) {
+        if (isNotANumber(input[i])) {
             break;
         }
 
-        if (str[i] != '.' && isBeforeDecimal) {
+        if (input[i] != '.' && isBeforeDecimal) {
 
-            double num = str[i] - '0';
-            num = num * pow(10, preDecimalLength - i - 1);
+            double num = input[i] - '0';
+            num = num * findPower(10, preDecimalLength - i - 1);
             result += num;
             
-        } else if (str[i] == '.') { 
-
+        } else if (input[i] == '.') { 
             isBeforeDecimal = false;
             continue;
 
         } else { 
 
-            double num = str[i] - '0';
-            num = num * pow(10, -(i - preDecimalLength));
+            double num = input[i] - '0';
+            num = num * findPower(10, -(i - preDecimalLength));
             result += num;
         }
     }
@@ -96,7 +95,7 @@ bool checkForNegative(const char *str) {
     return false;
 }
 
-void trim(char arr[]) {
+void trimWhitespaces(char arr[]) {
     int start = 0;
 
     while (arr[start] == ' ' || arr[start] == '\t' || arr[start] == '\n') {
@@ -120,12 +119,12 @@ void trim(char arr[]) {
     arr[j] = '\0'; 
 }
 
-int lengthAfterRemovingAlpha(const char* str) {
+int lengthAfterRemovingAlphabets(const char* str) {
 
-    int length = charArraySize(str);
+    int length = calculateArrayLength(str);
     int i = 0;
     while (i < length) {
-        if(isNan(str[i])) {
+        if(isNotANumber(str[i])) {
             length = i;
             break;
         }
@@ -144,9 +143,11 @@ int findPreDecimalLength(const char *str, int length) {
             break;
         }
     }
+
+    return preDecimalLength;
 }
 
-bool isNan(char c) {
+bool isNotANumber(char c) {
 
     int character = c - '0';
     if (c != '.' && c != '-' && (character < 0 || character > 9)) {
@@ -155,7 +156,7 @@ bool isNan(char c) {
     return false;
 }
 
-bool startsWithAlpha(const char *str) {
+bool startsWithAlphabets(const char *str) {
 
     int firstChar = str[0] - '0';
     if (str[0] != '.' && str[0] != '-' && (firstChar < 0 || firstChar > 9)) {
@@ -164,7 +165,7 @@ bool startsWithAlpha(const char *str) {
     return false;
 }
 
-int noOfWhitespaces(const char *str) {
+int noOfLeadingWhitespaces(const char *str) {
 
     int i = 0;
     while (str[i] == ' ') {
@@ -173,7 +174,7 @@ int noOfWhitespaces(const char *str) {
     return i;
 }
 
-int charArraySize(const char* str) {
+int calculateArrayLength(const char* str) {
     
     int size = 0;
     while (str[size] != '\0') {
@@ -182,7 +183,7 @@ int charArraySize(const char* str) {
     return size;
 }
 
-double pow(double base, double exponent) {
+double findPower(double base, double exponent) {
     
     double result = 1.0;
     if (exponent >= 0) {
