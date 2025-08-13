@@ -19,7 +19,7 @@ int main() {
         std::cout << "Please enter the number: " << std::endl;
         std::cin.getline(input, 100);
         double result = atofCopy(input);
-        std::cout << "Result: " << result << '\n';
+        std::cout << "Result: " << (double) result << '\n';
 
         char continueOrNot[100];
         std::cout << "Enter (Y/y) if you want to continue, or any other key to exit!" << '\n';
@@ -149,8 +149,9 @@ int findPreDecimalLength(const char *str, int length) {
 
 bool isNotANumber(char c) {
 
+    // c != '-' &&
     int character = c - '0';
-    if (c != '.' && c != '-' && (character < 0 || character > 9)) {
+    if (c != '.' && (character < 0 || character > 9)) {
         return true;
     }
     return false;
