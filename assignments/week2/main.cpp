@@ -12,7 +12,7 @@ int main() {
 startAgainLabel:
         std::cout << "Please enter the option from the below list:" << '\n' <<
                      "1. Addition" << '\n' <<
-                     "2. Substraction" << '\n' <<
+                     "2. Subtraction" << '\n' <<
                      "3. Multiplication" << '\n' <<
                      "4. Division" << '\n' <<
                      "5. Exit Program" <<
@@ -39,7 +39,7 @@ startAgainLabel:
                 break;
             
             case 2:
-                std::cout << "Performing substraction of two numbers: " << std::endl;
+                std::cout << "Performing subtraction of two numbers: " << std::endl;
                 break;
 
             case 3:
@@ -96,7 +96,7 @@ startAgainLabel:
                 break;
             
             case 2:
-                result = substractTwoNumbers(firstNumber, secondNumber);
+                result = subtractTwoNumbers(firstNumber, secondNumber);
                 break;
 
             case 3:

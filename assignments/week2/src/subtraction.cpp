@@ -1,4 +1,4 @@
-double substractTwoNumbers(double firstNumber, double secondNumber) {
+double subtractTwoNumbers(double firstNumber, double secondNumber) {
     
     double result;
 

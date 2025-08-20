@@ -2,7 +2,7 @@
 #define MATH_OPERATIONS_H
 
 #include "addition.h"
-#include "substraction.h"
+#include "subtraction.h"
 #include "multiplication.h"
 #include "division.h"
 
