@@ -3,19 +3,10 @@
 #include "./include/helper_functions.h"
 #include <dlfcn.h>
 
-
-
 int main() {
 
     void* handle = dlopen("./lib/libmylibrary.so", RTLD_LAZY);
     
-    if (!handle) {
-        std::cerr << "Error loading library: " << dlerror() << "\n";
-        return 1;
-    }
-
-    dlerror();
-
     double (*addTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "addTwoNumbers");
     double (*subtractTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "subtractTwoNumbers");
     double (*multiplyTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "multiplyTwoNumbers");
@@ -35,13 +26,6 @@ int main() {
     bool (*repeatProgramOrNot)(const char*) = (bool(*)(const char*)) dlsym(handle, "repeatProgramOrNot");
     double (*convertToFloatingNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToFloatingNumber");
 
-    const char* error = dlerror();
-    if (error) {
-        std::cerr << "Error resolving symbol: " << error << "\n";
-        dlclose(handle);
-        return 1;
-    }
-
     char input[100];
 
     while (true) {
@@ -54,22 +38,16 @@ startAgainLabel:
                      "4. Division" << '\n' <<
                      "5. Exit Program" <<
         std::endl;
-
         std::cin.getline(input, 100);
-
         removeWhiteSpaces(input);
-
         bool validOption = true;
-
         if (isNotANumber(input) && isValidFloatingPoint(input)) {
             std::cout << "Not a valid input ! ! !" << std::endl;
-            // validOption = false;
             goto startAgainLabel;
         }
 
         int choice = convertToInteger(input);
         int exitProgram = false;
-
         switch(choice) {
             case 1:
                 std::cout << "Performing addition of two numbers: " << std::endl;
@@ -94,7 +72,6 @@ startAgainLabel:
 
             default: 
                 std::cout << "Please input an option from 1 to 5" << std::endl;
-                // validOption = false;
                 goto startAgainLabel;
         }
 
@@ -104,14 +81,12 @@ startAgainLabel:
         
         char charFirstNumber[10];
         char charSecondNumber[10];
-
         std::cout << "Please enter the first number: ";
         std::cin.getline(charFirstNumber, 10);
         std::cout << '\n';
         std::cout << "Please enter the second number: ";
         std::cin.getline(charSecondNumber, 10);
         std::cout << '\n';
-
         if (isNotANumber(charFirstNumber) || isNotANumber(charSecondNumber)) {
             std::cout << "Wrong input ! ! !" << std::endl;
             goto startAgainLabel;
@@ -119,11 +94,8 @@ startAgainLabel:
 
         double firstNumber = convertToNumber(charFirstNumber);
         double secondNumber = convertToNumber(charSecondNumber);
-
         std::cout << "First: " << firstNumber << std::endl;
-
         double result = 0.0;
-
         switch(choice) {
             case 1:
                 result = addTwoNumbers(firstNumber, secondNumber);
@@ -143,17 +115,13 @@ startAgainLabel:
         }
 
         std::cout << "Result: " << result << std::endl;
-
         std::cout << "Do you want to continue? (y/Y). Enter any other key to exit." << std::endl;
-
         char repeatProgram[100];
         std::cin.getline(repeatProgram, 100);
-
         if (repeatProgramOrNot(repeatProgram)) {
             goto startAgainLabel;
         } else {
             return 0;
         }
-
     }
 }
