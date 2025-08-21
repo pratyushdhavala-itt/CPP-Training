@@ -1,9 +1,46 @@
 #include <iostream>
 #include "./include/math_operations.h"
 #include "./include/helper_functions.h"
+#include <dlfcn.h>
+
 
 
 int main() {
+
+    void* handle = dlopen("./lib/libmylibrary.so", RTLD_LAZY);
+    
+    if (!handle) {
+        std::cerr << "Error loading library: " << dlerror() << "\n";
+        return 1;
+    }
+
+    dlerror();
+
+    double (*addTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "addTwoNumbers");
+    double (*subtractTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "subtractTwoNumbers");
+    double (*multiplyTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "multiplyTwoNumbers");
+    double (*divideTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "divideTwoNumbers");
+
+    void (*removeWhiteSpaces)(char*) = (void(*)(char*)) dlsym(handle, "removeWhiteSpaces");
+    int (*findPower)(double, double) = (int(*)(double, double)) dlsym(handle, "findPower");
+    int (*calculateInputLength)(const char*) = (int(*)(const char*)) dlsym(handle, "calculateInputLength");
+    int (*convertToInteger)(const char*) = (int(*)(const char*)) dlsym(handle, "convertToInteger");
+    bool (*isNotANumber)(const char*) = (bool(*)(const char*)) dlsym(handle, "isNotANumber");
+    int (*firstDecimalIndex)(const char*) = (int(*)(const char*)) dlsym(handle, "firstDecimalIndex");
+    bool (*isValidFloatingPoint)(const char*) = (bool(*)(const char*)) dlsym(handle, "isValidFloatingPoint");
+    bool (*checkForNegative)(const char*) = (bool(*)(const char*)) dlsym(handle, "checkForNegative");
+    int (*findPreDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPreDecimalPointLength");
+    int (*findPostDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPostDecimalPointLength");
+    double (*convertToNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToNumber");
+    bool (*repeatProgramOrNot)(const char*) = (bool(*)(const char*)) dlsym(handle, "repeatProgramOrNot");
+    double (*convertToFloatingNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToFloatingNumber");
+
+    const char* error = dlerror();
+    if (error) {
+        std::cerr << "Error resolving symbol: " << error << "\n";
+        dlclose(handle);
+        return 1;
+    }
 
     char input[100];
 
@@ -97,7 +134,7 @@ startAgainLabel:
                 break;
 
             case 3:
-                result = multipyTwoNumbers(firstNumber, secondNumber);
+                result = multiplyTwoNumbers(firstNumber, secondNumber);
                 break;
 
             case 4:

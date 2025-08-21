@@ -1,6 +1,8 @@
 #ifndef HELPER_FUNCTIONS_H
 #define HELPER_FUNCTIONS_H
 
+extern "C" {
+
 void removeWhiteSpaces(char input[]);
 int findPower(double base, double exponent);
 int calculateInputLength(const char* input);
@@ -14,5 +16,7 @@ int findPostDecimalPointLength(const char* input);
 double convertToNumber(const char* input);
 bool repeatProgramOrNot(const char* input);
 double convertToFloatingNumber(const char* input);
+
+}
 
 #endif
