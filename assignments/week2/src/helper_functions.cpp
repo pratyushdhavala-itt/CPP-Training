@@ -12,10 +12,8 @@ double convertToNumber(const char* input) {
     double result = 0.0;
     if (isValidFloatingPoint(input)) {
         result = convertToFloatingNumber(input);
-        std::cout << "resu" << result;
     } else {
         result = convertToInteger(input);
-        std::cout << "YOYO";
     }
     return result;
 }

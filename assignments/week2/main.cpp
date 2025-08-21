@@ -64,11 +64,9 @@ startAgainLabel:
         if (exitProgram) {
             return 0;
         }
-
         
         char charFirstNumber[10];
         char charSecondNumber[10];
-
 
         std::cout << "Please enter the first number: ";
         std::cin.getline(charFirstNumber, 10);
@@ -81,7 +79,6 @@ startAgainLabel:
             std::cout << "Wrong input ! ! !" << std::endl;
             goto startAgainLabel;
         }
-
 
         double firstNumber = convertToNumber(charFirstNumber);
         double secondNumber = convertToNumber(charSecondNumber);
@@ -114,8 +111,6 @@ startAgainLabel:
 
         char repeatProgram[100];
         std::cin.getline(repeatProgram, 100);
-
-
 
         if (repeatProgramOrNot(repeatProgram)) {
             goto startAgainLabel;
