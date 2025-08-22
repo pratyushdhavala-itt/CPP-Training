@@ -5,26 +5,26 @@
 
 int main() {
 
-    void* handle = dlopen("./lib/libmylibrary.so", RTLD_LAZY);
+    // void* handle = dlopen("./lib/libmylibrary.so", RTLD_LAZY);
     
-    double (*addTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "addTwoNumbers");
-    double (*subtractTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "subtractTwoNumbers");
-    double (*multiplyTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "multiplyTwoNumbers");
-    double (*divideTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "divideTwoNumbers");
+    // double (*addTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "addTwoNumbers");
+    // double (*subtractTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "subtractTwoNumbers");
+    // double (*multiplyTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "multiplyTwoNumbers");
+    // double (*divideTwoNumbers)(double, double) = (double(*)(double, double)) dlsym(handle, "divideTwoNumbers");
 
-    void (*removeWhiteSpaces)(char*) = (void(*)(char*)) dlsym(handle, "removeWhiteSpaces");
-    int (*findPower)(double, double) = (int(*)(double, double)) dlsym(handle, "findPower");
-    int (*calculateInputLength)(const char*) = (int(*)(const char*)) dlsym(handle, "calculateInputLength");
-    int (*convertToInteger)(const char*) = (int(*)(const char*)) dlsym(handle, "convertToInteger");
-    bool (*isNotANumber)(const char*) = (bool(*)(const char*)) dlsym(handle, "isNotANumber");
-    int (*firstDecimalIndex)(const char*) = (int(*)(const char*)) dlsym(handle, "firstDecimalIndex");
-    bool (*isValidFloatingPoint)(const char*) = (bool(*)(const char*)) dlsym(handle, "isValidFloatingPoint");
-    bool (*checkForNegative)(const char*) = (bool(*)(const char*)) dlsym(handle, "checkForNegative");
-    int (*findPreDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPreDecimalPointLength");
-    int (*findPostDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPostDecimalPointLength");
-    double (*convertToNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToNumber");
-    bool (*repeatProgramOrNot)(const char*) = (bool(*)(const char*)) dlsym(handle, "repeatProgramOrNot");
-    double (*convertToFloatingNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToFloatingNumber");
+    // void (*removeWhiteSpaces)(char*) = (void(*)(char*)) dlsym(handle, "removeWhiteSpaces");
+    // double (*findPower)(double, double) = (double(*)(double, double)) dlsym(handle, "findPower");
+    // int (*calculateInputLength)(const char*) = (int(*)(const char*)) dlsym(handle, "calculateInputLength");
+    // int (*convertToInteger)(const char*) = (int(*)(const char*)) dlsym(handle, "convertToInteger");
+    // bool (*isNotANumber)(const char*) = (bool(*)(const char*)) dlsym(handle, "isNotANumber");
+    // int (*firstDecimalIndex)(const char*) = (int(*)(const char*)) dlsym(handle, "firstDecimalIndex");
+    // bool (*isValidFloatingPoint)(const char*) = (bool(*)(const char*)) dlsym(handle, "isValidFloatingPoint");
+    // bool (*checkForNegative)(const char*) = (bool(*)(const char*)) dlsym(handle, "checkForNegative");
+    // int (*findPreDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPreDecimalPointLength");
+    // int (*findPostDecimalPointLength)(const char*) = (int(*)(const char*)) dlsym(handle, "findPostDecimalPointLength");
+    // double (*convertToNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToNumber");
+    // bool (*repeatProgramOrNot)(const char*) = (bool(*)(const char*)) dlsym(handle, "repeatProgramOrNot");
+    // double (*convertToFloatingNumber)(const char*) = (double(*)(const char*)) dlsym(handle, "convertToFloatingNumber");
 
     char input[100];
 

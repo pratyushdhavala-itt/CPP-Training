@@ -93,7 +93,7 @@ bool checkForNegative(const char* input) {
     return false;
 }
 
-int findPower(double base, double exponent) {
+double findPower(double base, double exponent) {
 
     double result = 1.0;
     if (exponent >= 0) {

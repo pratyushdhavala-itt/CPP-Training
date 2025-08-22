@@ -4,7 +4,7 @@
 extern "C" {
 
 void removeWhiteSpaces(char input[]);
-int findPower(double base, double exponent);
+double findPower(double base, double exponent);
 int calculateInputLength(const char* input);
 int convertToInteger(const char* input);
 bool isNotANumber(const char* input);
