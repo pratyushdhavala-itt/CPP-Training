@@ -3,12 +3,8 @@
 #include "math_operations.h"
 #include "helper_functions.h"
 
-
 int main() {
-
     char input[100];
-
-    
     while (true) {
         printMenu();
         std::cin.getline(input, 100);

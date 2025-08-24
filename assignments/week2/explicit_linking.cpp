@@ -2,9 +2,6 @@
 #include <dlfcn.h>
 #include "math_operations.h"
 #include "helper_functions.h"
-
-
-
 struct dynamicFunctions {
     void* handle;
 
@@ -52,10 +49,7 @@ struct dynamicFunctions {
 
 int main() {
     dynamicFunctions dyFunc;
-
     char input[100];
-
-    
     while (true) {
         dyFunc.printMenu();
         std::cin.getline(input, 100);
@@ -80,7 +74,6 @@ int main() {
             std::cout << *dyFunc.PRINT_WRONG_INPUT << std::endl;
             continue;
         }
-
         double result = dyFunc.performChosenOperation(charFirstNumber, charSecondNumber, input);
         std::cout << *dyFunc.PRINT_RESULT << result << std::endl;
         std::cout << *dyFunc.PRINT_REPEAT_STRING << std::endl;
