@@ -1,4 +1,4 @@
-#include "../include/division.h"
+#include "division.h"
 
 double divideTwoNumbers(double firstNumber, double secondNumber) {
 

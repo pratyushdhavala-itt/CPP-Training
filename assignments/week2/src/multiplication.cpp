@@ -1,4 +1,4 @@
-#include "../include/multiplication.h"
+#include "multiplication.h"
 
 double multiplyTwoNumbers(double firstNumber, double secondNumber) {
 

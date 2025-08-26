@@ -1,4 +1,4 @@
-#include "../include/subtraction.h"
+#include "subtraction.h"
 
 double subtractTwoNumbers(double firstNumber, double secondNumber) {
     

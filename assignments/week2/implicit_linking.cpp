@@ -2,26 +2,38 @@
 #include <dlfcn.h>
 #include "math_operations.h"
 #include "helper_functions.h"
+#include "constants.h"
 
 int main() {
     char input[100];
     while (true) {
         printMenu();
         std::cin.getline(input, 100);
+        if (std::cin.fail()) {
+            handleInputLimitError();
+            continue;
+        }
         if (!isValidMenuOption(input)) {
             continue;
         }
         if (printChosenOption(input)) {
-
             return 0;
         }
         char charFirstNumber[10];
         char charSecondNumber[10];
         std::cout << PRINT_ENTER_FIRST_NUMBER;
         std::cin.getline(charFirstNumber, 10);
+        if (std::cin.fail()) {
+            handleInputLimitError();
+            continue;
+        }
         std::cout << '\n';
         std::cout << PRINT_ENTER_SECOND_NUMBER;
         std::cin.getline(charSecondNumber, 10);
+        if (std::cin.fail()) {
+            handleInputLimitError();
+            continue;
+        }
         std::cout << '\n';
         removeWhiteSpaces(charFirstNumber);
         removeWhiteSpaces(charSecondNumber);
@@ -34,6 +46,10 @@ int main() {
         std::cout << PRINT_REPEAT_STRING << std::endl;
         char repeatProgram[100];
         std::cin.getline(repeatProgram, 100);
+        if (std::cin.fail()) {
+            handleInputLimitError();
+            continue;
+        }
         if (repeatProgramOrNot(repeatProgram)) {
             continue;
         } 

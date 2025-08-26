@@ -11,6 +11,7 @@ extern "C" {
     extern const char* PRINT_REPEAT_STRING;
     extern const char* PRINT_RESULT;
 
+    void handleInputLimitError();
     void printMenu();
     bool isValidMenuOption(char* input);
     bool printChosenOption(const char* input);
