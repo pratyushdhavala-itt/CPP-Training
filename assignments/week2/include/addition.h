@@ -1,0 +1,7 @@
+
+#ifndef ADDITION_H
+#define ADDITION_H
+
+extern "C" double addTwoNumbers(double firstNumber, double secondNumber);
+
+#endif
