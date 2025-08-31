@@ -1,15 +1,16 @@
 #include <iostream>
 #include "matrix.h"
-#include "helper_functions.h"
+#include "atof_functions.h"
+#include "print_functions.h"
+#include "exception_handling.h"
 
-using namespace std;
 
 void Matrix::init() {
     row = convertToInteger(charRow);
     column = convertToInteger(charColumn);
     matrix = new double*[row];
     for (int index = 0; index < row; index++) {
-        matrix[index] = new double[column];
+        *(matrix + index) = new double[column];
     }
 }
 void Matrix::init(int row, int column) {
@@ -17,47 +18,35 @@ void Matrix::init(int row, int column) {
     this->column = column;
     matrix = new double*[row];
     for (int index = 0; index < row; index++) {
-        matrix[index] = new double[column];
+        *(matrix + index) = new double[column];
     }
 }
 
 void Matrix::print() const {
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < column; j++) {
-            cout << matrix[i][j] << " ";
+    for (int rowIndex = 0; rowIndex < row; rowIndex++) {
+        for (int columnIndex = 0; columnIndex < column; columnIndex++) {
+            std::cout << *(*(matrix + rowIndex) + columnIndex) << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 }
 
 void Matrix::add(const Matrix& firstMatrix, const Matrix& secondMatrix) {
-    
-    if (firstMatrix.row != secondMatrix.row || firstMatrix.column != secondMatrix.column) {
-        cout << "Matrices do not have the same dimensions ! ! ! Try again ! ! !";
-        matrix = nullptr;
-        return;
-    }
     init(firstMatrix.row, firstMatrix.column);
-
-    for (int indexI = 0; indexI < row; indexI++) {
-        for (int indexJ = 0; indexJ < column; indexJ++) {
-            matrix[indexI][indexJ] = firstMatrix.matrix[indexI][indexJ] + secondMatrix.matrix[indexI][indexJ];
+    for (int rowIndex = 0; rowIndex < row; rowIndex++) {
+        for (int columnIndex = 0; columnIndex < column; columnIndex++) {
+            *(*(matrix + rowIndex) + columnIndex) = *(*(firstMatrix.matrix + rowIndex) + columnIndex) + *(*(secondMatrix.matrix + rowIndex) + columnIndex);
         }
     }
     return;
 }
 
 void Matrix::multiply(const Matrix& firstMatrix, const Matrix& secondMatrix) {
-    if (firstMatrix.column != secondMatrix.row) {
-        cout << "Column of Matrix 1 and Row of Matrix 2 do not match ! ! ! Try again ! ! !" << endl;
-        matrix = nullptr;
-        return;
-    }
     init(firstMatrix.row, secondMatrix.column);
-    for (int indexI = 0; indexI < firstMatrix.row; indexI++) {
-        for (int indexJ = 0; indexJ < secondMatrix.column; indexJ++) {
-            for (int indexK = 0; indexK < firstMatrix.column; indexK++) {
-                matrix[indexI][indexJ] += firstMatrix.matrix[indexI][indexK] * secondMatrix.matrix[indexK][indexJ];
+    for (int rowIndex = 0; rowIndex < firstMatrix.row; rowIndex++) {
+        for (int columnIndex = 0; columnIndex < secondMatrix.column; columnIndex++) {
+            for (int commonIndex = 0; commonIndex < firstMatrix.column; commonIndex++) {
+                *(*(matrix + rowIndex) + columnIndex) += *(*(firstMatrix.matrix + rowIndex) + commonIndex) * *(*(secondMatrix.matrix + commonIndex) + columnIndex);
             }
         }
     }
@@ -65,12 +54,10 @@ void Matrix::multiply(const Matrix& firstMatrix, const Matrix& secondMatrix) {
 }
 
 Matrix::~Matrix() {
-
     if(matrix) {
-        for (int i = 0; i < row; i++) {
-            delete[] matrix[i];
+        for (int rowIndex = 0; rowIndex < row; rowIndex++) {
+            delete[] *(matrix + rowIndex);
         }
     }
-        
     delete[] matrix;
 }

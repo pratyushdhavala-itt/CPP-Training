@@ -1,8 +1,9 @@
 #include <iostream>
-#include "helper_functions.h"
+#include "exception_handling.h"
+#include "atof_functions.h"
+#include "print_functions.h"
 #include "matrix.h"
 #include "constants.h"
-using namespace std;
 
 extern bool exitProgram;
 
@@ -10,24 +11,23 @@ int main() {
     while (true) {
         printMenu();
         char input[1];
-        cin.getline(input, 2);
-        inputFail(1);
-        printChosenOption(input);
+        std::cin.getline(input, 2);
+        handleInputError(1);
+        printOption(input);
         if (exitProgram) {
-            exitProgram = false;
             break;
         }
         Matrix matrices[2];
         for (int matrixIndex = 0; matrixIndex < 2; matrixIndex++) {
-            cout << PRINT_ENTER_ROW << matrixIndex + 1 << ": ";
-            cin.getline(matrices[matrixIndex].charRow, 10);
-            if (!isValidRowOrColumn(matrices[matrixIndex].charRow)) {
+            std::cout << PRINT_ENTER_ROW << matrixIndex + 1 << ": ";
+            std::cin.getline(matrices[matrixIndex].charRow, 10);
+            if (!isValidInput(matrices[matrixIndex].charRow)) {
                 matrixIndex--; 
                 continue;
             }
-            cout << PRINT_ENTER_COLUMN << matrixIndex + 1 << ": ";
-            cin.getline(matrices[matrixIndex].charColumn, 10);
-            if (!isValidRowOrColumn(matrices[matrixIndex].charColumn)){
+            std::cout << PRINT_ENTER_COLUMN << matrixIndex + 1 << ": ";
+            std::cin.getline(matrices[matrixIndex].charColumn, 10);
+            if (!isValidInput(matrices[matrixIndex].charColumn)){
                 matrixIndex--;
                 continue;
             }
@@ -35,18 +35,18 @@ int main() {
         }
         if (!isValidMatrix(matrices, input)) continue;
         for (int matrixIndex = 0; matrixIndex < 2; matrixIndex++) {
-            for (int indexI = 0; indexI < matrices[matrixIndex].row; indexI++) {
-                for (int indexJ = 0; indexJ < matrices[matrixIndex].column; indexJ++) {
+            for (int rowIndex = 0; rowIndex < matrices[matrixIndex].row; rowIndex++) {
+                for (int columnIndex = 0; columnIndex < matrices[matrixIndex].column; columnIndex++) {
                     char charElement[10];
-                    cout << "Enter element for matrix " << matrixIndex + 1 << " for position [" << indexI << "][" << indexJ << "]: ";
-                    cin.getline(charElement, 10);
-                    if (inputFail(10) || !isValidNumber(charElement)) {
-                        cout << PRINT_INVALID_INPUT << endl;
-                        indexJ--;
+                    std::cout << PRINT_ENTER_ELEMENT_ONE << matrixIndex + 1 << PRINT_ENTER_ELEMENT_TWO << rowIndex << PRINT_ENTER_ELEMENT_THREE << columnIndex << PRINT_ENTER_ELEMENT_FOUR;
+                    std::cin.getline(charElement, 10);
+                    if (handleInputError(10) || !isValidNumber(charElement)) {
+                        std::cout << PRINT_INVALID_INPUT << std::endl;
+                        columnIndex--;
                         continue;
                     }
                     double element = convertToNumber(charElement);
-                    matrices[matrixIndex].matrix[indexI][indexJ] = element;
+                    matrices[matrixIndex].matrix[rowIndex][columnIndex] = element;
                 }
             }
         }
