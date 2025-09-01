@@ -82,6 +82,11 @@ int findPostDecimalPointLength(const char* input) {
 }
 
 double convertToFloatingNumber(const char* input) {
+    bool isNegative = false;
+    if (checkForNegative(input)) {
+        isNegative = true;
+        input++;
+    }
     int preDecimalPointLength = findPreDecimalPointLength(input);
     int postDecimalPointLength = findPostDecimalPointLength(input);
     int inputLength = calculateInputLength(input);
@@ -99,6 +104,9 @@ double convertToFloatingNumber(const char* input) {
             number = number * findPower(10, -(index - preDecimalPointLength));
             result += number;
         }
+    }
+    if (isNegative) {
+        result = result * (-1);
     }
     return result;
 }

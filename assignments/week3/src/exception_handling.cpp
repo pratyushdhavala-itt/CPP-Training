@@ -8,6 +8,16 @@ extern const char* PRINT_MATRIX_INVALID_ADDITION;
 extern const char* PRINT_MATRIX_INVALID_MULTIPLICATION;
 extern const char* PRINT_MATRIX_INVALID_INPUT;
 extern const char* PRINT_INPUT_TOO_LONG;
+extern const char* PRINT_INVALID_INPUT;
+
+bool isValidMatrixInput(char charElement[10], int& columnIndex) {
+    if(handleInputError(10) || !isValidNumber(charElement)) {
+        std::cout << PRINT_INVALID_INPUT << std::endl;
+        columnIndex--;
+        return false;
+    }
+    return true;
+}
 
 bool handleInputError(int limit) {
     if (std::cin.fail()) {
@@ -63,14 +73,16 @@ bool isValidFloatingPoint(const char* input) {
     return false;
 }
 
-bool isValidInput(char* input) {
+bool isValidInput(char* input, int& matrixIndex) {
     int inputLength = calculateInputLength(input);
     if (handleInputError(10)) {
+        matrixIndex--;
         return false;
     }
     for (int index = 0; index < inputLength; index++) {
-        if (input[index] < '0' || input[index] > '9') {
+        if (input[index] < '1' || input[index] > '9') {
             std::cout << PRINT_MATRIX_INVALID_INPUT << std::endl;
+            matrixIndex--;
             return false;
         }
     }

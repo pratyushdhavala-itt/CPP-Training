@@ -6,14 +6,12 @@ struct Matrix {
     char charColumn[10];
     int row;
     int column;
-
     double** matrix;
 
     void init();
     void init(int row, int column);
     void print() const;
-    void add(const Matrix& firstMatrix, const Matrix& secondMatrix);
-    void multiply(const Matrix& firstMatrix, const Matrix& secondMatrix);
+
     ~Matrix();
 };
 
