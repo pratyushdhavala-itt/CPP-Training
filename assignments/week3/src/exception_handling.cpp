@@ -3,6 +3,7 @@
 #include "print_functions.h"
 #include "matrix.h"
 #include "atof_functions.h"
+#include "input_limit.h"
 
 extern const char* PRINT_MATRIX_INVALID_ADDITION;
 extern const char* PRINT_MATRIX_INVALID_MULTIPLICATION;
@@ -11,7 +12,7 @@ extern const char* PRINT_INPUT_TOO_LONG;
 extern const char* PRINT_INVALID_INPUT;
 
 bool isValidMatrixInput(char charElement[10], int& columnIndex) {
-    if(handleInputError(10) || !isValidNumber(charElement)) {
+    if(handleInputError(MATRIX_INPUT) || !isValidNumber(charElement)) {
         std::cout << PRINT_INVALID_INPUT << std::endl;
         columnIndex--;
         return false;

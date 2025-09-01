@@ -4,6 +4,7 @@
 #include "print_functions.h"
 #include "matrix.h"
 #include "constants.h"
+#include "input_limit.h"
 
 extern bool exitProgram;
 

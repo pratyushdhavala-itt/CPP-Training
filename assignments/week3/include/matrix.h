@@ -1,9 +1,11 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include "input_limit.h"
+
 struct Matrix {
-    char charRow[10];
-    char charColumn[10];
+    char charRow[MATRIX_INPUT];
+    char charColumn[MATRIX_INPUT];
     int row;
     int column;
     double** matrix;
