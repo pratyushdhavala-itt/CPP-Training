@@ -10,14 +10,17 @@ extern bool exitProgram;
 
 int main() {
     while (true) {
+
         printMenu();
-        char input[1];
+        char input[MENU_INPUT - 1];
         std::cin.getline(input, MENU_INPUT);
         handleInputError(MENU_INPUT - 1);
         printOption(input);
         if (exitProgram) break;
-        Matrix matrices[2];
-        for (int matrixIndex = 0; matrixIndex < 2; matrixIndex++) {
+
+        Matrix matrices[MATRIX_ARRAY_ELEMENTS];
+
+        for (int matrixIndex = 0; matrixIndex < MATRIX_ARRAY_ELEMENTS; matrixIndex++) {
             std::cout << PRINT_ENTER_ROW << matrixIndex + 1 << PRINT_SEMICOLUMN;
             std::cin.getline((*(matrices + matrixIndex)).charRow, MATRIX_INPUT);
             if (!isValidInput((*(matrices + matrixIndex)).charRow, matrixIndex)) continue;
@@ -26,8 +29,10 @@ int main() {
             if (!isValidInput((*(matrices + matrixIndex)).charColumn, matrixIndex)) continue;
             matrices[matrixIndex].init();
         }
+
         if (!isValidMatrix(matrices, input)) continue;
-        for (int matrixIndex = 0; matrixIndex < 2; matrixIndex++) {
+
+        for (int matrixIndex = 0; matrixIndex < MATRIX_ARRAY_ELEMENTS; matrixIndex++) {
             for (int rowIndex = 0; rowIndex < (*(matrices + matrixIndex)).row; rowIndex++) {
                 for (int columnIndex = 0; columnIndex < (*(matrices + matrixIndex)).column; columnIndex++) {
                     char charElement[MATRIX_INPUT];
@@ -39,9 +44,11 @@ int main() {
                 }
             }
         }
-        printInputMatrices(matrices[0], matrices[1]);
+
+        printInputMatrices(matrices[FIRST_MATRIX_INDEX], matrices[SECOND_MATRIX_INDEX]);
         Matrix resultMatrix;
-        performMatrixOperation(input, resultMatrix, matrices[0], matrices[1]);
+
+        performMatrixOperation(input, resultMatrix, matrices[FIRST_MATRIX_INDEX], matrices[SECOND_MATRIX_INDEX]);
         printResultMatrix(resultMatrix);
     }
     return 0;

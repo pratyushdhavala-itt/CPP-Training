@@ -7,10 +7,7 @@
 void Matrix::init() {
     row = convertToInteger(charRow);
     column = convertToInteger(charColumn);
-    matrix = new double*[row];
-    for (int index = 0; index < row; index++) {
-        *(matrix + index) = new double[column];
-    }
+    init(row, column);
 }
 
 void Matrix::init(int row, int column) {
