@@ -1,7 +1,9 @@
 #ifndef OPTION_H
 #define OPTION_H
 
-class Option {
+#include <iostream>
+#include "constants.h"
+class UserOption {
 
 private:
 
@@ -15,17 +17,18 @@ public:
         MULTIPLICATION,
     };
 
-    Option();
+    UserOption();
 
-    bool getStatus();
+    bool getExitStatus();
     void print();
     Operation getOperation();
+    void printMenu();
 
-    friend std::istream& operator>>(std::istream& in, Option& option);
+    friend std::istream& operator>>(std::istream& in, UserOption& userOption);
 
 private:
 
-    Operation op;
+    Operation operation;
 };
 
 #endif

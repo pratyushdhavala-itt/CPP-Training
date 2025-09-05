@@ -1,16 +1,18 @@
 #include <iostream>
-#include "option.h"
+#include "user_option.h"
 #include "matrix.h"
-#include "addition_matrix.h"
+#include "matrix_addition.h"
 #include "matrix_operation.h"
-#include "multiplication_matrix.h"
+#include "matrix_multiplication.h"
 #include "constants.h"
 
 
-void performOperation(Option& option, Matrix& matrixOne, Matrix& matrixTwo) {
+void performOperation(UserOption& userOption, Matrix& matrixOne, Matrix& matrixTwo) {
+
     bool validMatrix = true;
-    switch(option.getOperation()) {
-        case Option::ADDITION: {
+    
+    switch(userOption.getOperation()) {
+        case UserOption::ADDITION: {
             AdditionMatrix result(matrixOne, matrixTwo);
             if (!result.validity) {
                 validMatrix = result.validity;
@@ -19,7 +21,7 @@ void performOperation(Option& option, Matrix& matrixOne, Matrix& matrixTwo) {
             result.print();
             break;
         }
-        case Option::MULTIPLICATION: {
+        case UserOption::MULTIPLICATION: {
             MultiplicationMatrix result(matrixOne, matrixTwo);
             if (!result.validity) {
                 validMatrix = result.validity;
@@ -29,17 +31,15 @@ void performOperation(Option& option, Matrix& matrixOne, Matrix& matrixTwo) {
             break;
         }
     }
-    if (!validMatrix) {
-        return;
-    }
-    char response;
     std::cout << PRINT_PERFORM_AGAIN << std::endl;
-    std::cin >> response;
-    if (response != 'y' && response != 'Y') {
-        std::cout << PRINT_CHOSE_OTHER_OPTION << std::endl;
-        return;
-    }
-    Option secondOption;
-    std::cin >> secondOption;
-    performOperation(secondOption, matrixOne, matrixTwo);
+}
+
+void performAnotherOperation(char input, Matrix& matrixOne, Matrix& matrixTwo) {
+
+    std::cin.ignore(IGNORE_INPUT, '\n');
+    UserOption userOption;
+    std::cin >> userOption;
+
+    performOperation(userOption, matrixOne, matrixTwo);
+
 }

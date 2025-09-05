@@ -1,5 +1,5 @@
 #include "exception_handling.h"
-#include "atof.h"
+#include "atof_functions.h"
 
 namespace Atof {
 

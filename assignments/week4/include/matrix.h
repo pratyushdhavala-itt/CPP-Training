@@ -1,36 +1,31 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "row.h"
-#include "column.h"
-#include "element.h"
-#include "option.h"
+#include "user_option.h"
+#include "constants.h"
 
 class Matrix {
 
 protected:
 
-    Row row;
-    Column column;
-    double** array2D;
+    int matrixRow;
+    int matrixColumn;
+    double** matrixArray;
     static int totalMatrixCount;
     int currentMatrixCount;
 
 public:
 
-    Matrix();
-
-    // bool isValid(Option& option);
+    Matrix(char inputMatrixRow[INTEGER_INPUT], char inputMatrixColumn[INTEGER_INPUT]);
+    Matrix(int inputMatrixRow, int inputMatrixColumn);
+    void init();
     int getRow() const;
     int getColumn() const;
     int getCurrentMatrixCount();
-    void setValue(Element& element);
-    void init();
     void print() const;
-    void commonPrint() const;
+    void displayMatrix() const;
     double getElement(int row, int column);
-
-    friend std::istream& operator >> (std::istream& in, Matrix& matrix);
+    void setElement(char element[10], int rowIndex, int& columnIndex);
 
     ~Matrix();
 

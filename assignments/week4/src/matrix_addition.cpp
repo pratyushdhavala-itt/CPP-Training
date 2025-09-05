@@ -1,39 +1,34 @@
-#include "addition_matrix.h"
+#include <iostream>
+#include "matrix_addition.h"
 #include "constants.h"
+#include "exception_handling.h"
 
 AdditionMatrix::AdditionMatrix(Matrix& matrixOne, Matrix& matrixTwo)
-: matrixOne{matrixOne}, matrixTwo{matrixTwo} {
+: Matrix(matrixOne.getRow(), matrixOne.getColumn()), matrixOne{matrixOne}, matrixTwo{matrixTwo} , validity{true} {
     if (!validAddition()) {
         validity = false;
         std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
     } else {
+        init();
         add();
     }
 }
 
 void AdditionMatrix::add() {
-
-    row = matrixOne.getRow();
-    column = matrixOne.getColumn();
     
-    init();
-
-    for (int i = 0; i < row.getRow(); i++) {
-        for (int j = 0; j < column.getColumn(); j++) {
-            *(*(array2D + i) + j) = matrixOne.getElement(i, j) + matrixTwo.getElement(i, j);
+    for (int rowIndex = 0; rowIndex < matrixRow; rowIndex++) {
+        for (int columnIndex = 0; columnIndex < matrixColumn; columnIndex++) {
+            *(*(matrixArray + rowIndex) + columnIndex) = matrixOne.getElement(rowIndex, columnIndex) + matrixTwo.getElement(rowIndex, columnIndex);
         }
     }
 }
 
 void AdditionMatrix::print() const {
-    std::cout << PRINT_RESULT_MATRIX;
-    commonPrint();
+    std::cout << PRINT_RESULT_MATRIX << std::endl;
+    displayMatrix();
 }
 
 bool AdditionMatrix::validAddition() {
-    bool result = true;
-    if (matrixOne.getColumn() != matrixTwo.getColumn() || matrixOne.getRow() != matrixTwo.getRow()) {
-        return false;
-    }
+    bool result = ExceptionHandling::validAddition(matrixOne, matrixTwo);
     return result;
 }

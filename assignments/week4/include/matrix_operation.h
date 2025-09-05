@@ -1,9 +1,11 @@
 #ifndef MATRIX_OPERATION_H
 #define MATRIX_OPERATION_H
 
-#include "option.h"
+#include "user_option.h"
 #include "matrix.h"
+#include "constants.h"
 
-void performOperation(Option& option, Matrix& matrixOne, Matrix& matrixTwo);
+void performOperation(UserOption& userOption, Matrix& matrixOne, Matrix& matrixTwo);
+void performAnotherOperation(char input, Matrix& matrixOne, Matrix& matrixTwo);
 
 #endif

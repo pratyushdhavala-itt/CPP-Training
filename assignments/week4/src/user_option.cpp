@@ -1,45 +1,42 @@
 #include <iostream>
 #include "exception_handling.h"
 #include "constants.h"
-#include "option.h"
-#include "print.h"
+#include "user_option.h"
 
-Option::Option() : exitProgram{false} {
-    Print::printMenu();
+UserOption::UserOption() : exitProgram{false} {
+    printMenu();
 }
 
-bool Option::getStatus() {
+bool UserOption::getExitStatus() {
     return exitProgram;
 }
 
-Option::Operation Option::getOperation() {
-    return op;
+UserOption::Operation UserOption::getOperation() {
+    return operation;
 }
 
-std::istream& operator >>(std::istream& in, Option& option) {
-    in >> option.input;
-
-    if (ExceptionHandling::inputFail()) {
-        option.exitProgram = true;
-    } else {
-        option.print();
-    }
-
-    in.ignore(1000, '\n');
+std::istream& operator >>(std::istream& in, UserOption& userOption) {
+    userOption.input = in.get();
+    userOption.print();
+    in.ignore(IGNORE_INPUT, '\n');
     return in;
 }
 
-void Option::print() {
+void UserOption::printMenu() {
+    std::cout << PRINT_MENU << std::endl;
+}
+
+void UserOption::print() {
 
     switch(input) {
         case '1':
             std::cout << PRINT_PERFORM_ADDITON << std::endl;
-            op = ADDITION;
+            operation = ADDITION;
             break;
 
         case '2':
             std::cout << PRINT_PERFORM_MULTIPLICATION << std::endl;
-            op = MULTIPLICATION;
+            operation = MULTIPLICATION;
             break;
 
         default:
@@ -48,4 +45,5 @@ void Option::print() {
             break;
     }
 }
+
 

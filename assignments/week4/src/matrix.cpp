@@ -1,90 +1,84 @@
 #include <iostream>
 #include "matrix.h"
-#include "element.h"
-#include "atof.h"
+#include "atof_functions.h"
 #include "exception_handling.h"
 #include "constants.h"
 
 int Matrix::totalMatrixCount = 0;
 
-Matrix::Matrix() {
+Matrix::Matrix(char inputMatrixRow[INTEGER_INPUT], char inputMatrixColumn[INTEGER_INPUT]) {
+    
+    matrixRow = Atof::convertToInteger(inputMatrixRow);
+    matrixColumn = Atof::convertToInteger(inputMatrixColumn);
+
+    init();
+
     totalMatrixCount++;
     currentMatrixCount = totalMatrixCount;
 }
 
+Matrix::Matrix(int inputMatrixRow, int inputMatrixColumn) : 
+    matrixRow{inputMatrixRow}, matrixColumn{inputMatrixColumn} {
+
+    init();
+
+    totalMatrixCount++;
+    currentMatrixCount = totalMatrixCount;
+}
+
+void Matrix::init() {
+    matrixArray = new double*[matrixRow];
+    for (int rowIndex = 0; rowIndex < matrixRow; rowIndex++) {
+        *(matrixArray + rowIndex) = new double[matrixColumn];
+    }
+}
+
+void Matrix::setElement(char element[INTEGER_INPUT], int rowIndex, int& columnIndex) {
+
+    if (!ExceptionHandling::isValidMatrixInput(element)) {
+        std::cout << PRINT_MATRIX_INVALID_INPUT << std::endl;
+        columnIndex--;
+    }
+    double matrixElement = Atof::convertToNumber(element);
+    *(*(matrixArray + rowIndex) + columnIndex) = matrixElement;
+}
+
 int Matrix::getRow() const {
-    return row.getRow();
+    return matrixRow;
 }
 
 int Matrix::getColumn() const {
-    return column.getColumn();
+    return matrixColumn;
 }
 
 int Matrix::getCurrentMatrixCount() {
     return currentMatrixCount;
 }
 
-void Matrix::setValue(Element& element) {
-    *(*(array2D + element.getRow()) + element.getColumn()) = element.getValue();
-}
-
 double Matrix::getElement(int rowIndex, int columnIndex) {
-    return *(*(array2D + rowIndex) + columnIndex);
-}
-
-void Matrix::init() {
-    array2D = new double*[row.getRow()];
-    for (int rowIndex = 0; rowIndex < row.getRow(); rowIndex++) {
-        *(array2D + rowIndex) = new double[column.getColumn()];
-    }
+    return *(*(matrixArray + rowIndex) + columnIndex);
 }
 
 void Matrix::print() const {
     std::cout << PRINT_THIS_MATRIX << currentMatrixCount << PRINT_SEMICOLUMN << std::endl;
-    commonPrint();
+    displayMatrix();
 }
 
-void Matrix::commonPrint() const {
-    for (int rowIndex = 0; rowIndex < row.getRow(); rowIndex++) {
-        for (int columnIndex = 0; columnIndex < column.getColumn(); columnIndex++) {
-            std::cout << *(*(array2D + rowIndex) + columnIndex) << " ";
+void Matrix::displayMatrix() const {
+    for (int rowIndex = 0; rowIndex < getRow(); rowIndex++) {
+        for (int columnIndex = 0; columnIndex < getColumn(); columnIndex++) {
+            std::cout << *(*(matrixArray + rowIndex) + columnIndex) << " ";
         }
         std::cout << '\n';
     }
 }
 
-std::istream& operator >> (std::istream& in, Matrix& matrix) {
-    char row[10];
-    char column[10];
-    while (true) {
-        std::cout << PRINT_ENTER_ROW << matrix.currentMatrixCount << PRINT_SEMICOLUMN;
-        in.getline(row, 10);
-        if (ExceptionHandling::isValidInput(row)) {
-            break;
-        }
-    }
-    
-    while (true) {
-        std::cout << PRINT_ENTER_COLUMN << matrix.currentMatrixCount << PRINT_SEMICOLUMN;
-        in.getline(column, 10);
-        if (ExceptionHandling::isValidInput(column)) {
-            break;
-        }
-    }
-
-    matrix.row = Atof::convertToNumber(row);
-    matrix.column = Atof::convertToNumber(column);
-    
-    matrix.init();
-    return in;
-}
-
 Matrix::~Matrix() {
-    totalMatrixCount--;
-    for (int rowIndex = 0; rowIndex < row.getRow(); rowIndex++) {
-        delete[] *(array2D + rowIndex);
+    for (int rowIndex = 0; rowIndex < getRow(); rowIndex++) {
+        delete[] *(matrixArray + rowIndex);
     }
 
-    delete[] array2D;
+    delete[] matrixArray;
 }
+
 

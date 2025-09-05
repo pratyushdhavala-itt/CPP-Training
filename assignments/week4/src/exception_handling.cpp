@@ -1,17 +1,17 @@
 #include <iostream>
 #include "constants.h"
 #include "matrix.h"
-#include "option.h"
+#include "user_option.h"
 #include "exception_handling.h"
-#include "atof.h"
+#include "atof_functions.h"
 
 namespace ExceptionHandling {
 
-    bool isCompatible(Matrix& matrixOne, Matrix& matrixTwo, Option& option) {
+    bool canPerformOperation(Matrix& matrixOne, Matrix& matrixTwo, UserOption& userOption) {
         bool result = true;
-        if (option.getOperation() == Option::ADDITION) {
+        if (userOption.getOperation() == UserOption::ADDITION) {
             result = validAddition(matrixOne, matrixTwo);
-        } else if (option.getOperation() == Option::MULTIPLICATION) {
+        } else if (userOption.getOperation() == UserOption::MULTIPLICATION) {
             result = validMultiplication(matrixOne, matrixTwo);
         }
         if (!result) {
@@ -57,7 +57,7 @@ namespace ExceptionHandling {
         return result;
     }
 
-    bool isValidMatrixInput(char charElement[10]) {
+    bool isValidMatrixInput(char charElement[INTEGER_INPUT]) {
         bool result = true;
         if(handleInputError(10) || !isValidNumber(charElement)) {
             std::cout << PRINT_INVALID_INPUT << std::endl;
@@ -71,7 +71,7 @@ namespace ExceptionHandling {
         if (std::cin.fail()) {
             std::cout << PRINT_INPUT_TOO_LONG << std::endl;
             std::cin.clear();
-            std::cin.ignore(limit, '\n');
+            std::cin.ignore(IGNORE_INPUT, '\n');
             result = true;
         }
         return result;
@@ -80,13 +80,14 @@ namespace ExceptionHandling {
     bool isValidInput(char* input) {
         bool result = true;
         int inputLength = Atof::calculateInputLength(input);
-        if (handleInputError(10)) {
+        if (handleInputError(INTEGER_INPUT)) {
             result = false;
         }
         for (int index = 0; index < inputLength; index++) {
             if (input[index] < '1' || input[index] > '9') {
-                std::cout << PRINT_MATRIX_INVALID_INPUT << std::endl;
                 result = false;
+                std::cout << PRINT_MATRIX_INVALID_INPUT << std::endl;
+                break;
             }
         }
         return result;

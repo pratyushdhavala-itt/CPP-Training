@@ -2,7 +2,8 @@
 #define EXCEPTION_HANDLING_H
 
 #include "matrix.h"
-#include "option.h"
+#include "constants.h"
+#include "user_option.h"
 
 namespace ExceptionHandling {
     
@@ -10,7 +11,7 @@ namespace ExceptionHandling {
     
     bool isValidMenuOption(char input);
     
-    bool isCompatible(Matrix& matrixOne, Matrix& matrixTwo, Option& option);
+    bool canPerformOperation(Matrix& matrixOne, Matrix& matrixTwo, UserOption& userOption);
 
     bool validAddition(Matrix& matrixOne, Matrix& matrixTwo);
 

@@ -2,6 +2,7 @@
 #define ADDITION_MATRIX_H
 
 #include "matrix.h"
+#include "constants.h"
 
 class AdditionMatrix : public Matrix {
 
@@ -18,7 +19,7 @@ public:
     bool validAddition();
     void print() const;
     
-    friend void performOperation(Option& option, Matrix& matrixOne, Matrix& matrixTwo);
+    friend void performOperation(UserOption& userOption, Matrix& matrixOne, Matrix& matrixTwo);
 };
 
 #endif
