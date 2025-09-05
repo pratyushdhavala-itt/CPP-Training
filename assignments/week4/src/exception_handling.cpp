@@ -17,8 +17,7 @@ namespace ExceptionHandling {
         if (!result) {
             std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
         }
-        // matrixOne.~Matrix();
-        // matrixTwo.~Matrix();
+
         return result;
     }
 
