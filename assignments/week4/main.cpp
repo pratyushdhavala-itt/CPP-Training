@@ -6,6 +6,7 @@
 #include "addition_matrix.h"
 #include "multiplication_matrix.h"
 #include "exception_handling.h"
+#include "matrix_operation.h"
 
 using namespace std;
 
@@ -21,34 +22,23 @@ int main() {
         Matrix matrixTwo;
         cin >> matrixTwo;
 
-        Matrix matrices[] {matrixOne, matrixTwo};
         if (!ExceptionHandling::isCompatible(matrixOne, matrixTwo, option)) continue;
-        for (int k = 0; k < 2; k++) {
-            for (int i = 0; i < matrices[k].getRow(); i++) {
-                for (int j = 0; j < matrices[k].getColumn(); j++) {
-                    Element element(Row(i), Column(j), matrices[k].getCurrentMatrixCount());
+
+        Matrix* matrices[] { &matrixOne, &matrixTwo };
+        for (int matrixIndex = 0; matrixIndex < 2; matrixIndex++) {
+            for (int rowIndex = 0; rowIndex < matrices[matrixIndex]->getRow(); rowIndex++) {
+                for (int columnIndex = 0; columnIndex < matrices[matrixIndex]->getColumn(); columnIndex++) {
+                    Element element(Row(rowIndex), Column(columnIndex), matrices[matrixIndex]->getCurrentMatrixCount());
                     cin >> element;
-                    matrices[k].setValue(element);
+                    matrices[matrixIndex]->setValue(element);
                 }
             }
         }
 
-
         matrixOne.print();
         matrixTwo.print();
 
-        switch(option.getOperation()) {
-            case Option::ADDITION: {
-                AdditionMatrix result(matrixOne, matrixTwo);
-                result.print();
-                break;
-            }
-            case Option::MULTIPLICATION: {
-                MultiplicationMatrix result(matrixOne, matrixTwo);
-                result.print();
-                break;
-            }
-        }
+        performOperation(option, matrixOne, matrixTwo);
     }
     return 0;
 }

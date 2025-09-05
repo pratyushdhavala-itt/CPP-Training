@@ -7,29 +7,14 @@
 Element::Element(Row inputRow, Column inputColumn, int matrixCount) 
     : row{inputRow}, column{inputColumn} {
     
-    std::cout << PRINT_ENTER_ELEMENT_ONE << matrixCount << PRINT_ENTER_ELEMENT_TWO << row.getRow() 
-              << PRINT_ENTER_ELEMENT_THREE << column.getColumn() << PRINT_ENTER_ELEMENT_FOUR;       
+    std::cout << PRINT_ENTER_ELEMENT_ONE 
+              << matrixCount 
+              << PRINT_ENTER_ELEMENT_TWO 
+              << row.getRow() 
+              << PRINT_ENTER_ELEMENT_THREE 
+              << column.getColumn() 
+              << PRINT_ENTER_ELEMENT_FOUR;       
 
-}
-
-std::istream& operator >> (std::istream& in, Element& element) {
-
-    while (true) {
-        in.getline(element.charValue, 10);
-        if (in.fail()) {
-            in.clear();
-            in.ignore(1000, '\n');
-        }
-        if (ExceptionHandling::isValidMatrixInput(element.charValue)) {
-            break;
-        } else {
-            std::cout << "Enter value again: ";
-        }
-    }
-
-    element.value = Atof::convertToNumber(element.charValue);
-    
-    return in;
 }
 
 int Element::getRow() {
@@ -43,3 +28,21 @@ int Element::getColumn() {
 double Element::getValue() {
     return value;
 }
+
+std::istream& operator >> (std::istream& in, Element& element) {
+    while (true) {
+        in.getline(element.charValue, 10);
+        if (in.fail()) {
+            in.clear();
+            in.ignore(1000, '\n');
+        }
+        if (ExceptionHandling::isValidMatrixInput(element.charValue)) {
+            break;
+        } else {
+            std::cout << ENTER_VALUE_AGAIN;
+        }
+    }
+    element.value = Atof::convertToNumber(element.charValue);
+    return in;
+}
+

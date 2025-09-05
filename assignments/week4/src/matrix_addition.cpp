@@ -1,21 +1,14 @@
 #include "addition_matrix.h"
+#include "constants.h"
 
 AdditionMatrix::AdditionMatrix(Matrix& matrixOne, Matrix& matrixTwo)
 : matrixOne{matrixOne}, matrixTwo{matrixTwo} {
-
-    if (validAddition()) {
-        add();
+    if (!validAddition()) {
+        validity = false;
+        std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
     } else {
-        std::cout << "Dimensions do not match" << std::endl;
+        add();
     }
-}
-
-bool AdditionMatrix::validAddition() {
-    bool result = true;
-    if (matrixOne.getRow() != matrixTwo.getRow() || matrixOne.getColumn() != matrixTwo.getColumn()) {
-        result = false;
-    }
-    return result;
 }
 
 void AdditionMatrix::add() {
@@ -30,4 +23,17 @@ void AdditionMatrix::add() {
             *(*(array2D + i) + j) = matrixOne.getElement(i, j) + matrixTwo.getElement(i, j);
         }
     }
+}
+
+void AdditionMatrix::print() const {
+    std::cout << PRINT_RESULT_MATRIX;
+    commonPrint();
+}
+
+bool AdditionMatrix::validAddition() {
+    bool result = true;
+    if (matrixOne.getColumn() != matrixTwo.getColumn() || matrixOne.getRow() != matrixTwo.getRow()) {
+        return false;
+    }
+    return result;
 }

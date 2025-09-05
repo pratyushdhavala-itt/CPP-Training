@@ -7,12 +7,15 @@
 
 class Element {
 
+private:
+
     Row row;
     Column column;
     char charValue[10];
     double value;
 
 public:
+
     Element(Row row, Column column, int matrixCount);
 
     double getValue();

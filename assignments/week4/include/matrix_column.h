@@ -4,6 +4,9 @@
 #include <iostream>
 
 class Column {
+
+private:
+
     int matrixColumn;
 
 public:
@@ -14,7 +17,7 @@ public:
 
     int getColumn() const;
 
-    void setColumn(int column);
+    // void setColumn(int column);
 
     friend std::istream& operator >> (std::istream& in, Column& column);
 };

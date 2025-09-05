@@ -20,5 +20,9 @@ inline const char* PRINT_MENU = "Please enter the option from the below list:-" 
 inline const char* PRINT_PERFORM_ADDITON = "Performing Matrix Addition";
 inline const char* PRINT_PERFORM_MULTIPLICATION = "Performing Matrix Multiplication";
 inline const char* PRINT_EXIT_PROGRAM = "Exited program successfully ! ! ! ";
-
+inline const char* ENTER_VALUE_AGAIN = "Enter value again: ";
+inline const char* PRINT_DIMENSIONS_MATCH = "Dimensions do not match ! ! ! Try again ! ! !";
+inline const char* PRINT_PERFORM_AGAIN = "Enter (y/Y) if you want to perform another operation with same matrices";
+inline const char* PRINT_CHOSE_OTHER_OPTION = "User chose to enter different matrices";
+inline const char* PRINT_THIS_MATRIX = "Your matrix ";
 #endif

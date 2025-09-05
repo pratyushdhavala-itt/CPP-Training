@@ -4,12 +4,15 @@
 #include <iostream>
 
 class Row {
+
+private:
+
     int matrixRow;
 
 public:
 
     int getRow() const;
-    void setRow(int row);
+    // void setRow(int row);
 
     Row() = default;
     Row(int row);

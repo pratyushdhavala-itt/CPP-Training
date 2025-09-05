@@ -8,6 +8,14 @@ Option::Option() : exitProgram{false} {
     Print::printMenu();
 }
 
+bool Option::getStatus() {
+    return exitProgram;
+}
+
+Option::Operation Option::getOperation() {
+    return op;
+}
+
 std::istream& operator >>(std::istream& in, Option& option) {
     in >> option.input;
 
@@ -19,10 +27,6 @@ std::istream& operator >>(std::istream& in, Option& option) {
 
     in.ignore(1000, '\n');
     return in;
-}
-
-bool Option::getStatus() {
-    return exitProgram;
 }
 
 void Option::print() {
@@ -45,6 +49,3 @@ void Option::print() {
     }
 }
 
-Option::Operation Option::getOperation() {
-    return op;
-}

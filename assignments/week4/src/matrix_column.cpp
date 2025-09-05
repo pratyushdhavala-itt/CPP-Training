@@ -7,9 +7,9 @@ int Column::getColumn() const {
     return matrixColumn;
 }
 
-void Column::setColumn(int matrixColumn) {
-    this->matrixColumn = matrixColumn;
-}
+// void Column::setColumn(int matrixColumn) {
+//     this->matrixColumn = matrixColumn;
+// }
 
 std::istream& operator >> (std::istream& in, Column& column) {
     in >> column.matrixColumn;

@@ -1,9 +1,13 @@
+#ifndef EXCEPTION_HANDLING_H
+#define EXCEPTION_HANDLING_H
+
 #include "matrix.h"
 #include "option.h"
 
 namespace ExceptionHandling {
     
     bool inputFail();
+    
     bool isValidMenuOption(char input);
     
     bool isCompatible(Matrix& matrixOne, Matrix& matrixTwo, Option& option);
@@ -24,3 +28,5 @@ namespace ExceptionHandling {
 
     bool isValidNumber(const char* input);
 };
+
+#endif

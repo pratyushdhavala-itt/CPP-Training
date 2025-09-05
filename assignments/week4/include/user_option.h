@@ -4,10 +4,12 @@
 class Option {
 
 private:
+
     char input;
     bool exitProgram;
 
 public:
+
     enum Operation {
         ADDITION,
         MULTIPLICATION,
@@ -22,8 +24,8 @@ public:
     friend std::istream& operator>>(std::istream& in, Option& option);
 
 private:
-    Operation op;
 
+    Operation op;
 };
 
 #endif

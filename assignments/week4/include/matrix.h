@@ -12,7 +12,7 @@ protected:
 
     Row row;
     Column column;
-    int** array2D;
+    double** array2D;
     static int totalMatrixCount;
     int currentMatrixCount;
 
@@ -27,9 +27,12 @@ public:
     void setValue(Element& element);
     void init();
     void print() const;
+    void commonPrint() const;
     double getElement(int row, int column);
 
     friend std::istream& operator >> (std::istream& in, Matrix& matrix);
+
+    ~Matrix();
 
 };
 
