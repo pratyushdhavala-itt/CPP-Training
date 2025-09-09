@@ -19,13 +19,15 @@ public:
     Matrix(char inputMatrixRow[INTEGER_INPUT], char inputMatrixColumn[INTEGER_INPUT]);
     Matrix(int inputMatrixRow, int inputMatrixColumn);
     void init();
-    int getRow() const;
-    int getColumn() const;
+    int getRowCount() const;
+    int getColumnCount() const;
     int getCurrentMatrixCount();
     void print() const;
     void displayMatrix() const;
     double getElement(int row, int column);
-    void setElement(char element[10], int rowIndex, int& columnIndex);
+    void setElement(char element[INTEGER_INPUT], int rowIndex, int& columnIndex);
+    friend class MatrixOperation;
+
 
     ~Matrix();
 

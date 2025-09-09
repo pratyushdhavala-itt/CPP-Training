@@ -1,24 +1,26 @@
 #ifndef ATOF_H
 #define ATOF_H
-namespace Atof {
-
-    int convertToInteger(const char* input);
-
-    int calculateInputLength(const char* input);
-
-    double findPower(double base, double exponent);
-
-    void removeWhiteSpaces(char* input);
-
-    int findPreDecimalPointLength(const char* input);
-
-    int findPostDecimalPointLength(const char* input);
+class Atof {
     
-    double convertToFloatingNumber(const char* input);
+public:
 
-    int firstDecimalIndex(const char* input);
+    static int convertToInteger(const char* input);
 
-    double convertToNumber(const char* input);
+    static int calculateInputLength(const char* input);
+
+    static double findPower(double base, double exponent);
+
+    static void removeWhiteSpaces(char* input);
+
+    static int findPreDecimalPointLength(const char* input);
+
+    static int findPostDecimalPointLength(const char* input);
+    
+    static double convertToFloatingNumber(const char* input);
+
+    static int firstDecimalIndex(const char* input);
+
+    static double convertToNumber(const char* input);
 
 };
 

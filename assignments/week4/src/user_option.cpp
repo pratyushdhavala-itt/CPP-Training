@@ -5,6 +5,7 @@
 
 UserOption::UserOption() : exitProgram{false} {
     printMenu();
+    
 }
 
 bool UserOption::getExitStatus() {

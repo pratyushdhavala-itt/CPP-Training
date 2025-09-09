@@ -7,6 +7,11 @@ enum NumberConstants {
     IGNORE_INPUT = 1000,
 };
 
+enum MatrixIndex {
+    FIRST_MATRIX = 1,
+    SECOND_MATRIX = 2,
+};
+
 inline const char* PRINT_ENTER_ROW_MATRIX_ONE = "Enter row for matrix 1: ";
 inline const char* PRINT_ENTER_COLUMN_MATRIX_ONE = "Enter column for matrix 1: ";
 inline const char* PRINT_ENTER_ROW_MATRIX_TWO = "Enter row for matrix 2: ";

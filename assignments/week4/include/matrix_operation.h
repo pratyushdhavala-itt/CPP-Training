@@ -5,7 +5,25 @@
 #include "matrix.h"
 #include "constants.h"
 
-void performOperation(UserOption& userOption, Matrix& matrixOne, Matrix& matrixTwo);
-void performAnotherOperation(char input, Matrix& matrixOne, Matrix& matrixTwo);
+class MatrixOperation {
+
+private:
+
+    Matrix& matrixOne;
+    Matrix& matrixTwo;
+    Matrix result;
+
+public:
+    MatrixOperation(Matrix& matrixOne, Matrix& matrixTwo);
+    void add();
+    void multiply();
+    bool validMultiplication();
+    bool validAddition();
+    void print() const;
+    void performOperation(UserOption& UserOption);
+    void performAnotherOperation();
+
+};
+
 
 #endif

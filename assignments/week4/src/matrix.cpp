@@ -43,11 +43,11 @@ void Matrix::setElement(char element[INTEGER_INPUT], int rowIndex, int& columnIn
     *(*(matrixArray + rowIndex) + columnIndex) = matrixElement;
 }
 
-int Matrix::getRow() const {
+int Matrix::getRowCount() const {
     return matrixRow;
 }
 
-int Matrix::getColumn() const {
+int Matrix::getColumnCount() const {
     return matrixColumn;
 }
 
@@ -65,8 +65,8 @@ void Matrix::print() const {
 }
 
 void Matrix::displayMatrix() const {
-    for (int rowIndex = 0; rowIndex < getRow(); rowIndex++) {
-        for (int columnIndex = 0; columnIndex < getColumn(); columnIndex++) {
+    for (int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
+        for (int columnIndex = 0; columnIndex < getColumnCount(); columnIndex++) {
             std::cout << *(*(matrixArray + rowIndex) + columnIndex) << " ";
         }
         std::cout << '\n';
@@ -74,7 +74,7 @@ void Matrix::displayMatrix() const {
 }
 
 Matrix::~Matrix() {
-    for (int rowIndex = 0; rowIndex < getRow(); rowIndex++) {
+    for (int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
         delete[] *(matrixArray + rowIndex);
     }
 
