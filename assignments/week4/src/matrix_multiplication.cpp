@@ -9,7 +9,6 @@ MultiplicationMatrix::MultiplicationMatrix(Matrix& matrixOne, Matrix& matrixTwo)
         validity = false;
         std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
     } else {
-        init();
         multiply();
     }
 }

@@ -79,6 +79,9 @@ namespace ExceptionHandling {
 
     bool isValidInput(char* input) {
         bool result = true;
+        if (checkForNegative(input)) {
+            result = false;
+        }
         int inputLength = Atof::calculateInputLength(input);
         if (handleInputError(INTEGER_INPUT)) {
             result = false;

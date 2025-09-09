@@ -7,23 +7,21 @@
 #include "matrix_operation.h"
 #include "constants.h"
 
-using namespace std;
-
 int main() {
     while (true) {
 
         UserOption userOption;
-        cin >> userOption;
+        std::cin >> userOption;
         if (userOption.getExitStatus()) break;
         char inputMatrixRow[INTEGER_INPUT];
         char inputMatrixColumn[INTEGER_INPUT];
 
         while (true) {
-            cout << PRINT_ENTER_ROW_MATRIX_ONE;
-            cin.getline(inputMatrixRow, INTEGER_INPUT);
+            std::cout << PRINT_ENTER_ROW_MATRIX_ONE;
+            std::cin.getline(inputMatrixRow, INTEGER_INPUT);
             if(!ExceptionHandling::isValidInput(inputMatrixRow)) continue;
-            cout << PRINT_ENTER_COLUMN_MATRIX_ONE;
-            cin.getline(inputMatrixColumn, INTEGER_INPUT);
+            std::cout << PRINT_ENTER_COLUMN_MATRIX_ONE;
+            std::cin.getline(inputMatrixColumn, INTEGER_INPUT);
             if(!ExceptionHandling::isValidInput(inputMatrixRow)) continue;
             break;
         }
@@ -31,11 +29,11 @@ int main() {
         Matrix matrixOne(inputMatrixRow, inputMatrixColumn);
 
         while (true) {
-            cout << PRINT_ENTER_ROW_MATRIX_TWO;
-            cin.getline(inputMatrixRow, INTEGER_INPUT);
+            std::cout << PRINT_ENTER_ROW_MATRIX_TWO;
+            std::cin.getline(inputMatrixRow, INTEGER_INPUT);
             if(!ExceptionHandling::isValidInput(inputMatrixRow)) continue;
-            cout << PRINT_ENTER_COLUMN_MATRIX_TWO;
-            cin.getline(inputMatrixColumn, INTEGER_INPUT);
+            std::cout << PRINT_ENTER_COLUMN_MATRIX_TWO;
+            std::cin.getline(inputMatrixColumn, INTEGER_INPUT);
             if(!ExceptionHandling::isValidInput(inputMatrixRow)) continue;
             break;
         }
@@ -44,20 +42,20 @@ int main() {
 
         if (!ExceptionHandling::canPerformOperation(matrixOne, matrixTwo, userOption)) continue;
 
-        char element[10];
+        char element[INTEGER_INPUT];
 
         for (int rowIndex = 0; rowIndex < matrixOne.getRow(); rowIndex++) {
             for (int columnIndex = 0; columnIndex < matrixOne.getColumn(); columnIndex++) {
-                cout << PRINT_ENTER_ELEMENT_ONE_1 << rowIndex << PRINT_ENTER_ELEMENT_THREE << columnIndex << PRINT_ENTER_ELEMENT_FOUR;
-                cin.getline(element, 10);
+                std::cout << PRINT_ENTER_ELEMENT_ONE_1 << rowIndex << PRINT_ENTER_ELEMENT_THREE << columnIndex << PRINT_ENTER_ELEMENT_FOUR;
+                std::cin.getline(element, INTEGER_INPUT);
                 matrixOne.setElement(element, rowIndex, columnIndex);
             }
         }
 
         for (int rowIndex = 0; rowIndex < matrixTwo.getRow(); rowIndex++) {
             for (int columnIndex = 0; columnIndex < matrixTwo.getColumn(); columnIndex++) {
-                cout << PRINT_ENTER_ELEMENT_ONE_2 << rowIndex << PRINT_ENTER_ELEMENT_THREE << columnIndex << PRINT_ENTER_ELEMENT_FOUR;
-                cin.getline(element, 10);
+                std::cout << PRINT_ENTER_ELEMENT_ONE_2 << rowIndex << PRINT_ENTER_ELEMENT_THREE << columnIndex << PRINT_ENTER_ELEMENT_FOUR;
+                std::cin.getline(element, INTEGER_INPUT);
                 matrixTwo.setElement(element, rowIndex, columnIndex);
             }
         }
@@ -69,10 +67,10 @@ int main() {
         
         while (true) {
             char input;
-            cin >> input;
+            std::cin >> input;
             if (input != 'y' && input != 'Y') {
-                cout << PRINT_RESTART_PROGRAM << endl;
-                cin.ignore(1000, '\n');
+                std::cout << PRINT_RESTART_PROGRAM << std::endl;
+                std::cin.ignore(IGNORE_INPUT, '\n');
                 break;
             } 
             performAnotherOperation(input, matrixOne, matrixTwo);
