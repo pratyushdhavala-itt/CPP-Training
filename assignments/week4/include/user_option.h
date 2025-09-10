@@ -22,7 +22,6 @@ public:
     bool getExitStatus();
     void print();
     Operation getOperation();
-    void printMenu();
 
     friend std::istream& operator>>(std::istream& in, UserOption& userOption);
 

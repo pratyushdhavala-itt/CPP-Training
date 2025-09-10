@@ -4,8 +4,7 @@
 #include "user_option.h"
 
 UserOption::UserOption() : exitProgram{false} {
-    printMenu();
-    
+    std::cout << PRINT_MENU << std::endl;
 }
 
 bool UserOption::getExitStatus() {
@@ -21,10 +20,6 @@ std::istream& operator >>(std::istream& in, UserOption& userOption) {
     userOption.print();
     in.ignore(IGNORE_INPUT, '\n');
     return in;
-}
-
-void UserOption::printMenu() {
-    std::cout << PRINT_MENU << std::endl;
 }
 
 void UserOption::print() {
