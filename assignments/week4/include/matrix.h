@@ -23,11 +23,10 @@ public:
     int getColumnCount() const;
     int getCurrentMatrixCount();
     void print() const;
-    void displayMatrix() const;
     double getElement(int row, int column);
     void setElement(char element[INTEGER_INPUT], int rowIndex, int& columnIndex);
     friend class MatrixOperation;
-
+    
 
     ~Matrix();
 

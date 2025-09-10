@@ -7,6 +7,9 @@
 
 void matrixDimensionInput(char inputMatrixRow[], char inputMatrixColumn[], MatrixIndex matrixIndex);
 void matrixElementInput(Matrix& matrix);
+void performAnotherOperation(MatrixOperation& matrixOperation);
+void performOperation(MatrixOperation& matrixOperation, UserOption& userOption);
+bool canPerformOperation(MatrixOperation& matrixOperation, UserOption& userOption);
 
 int main() {
     while (true) {
@@ -23,7 +26,9 @@ int main() {
         matrixDimensionInput(inputMatrixRow, inputMatrixColumn, SECOND_MATRIX);
         Matrix matrixTwo(inputMatrixRow, inputMatrixColumn);
 
-        if (!ExceptionHandling::canPerformOperation(matrixOne, matrixTwo, userOption)) continue;
+        MatrixOperation matrixOperation(matrixOne, matrixTwo);
+
+        if (!canPerformOperation(matrixOperation, userOption)) continue;
 
         matrixElementInput(matrixOne);
         matrixElementInput(matrixTwo);
@@ -31,8 +36,8 @@ int main() {
         matrixOne.print();
         matrixTwo.print();
 
-        MatrixOperation operation(matrixOne, matrixTwo);
-        operation.performOperation(userOption);
+        
+        performOperation(matrixOperation, userOption);
         
         while (true) {
             char input;
@@ -42,7 +47,7 @@ int main() {
                 std::cin.ignore(IGNORE_INPUT, '\n');
                 break;
             } 
-            operation.performAnotherOperation();
+            performAnotherOperation(matrixOperation);
         }
         
     }
@@ -73,4 +78,51 @@ void matrixDimensionInput(char inputMatrixRow[], char inputMatrixColumn[], Matri
         if(!ExceptionHandling::isValidInput(inputMatrixRow)) continue;
         break;
     }
+}
+
+void performOperation(MatrixOperation& matrixOperation, UserOption& userOption) {
+
+    switch(userOption.getOperation()) {
+        case UserOption::ADDITION: {
+            if (!matrixOperation.validAddition()) {
+                break;
+            }
+            matrixOperation.add();
+            matrixOperation.result.print();
+            break;
+        }
+        case UserOption::MULTIPLICATION: {
+            if (!matrixOperation.validMultiplication()) {
+                break;
+            }
+            matrixOperation.multiply();
+            matrixOperation.result.print();
+            break;
+        }
+    }
+    std::cout << PRINT_PERFORM_AGAIN << std::endl;
+}
+
+void performAnotherOperation(MatrixOperation& matrixOperation) {
+
+    std::cin.ignore(IGNORE_INPUT, '\n');
+    UserOption userOption;
+    std::cin >> userOption;
+
+    performOperation(matrixOperation, userOption);
+
+}
+
+bool canPerformOperation(MatrixOperation& matrixOperation, UserOption& userOption) {
+    bool result = true;
+    if (userOption.getOperation() == UserOption::ADDITION) {
+        result = matrixOperation.validAddition();
+    } else if (userOption.getOperation() == UserOption::MULTIPLICATION) {
+        result = matrixOperation.validMultiplication();
+    }
+    if (!result) {
+        std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
+    }
+
+    return result;
 }

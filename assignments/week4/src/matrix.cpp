@@ -61,10 +61,6 @@ double Matrix::getElement(int rowIndex, int columnIndex) {
 
 void Matrix::print() const {
     std::cout << PRINT_THIS_MATRIX << currentMatrixCount << PRINT_SEMICOLUMN << std::endl;
-    displayMatrix();
-}
-
-void Matrix::displayMatrix() const {
     for (int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
         for (int columnIndex = 0; columnIndex < getColumnCount(); columnIndex++) {
             std::cout << *(*(matrixArray + rowIndex) + columnIndex) << " ";

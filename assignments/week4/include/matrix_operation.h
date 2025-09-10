@@ -20,8 +20,8 @@ public:
     bool validMultiplication();
     bool validAddition();
     void print() const;
-    void performOperation(UserOption& UserOption);
-    void performAnotherOperation();
+
+    friend void performOperation(MatrixOperation& matrixOperation, UserOption& userOption);
 
 };
 

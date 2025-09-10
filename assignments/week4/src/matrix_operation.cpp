@@ -24,12 +24,18 @@ void MatrixOperation::multiply() {
 }
 
 bool MatrixOperation::validMultiplication() {
-    bool result = ExceptionHandling::validMultiplication(matrixOne, matrixTwo);
+    bool result = true;
+    if (matrixOne.getColumnCount() != matrixTwo.getRowCount()) {
+        return false;
+    }
     return result;
 }
 
 bool MatrixOperation::validAddition() {
-    bool result = ExceptionHandling::validAddition(matrixOne, matrixTwo);
+    bool result = true;
+    if (matrixOne.getRowCount() != matrixTwo.getRowCount() || matrixOne.getColumnCount() != matrixTwo.getColumnCount()) {
+        result = false;
+    }
     return result;
 }
 
@@ -42,35 +48,3 @@ void MatrixOperation::add() {
     }
 }
 
-void MatrixOperation::performOperation(UserOption& userOption) {
-
-    switch(userOption.getOperation()) {
-        case UserOption::ADDITION: {
-            if (!validAddition()) {
-                break;
-            }
-            add();
-            result.print();
-            break;
-        }
-        case UserOption::MULTIPLICATION: {
-            if (!validMultiplication()) {
-                break;
-            }
-            multiply();
-            result.print();
-            break;
-        }
-    }
-    std::cout << PRINT_PERFORM_AGAIN << std::endl;
-}
-
-void MatrixOperation::performAnotherOperation() {
-
-    std::cin.ignore(IGNORE_INPUT, '\n');
-    UserOption userOption;
-    std::cin >> userOption;
-
-    performOperation(userOption);
-
-}

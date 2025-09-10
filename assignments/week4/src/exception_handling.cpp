@@ -5,36 +5,6 @@
 #include "exception_handling.h"
 #include "atof_functions.h"
 
-bool ExceptionHandling::canPerformOperation(Matrix& matrixOne, Matrix& matrixTwo, UserOption& userOption) {
-    bool result = true;
-    if (userOption.getOperation() == UserOption::ADDITION) {
-        result = validAddition(matrixOne, matrixTwo);
-    } else if (userOption.getOperation() == UserOption::MULTIPLICATION) {
-        result = validMultiplication(matrixOne, matrixTwo);
-    }
-    if (!result) {
-        std::cout << PRINT_DIMENSIONS_MATCH << std::endl;
-    }
-
-    return result;
-}
-
-bool ExceptionHandling::validAddition(Matrix& matrixOne, Matrix& matrixTwo) {
-    bool result = true;
-    if (matrixOne.getRowCount() != matrixTwo.getRowCount() || matrixOne.getColumnCount() != matrixTwo.getColumnCount()) {
-        result = false;
-    }
-    return result;
-}
-
-bool ExceptionHandling::validMultiplication(Matrix& matrixOne, Matrix& matrixTwo) {
-    bool result = true;
-    if (matrixOne.getColumnCount() != matrixTwo.getRowCount()) {
-        return false;
-    }
-    return result;
-}
-
 bool ExceptionHandling::isValidNumber(const char* input) {
     bool result = true;
     int indexOfFirstDecimal = -1;
