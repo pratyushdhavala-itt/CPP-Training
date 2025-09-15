@@ -15,11 +15,11 @@ void Account::addTransaction(Transaction* transaction) {
     *(transactions + transactionCount - 1) = transaction;
 }
 
-Transaction** Account::getAllTransactions() {
+Transaction** Account::getAllTransactions() const {
     return transactions;
 }
 
-double Account::getBalance() {
+double Account::getBalance() const {
     return balance;
 }
 
@@ -27,11 +27,11 @@ void Account::setBalance(double amount) {
     balance = amount;
 }
 
-long Account::getAccountNumber() {
+long Account::getAccountNumber() const {
     return accountNumber;
 }
 
-int Account::getTransactionCount() {
+int Account::getTransactionCount() const {
     return transactionCount;
 }
 Account::~Account() {

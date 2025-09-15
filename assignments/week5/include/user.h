@@ -27,12 +27,12 @@ public:
     User();
     User(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, UserType userType, Account::AccountType accountType);
 
-    std::string getUserID();
-    bool checkUserPassword(std::string password);
-    UserType getUserType();
-    std::string getUserFullName();
+    std::string getUserID() const;
+    bool checkUserPassword(std::string password) const;
+    UserType getUserType() const;
+    std::string getUserFullName() const;
 
-    virtual void showMenu() = 0;
+    virtual void showMenu() const = 0;
 
     virtual ~User();
 };

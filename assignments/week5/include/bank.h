@@ -21,7 +21,6 @@ public:
         UNAUTHENTICATED = 2,
     };
 
-
 private:
 
     Bank();
@@ -37,38 +36,37 @@ private:
     TransactionState currentTransactionState;
     Authenticator::AuthenticationErrorState currentAuthenticationErrorState;
 
-
+    void setCustomerOrAdmin();
     int getUserIndex(std::string& userID);
     Customer* findUserByAccountNo(long accountNumber);
-    std::string helperGetAccountStatement(int limit);
+    std::string helperGetAccountStatement(int limit) const;
     void recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType);
     void recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType, long destinationAccNo);
-    void setCustomerOrAdmin();
-
+    
 public:
 
     static Bank& getBankInstance();
 
-    User* findUserById(std::string& userID);
     void login(std::string& userID, std::string& attemptedPassword);
-    void showMenu();
-    AuthenticationState getCurrentUserState();
-    User::UserType getCurrentUserType();
-    TransactionState getCurrentTransactionState();
-    std::string getAuthenticationError();
+    std::string getLoginMessage() const;
+    AuthenticationState getCurrentUserState() const;
+    std::string getAuthenticationError() const;
+    User::UserType getCurrentUserType() const;
+    TransactionState getCurrentTransactionState() const;
+    User* findUserById(std::string& userID) const;
+    void showMenu() const;
     void logout();
-    std::string getLoginMessage();
 
     void addUser(std::string& userFirstName, std::string& userLastName, std::string& userID, std::string& userPassword, Account::AccountType accountType);
     void deleteUser(std::string& userID);
-    std::string getAllCustomerDetails();
+    std::string getAllCustomerDetails() const;
 
-    double getCustomerBalance();
+    double getCustomerBalance() const;
     void deposit(double amount);
     void withdraw(double amount);
     void transfer(long destAccountNo, double amount);
-    std::string getAccountMiniStatement();
-    std::string getAccountFullStatement();
+    std::string getAccountMiniStatement() const;
+    std::string getAccountFullStatement() const;
 
     Bank(const Bank&) = delete;
     Bank& operator=(const Bank&) = delete;

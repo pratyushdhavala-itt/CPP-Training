@@ -28,12 +28,12 @@ public:
 
     Account();
 
-    double getBalance();
+    double getBalance() const;
     void setBalance(double balance);
-    long getAccountNumber();
+    long getAccountNumber() const;
     void addTransaction(Transaction* transaction);
-    Transaction** getAllTransactions();
-    int getTransactionCount();
+    Transaction** getAllTransactions() const;
+    int getTransactionCount() const;
 
     ~Account();
 };

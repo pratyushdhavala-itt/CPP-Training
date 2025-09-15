@@ -27,7 +27,7 @@ public:
     Customer(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, Account::AccountType accountType);
 
     Account& getCustomerAccount();
-    void showMenu();
+    void showMenu() const override;
     std::string toString();
 
     ~Customer();

@@ -54,23 +54,23 @@ void Bank::login(std::string& userID, std::string& attemptedPassword) {
 }
 
 
-Bank::AuthenticationState Bank::getCurrentUserState() {
+Bank::AuthenticationState Bank::getCurrentUserState() const {
     return currentAuthenticationState;
 }
 
-std::string Bank::getLoginMessage() {
+std::string Bank::getLoginMessage() const {
     return PRINT_LOGIN + currentUser->getUserID() + PRINT_LOGIN_WELCOME + currentUser->getUserFullName() + PRINT_NEXT_LINE;
 }
 
-User::UserType Bank::getCurrentUserType() {
+User::UserType Bank::getCurrentUserType() const {
     return currentUser->getUserType();
 }
 
-void Bank::showMenu() {
+void Bank::showMenu() const{
     currentUser->showMenu();
 }
 
-User* Bank::findUserById(std::string& userID) {
+User* Bank::findUserById(std::string& userID) const {
     for (int index = 0; index < userCount; index++) {
         if ((*(users + index))->getUserID() == userID) {
             return *(users + index);
@@ -129,7 +129,7 @@ void Bank::deleteUser(std::string& userID) {
     currentTransactionState = SUCCESS;
 }
 
-std::string Bank::getAllCustomerDetails() {
+std::string Bank::getAllCustomerDetails() const {
     std::string combinedCustomerDetails;
     for (int index = 0; index < userCount; index++) {
         Customer* tempCustomer = dynamic_cast<Customer*>(*(users + index));
@@ -141,7 +141,7 @@ std::string Bank::getAllCustomerDetails() {
     return combinedCustomerDetails;
 }
 
-double Bank::getCustomerBalance() {
+double Bank::getCustomerBalance() const {
     return currentCustomer->getCustomerAccount().getBalance();
 }
 
@@ -211,7 +211,7 @@ Customer* Bank::findUserByAccountNo(long accountNumber) {
     return customer;
 }
 
-std::string Bank::helperGetAccountStatement(int limit) {
+std::string Bank::helperGetAccountStatement(int limit) const {
     Customer* customer = dynamic_cast<Customer*>(currentUser);
     Transaction** transactions = customer->getCustomerAccount().getAllTransactions();
     std::string combinedTransactions;
@@ -221,17 +221,17 @@ std::string Bank::helperGetAccountStatement(int limit) {
     return combinedTransactions;
 }
 
-std::string Bank::getAccountFullStatement() {
+std::string Bank::getAccountFullStatement() const {
     return helperGetAccountStatement(currentCustomer->getCustomerAccount().getTransactionCount());
 }
 
-std::string Bank::getAccountMiniStatement() {
+std::string Bank::getAccountMiniStatement() const {
     int transactionCount = currentCustomer->getCustomerAccount().getTransactionCount();
     int limit = (transactionCount > 10) ? 10 : transactionCount;
     return helperGetAccountStatement(limit);
 }
 
-Bank::TransactionState Bank::getCurrentTransactionState() {
+Bank::TransactionState Bank::getCurrentTransactionState() const {
     return currentTransactionState;
 }
 
@@ -259,7 +259,7 @@ void Bank::logout() {
     currentAuthenticationErrorState = Authenticator::NO_ERROR;
 }
 
-std::string Bank::getAuthenticationError() {
+std::string Bank::getAuthenticationError() const {
     std::string authenticationError;
     switch(currentAuthenticationErrorState) {
         case Authenticator::WRONG_PASSWORD: {

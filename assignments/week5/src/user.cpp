@@ -16,7 +16,7 @@ User::User() {
 
 }
 
-bool User::checkUserPassword(std::string attemptedPassword) {
+bool User::checkUserPassword(std::string attemptedPassword) const {
     bool passwordMatch = false;
     if (attemptedPassword == userPassword) {
         passwordMatch = true;
@@ -24,15 +24,15 @@ bool User::checkUserPassword(std::string attemptedPassword) {
     return passwordMatch;
 }
 
-std::string User::getUserID() {
+std::string User::getUserID() const {
     return userID;
 }
 
-User::UserType User::getUserType() {
+User::UserType User::getUserType() const {
     return userType;
 }
 
-std::string User::getUserFullName() {
+std::string User::getUserFullName() const {
     return userFirstName + " " + userLastName;
 }
 
