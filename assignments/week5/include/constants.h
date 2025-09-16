@@ -1,6 +1,22 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+enum InputConstants {
+    AMOUNT_INPUT = 9,
+    MENU_INPUT = 2,
+};
+
+enum InputValidationConstants {
+    PASSWORD_MIN_LENGTH = 4,
+    PASSWORD_MAX_LENGTH = 20,
+    USER_ID_MIN_LENGTH = 3,
+    USER_ID_MAX_LENGTH = 20,
+    IGNORE_CHARACTER_BUFFER = 1000,
+    ACCOUNT_NO_LENGTH = 4,
+    ARRAY_FIRST_INDEX = 0,
+    INPUT_MENU_LENGTH = 1,
+};
+
 inline const char* PRINT_ENTER_USER_ID = "\nEnter user ID: ";
 inline const char* PRINT_ENTER_PASSWORD = "\nEnter password: ";
 inline const char* PRINT_ENTER_DEPOSIT_AMOUNT = "\nEnter the deposit amount: ";

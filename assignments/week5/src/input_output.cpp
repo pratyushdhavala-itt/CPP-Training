@@ -8,12 +8,11 @@
 #include "input_validation.h"
 
 
-
 void takeInputAmount(double& amount, const char* inputMessage) {
-    char inputAmount[9];
+    char inputAmount[AMOUNT_INPUT];
     while (true) {
         std::cout << inputMessage;
-        std::cin.getline(inputAmount, 9);
+        std::cin.getline(inputAmount, AMOUNT_INPUT);
         if (!InputValidation::isValidAmount(inputAmount)) {
             std::cout << PRINT_INVALID_AMOUNT_FORMAT << std::endl;
             continue;
@@ -24,10 +23,10 @@ void takeInputAmount(double& amount, const char* inputMessage) {
 }
 
 void takeInputAccountNo(long& destinationAccountNo, const char* inputMessage) {
-    char inputDestinationAccountNo[9];
+    char inputDestinationAccountNo[AMOUNT_INPUT];
     while (true) {
         std::cout << inputMessage;
-        std::cin.getline(inputDestinationAccountNo, 9);
+        std::cin.getline(inputDestinationAccountNo, AMOUNT_INPUT);
         if (!InputValidation::isValidAccountNumber(inputDestinationAccountNo)) {
             std::cout << PRINT_INVALID_ACCOUNT_NO_FORMAT << std::endl;
             continue;
@@ -40,7 +39,7 @@ void takeInputAccountNo(long& destinationAccountNo, const char* inputMessage) {
 void takeInputUserMenu(int& input) {
     while(true) {
         char userInput[2];
-        std::cin.getline(userInput, 2);
+        std::cin.getline(userInput, MENU_INPUT);
         if (InputValidation::isInputTooLong()) {
             std::cout << PRINT_INPUT_TOO_LONG << std::endl;
             continue;
@@ -101,10 +100,10 @@ void performCustomerBankOperation(Bank& bank) {
 }
 
 void takeInputCreateUser(int& userTypeInput, std::string& userFirstName, std::string& userLastName, std::string& userID, std::string& userPassword, int& accountType) {
-    char createUserInput[2];
+    char createUserInput[MENU_INPUT];
     while (true) {
         std::cout << PRINT_SELECT_USER_TYPE << std::endl;
-        std::cin.getline(createUserInput, 2);
+        std::cin.getline(createUserInput, MENU_INPUT);
         if (!InputValidation::isValidMenuChoice(createUserInput)) {
             std::cout << PRINT_INVALID_INPUT << std::endl;
             continue;
@@ -148,12 +147,13 @@ void takeInputCreateUser(int& userTypeInput, std::string& userFirstName, std::st
         }
         break;
     }
-    char selectAccountType[2];
-    while (true) {
+    char selectAccountType[MENU_INPUT];
+    while (true && userTypeInput != User::ADMIN) {
         std::cout << PRINT_SELECT_ACCOUNT_TYPE << std::endl;
-        std::cin.getline(selectAccountType, 2);
+        std::cin.getline(selectAccountType, MENU_INPUT);
         if (!InputValidation::isValidMenuChoice(selectAccountType)) {
             std::cout << PRINT_INVALID_INPUT << std::endl;
+            continue;
         }
         break;
     }

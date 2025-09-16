@@ -1,17 +1,22 @@
 #include <iostream>
 #include <cstring>
+
 #include "input_validation.h"
+#include "constants.h"
 
 bool InputValidation::isValidUserID(const std::string& userID) {
     bool result = true;
     if (userID.empty()) {
         result = false;
     }
-    if (userID.size() < 3 || userID.size() > 20) {
+    if (userID.size() < USER_ID_MIN_LENGTH || userID.size() > USER_ID_MAX_LENGTH) {
         result = false;
     }
-    for (char c : userID) {
-        if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')) {
+    for (char currentChar : userID) {
+        if (!((currentChar >= '0' && currentChar <= '9') || 
+            (currentChar >= 'A' && currentChar <= 'Z') || 
+            (currentChar >= 'a' && currentChar <= 'z') || 
+            (currentChar == '_'))) {
             result = false;
             break;
         }
@@ -21,11 +26,11 @@ bool InputValidation::isValidUserID(const std::string& userID) {
 
 bool InputValidation::isValidPassword(const std::string& password) {
     bool result = true;
-    if (password.size() < 4 || password.size() > 20) {
+    if (password.size() < PASSWORD_MIN_LENGTH || password.size() > PASSWORD_MAX_LENGTH) {
         result = false;
     }
-    for (char c : password) {
-        if (c == ' ') {
+    for (char currentChar : password) {
+        if (currentChar == ' ') {
             result = false;
             break;
         }
@@ -60,7 +65,7 @@ bool InputValidation::isInputTooLong() {
     bool result = false;
     if (std::cin.fail()) {
         std::cin.clear();
-        std::cin.ignore(1000, '\n');
+        std::cin.ignore(IGNORE_CHARACTER_BUFFER, '\n');
         result = true;
     }
     return result;
@@ -76,7 +81,7 @@ bool InputValidation::isValidAccountNumber(const char* accountNumber) {
     if (accountNumber == nullptr || *accountNumber == '\0') {
         result = false;
     }
-    if (strlen(accountNumber) != 4) {
+    if (strlen(accountNumber) != ACCOUNT_NO_LENGTH) {
         result = false;
     }
     for (int index = 0; accountNumber[index] != '\0'; index++) {
@@ -96,7 +101,7 @@ bool InputValidation::isValidName(const std::string& userName) {
         result = false;
     }
 
-    char firstLetter = userName[0];
+    char firstLetter = userName[ARRAY_FIRST_INDEX];
     if (!(firstLetter >= 'A' && firstLetter <= 'Z')) {
         result = false;
     }
@@ -116,7 +121,7 @@ bool InputValidation::isValidMenuChoice(const char* input) {
     if (input == nullptr || *input == '\0') {
         result = false;
     }
-    if (strlen(input) != 1) {
+    if (strlen(input) != INPUT_MENU_LENGTH) {
         result = false;
     }
     if (isInputTooLong()) {
