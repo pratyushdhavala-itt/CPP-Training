@@ -20,13 +20,13 @@ public:
 
 private:
 
-    Account bankAccount;
+    Account* bankAccount;
 
 public:
 
     Customer(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, Account::AccountType accountType);
 
-    Account& getCustomerAccount();
+    Account* getCustomerAccount();
     void showMenu() const override;
     std::string toString();
 

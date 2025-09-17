@@ -9,16 +9,12 @@
 
 Bank::Bank() 
     : userCount{1}, 
-    currentUser{nullptr},
     currentAdmin{nullptr},
-    currentCustomer{nullptr},
     authenticator{Authenticator()},
-    users{(User**) malloc(sizeof(User*))},
-    currentAuthenticationState{UNAUTHENTICATED}, 
-    currentAuthenticationErrorState{Authenticator::NO_ERROR} {
+    authenticationErrorState{Authenticator::NO_ERROR},
+    bankAccount{nullptr} {
 
-    Admin* admin = new Admin();
-    *(users) = admin;
+    
 
     std::cout << PRINT_WELCOME_BANK << std::endl;
 }
@@ -28,24 +24,12 @@ Bank& Bank::getBankInstance() {
     return bank;
 }
 
-Bank::AuthenticationState Bank::getCurrentUserState() const {
-    return currentAuthenticationState;
-}
-
-std::string Bank::getLoginMessage() const {
-    return PRINT_LOGIN + currentUser->getUserID() + PRINT_LOGIN_WELCOME + currentUser->getUserFullName() + PRINT_NEXT_LINE;
-}
-
-User::UserType Bank::getCurrentUserType() const {
-    return currentUser->getUserType();
-}
-
-void Bank::showMenu() const{
-    currentUser->showMenu();
+void Bank::showMenu() const {
+    authenticator.getAuthenticatedUser()->showMenu();
 }
 
 double Bank::getCustomerBalance() const {
-    return currentCustomer->getCustomerAccount().getBalance();
+    return bankAccount->getBalance();
 }
 
 Bank::TransactionState Bank::getCurrentTransactionState() const {
@@ -53,108 +37,52 @@ Bank::TransactionState Bank::getCurrentTransactionState() const {
 }
 
 void Bank::login(std::string& userID, std::string& attemptedPassword) {
-    User* tempUser = findUserById(userID);
-    if (tempUser) {
-        authenticator.authenticate(tempUser, attemptedPassword);
-        if (authenticator.getAuthenticatedUser()) {
-            currentUser = authenticator.getAuthenticatedUser();
-            setCustomerOrAdmin();
-            currentAuthenticationState = AUTHENTICATED;
-            currentAuthenticationErrorState = Authenticator::NO_ERROR;
+
+    Authenticator::AuthenticationState authenticationState = authenticator.authenticate(userID, attemptedPassword);
+    
+    if (authenticationState == Authenticator::AUTHENTICATED) {
+        User* tempUser = authenticator.getAuthenticatedUser();
+        if (tempUser->getUserType() == User::CUSTOMER) {
+            Customer* customer = dynamic_cast<Customer*>(tempUser);
+            bankAccount = customer->getCustomerAccount();
+            userType = User::CUSTOMER;
         } else {
-            currentAuthenticationErrorState = Authenticator::WRONG_PASSWORD;
+            currentAdmin = dynamic_cast<Admin*>(tempUser);
+            userType = User::ADMIN;
         }
     } else {
-        currentAuthenticationErrorState = Authenticator::WRONG_USER_NAME;
+        authenticationErrorState = authenticator.getAuthenticationErrorState();
     }
+
 }
 
 void Bank::logout() {
     authenticator.unAuthenticate();
-    currentUser = nullptr;
-    currentAuthenticationState = UNAUTHENTICATED;
-    currentAuthenticationErrorState = Authenticator::NO_ERROR;
+    authenticationErrorState = Authenticator::NO_ERROR;
+    currentAdmin = nullptr;
 }
 
-void Bank::setCustomerOrAdmin() {
-    if (currentUser->getUserType() == User::ADMIN) {
-        currentAdmin = dynamic_cast<Admin*>(currentUser);
-    } else if (currentUser->getUserType() == User::CUSTOMER) {
-        currentCustomer = dynamic_cast<Customer*>(currentUser);
-    }
+Authenticator::AuthenticationErrorState Bank::getAuthenticationErrorState() {
+    return authenticationErrorState;
 }
 
-User* Bank::findUserById(std::string& userID) const {
-    for (int userIndex = 0; userIndex < userCount; userIndex++) {
-        if ((*(users + userIndex))->getUserID() == userID) {
-            return *(users + userIndex);
-        }
-    }
-    return nullptr;
-}
-
-int Bank::getUserIndex(std::string& userID) {
-    for (int userIndex = 0; userIndex < userCount; userIndex++) {
-        if ((*(users + userIndex))->getUserID() == userID) {
-            return userIndex;
-        }
-    }
-    return -1;
-}
 
 void Bank::addUser(std::string& userFirstName, std::string& userLastName, std::string& userID, std::string& userPassword, Account::AccountType accountType) {
-    userCount++;
-    users = (User**) realloc(users, userCount * sizeof(User*));
-    if (accountType != Account::ADMIN_ACCOUNT) {
-        *(users + (userCount - 1)) = new Customer(userFirstName, userLastName, userID, userPassword, accountType);
-    } else {
-        *(users + (userCount - 1)) = new Admin(userFirstName, userLastName, userID, userPassword);
-    }
+
+    authenticator.addUser(userFirstName, userLastName, userID, userPassword, accountType);
+    Customer* tempCustomer = dynamic_cast<Customer*>(authenticator.findUserById(userID));
+    std::cout << "Created user: " + userID << "\nAccount Number: " + std::to_string(tempCustomer->getCustomerAccount()->getAccountNumber()) << std::endl;
     
 }
 
 void Bank::deleteUser(std::string& userID) {
 
-    if (currentUser->getUserID() == userID) {
-        std::cout << PRINT_CANNOT_DELETE_CURRENT_USER << std::endl;
-        currentTransactionState = FAILURE;
-        return;
-    }
-
-    int deleteUserIndex = getUserIndex(userID);
-    if (deleteUserIndex == -1) {
-        std::cout << PRINT_USER_DOES_NOT_EXIST << std::endl;
-        currentTransactionState = FAILURE;
-        return;
-    }
-
-    delete *(users + deleteUserIndex);
-    for (int userIndex = deleteUserIndex; userIndex < userCount - 1; userIndex++) {
-        *(users + userIndex) = *(users + userIndex + 1);
-    }
-
-    userCount--;
-    if (userCount > 0) {
-        users = (User**) realloc(users, userCount * sizeof(User*));
-    } else {
-        free(users);
-        users = nullptr;
-    }
-    currentTransactionState = SUCCESS;
+    authenticator.deleteUser(userID);
 }
 
 std::string Bank::getAllCustomerDetails() const {
-    std::string combinedCustomerDetails;
-    for (int userIndex = 0; userIndex < userCount; userIndex++) {
-        Customer* tempCustomer = dynamic_cast<Customer*>(*(users + userIndex));
-        if (tempCustomer) {
-            combinedCustomerDetails += tempCustomer->toString();
-        }
-    }
-    if (combinedCustomerDetails.empty()) { 
-        combinedCustomerDetails = PRINT_NO_CUSTOMER;
-    }
-    return combinedCustomerDetails;
+
+    return authenticator.getAllCustomerDetails();
 }
 
 void Bank::deposit(double amount) {
@@ -165,9 +93,9 @@ void Bank::deposit(double amount) {
     }
 
     double newBalance = getCustomerBalance() + amount;
-    currentCustomer->getCustomerAccount().setBalance(newBalance);
+    bankAccount->setBalance(newBalance);
     currentTransactionState = SUCCESS;
-    recordTransaction(currentCustomer, amount, Transaction::DEPOSIT_TRANSACTION);
+    recordTransaction(this->bankAccount, amount, Transaction::DEPOSIT_TRANSACTION);
 }
 
 void Bank::withdraw(double amount) {
@@ -179,29 +107,32 @@ void Bank::withdraw(double amount) {
     }
 
     double newBalance = currentBalance - amount;
-    currentCustomer->getCustomerAccount().setBalance(newBalance);
+    bankAccount->setBalance(newBalance);
     currentTransactionState = SUCCESS;
-    recordTransaction(currentCustomer, amount, Transaction::WITHDRAW_TRANSACTION);
+    recordTransaction(this->bankAccount, amount, Transaction::WITHDRAW_TRANSACTION);
+}
+
+std::string Bank::getLoginMessage() const {
+    return authenticator.getLoginMessage();
 }
 
 void Bank::transfer(long destAccountNo, double amount) {
 
-    double sendingCustomerBalance = getCustomerBalance();
-    if (amount > MAX_AMOUNT || amount > sendingCustomerBalance) {
+    if (amount > MAX_AMOUNT || amount > getCustomerBalance()) {
         currentTransactionState = FAILURE;
         return;
     }
 
-    Customer* recevingCustomer = findUserByAccountNo(destAccountNo);
+    Account* destinationAccount = authenticator.findAccountByNumber(destAccountNo);
 
-    if (recevingCustomer) {
+    if (destinationAccount) {
 
-        double newBalance = recevingCustomer->getCustomerAccount().getBalance() + amount;
-        recevingCustomer->getCustomerAccount().setBalance(newBalance);
-        currentCustomer->getCustomerAccount().setBalance(sendingCustomerBalance - amount);
+        double newBalance = destinationAccount->getBalance() + amount;
+        destinationAccount->setBalance(newBalance);
+        recordTransaction(destinationAccount, amount, Transaction::RECD_TRANSFER_TRANSACTION, bankAccount->getAccountNumber());
+        bankAccount->setBalance(getCustomerBalance() - amount);
         currentTransactionState = SUCCESS;
-        recordTransaction(currentCustomer, amount, Transaction::SENT_TRANSFER_TRANSACTION, destAccountNo);
-        recordTransaction(recevingCustomer, amount, Transaction::RECD_TRANSFER_TRANSACTION, currentCustomer->getCustomerAccount().getAccountNumber());
+        recordTransaction(bankAccount, amount, Transaction::SENT_TRANSFER_TRANSACTION, destAccountNo);
     
     } else {
         std::cout << PRINT_DEST_ACC_DOES_NOT_EXIST << std::endl; 
@@ -209,23 +140,8 @@ void Bank::transfer(long destAccountNo, double amount) {
     }
 }
 
-Customer* Bank::findUserByAccountNo(long accountNumber) {
-    Customer* customer = nullptr;
-    for (int userIndex = 0; userIndex < userCount; userIndex++) {
-        Customer* tempCustomer = dynamic_cast<Customer*>(*(users + userIndex));
-        if (tempCustomer) {
-            if (tempCustomer->getCustomerAccount().getAccountNumber() == accountNumber) {
-                customer = tempCustomer;
-                break;
-            }
-        }
-    }
-    return customer;
-}
-
 std::string Bank::helperGetAccountStatement(int limit) const {
-    Customer* customer = dynamic_cast<Customer*>(currentUser);
-    Transaction** transactions = customer->getCustomerAccount().getAllTransactions();
+    Transaction** transactions = bankAccount->getAllTransactions();
     std::string combinedTransactions;
     for (int transactionIndex = limit - 1; transactionIndex >= 0; transactionIndex--) {
         combinedTransactions += (*(transactions + transactionIndex))->toString();
@@ -234,35 +150,36 @@ std::string Bank::helperGetAccountStatement(int limit) const {
 }
 
 std::string Bank::getAccountFullStatement() const {
-    return helperGetAccountStatement(currentCustomer->getCustomerAccount().getTransactionCount());
+    return helperGetAccountStatement(bankAccount->getTransactionCount());
 }
 
 std::string Bank::getAccountMiniStatement() const {
-    int transactionCount = currentCustomer->getCustomerAccount().getTransactionCount();
+    int transactionCount = bankAccount->getTransactionCount();
     int limit = (transactionCount > 10) ? 10 : transactionCount;
     return helperGetAccountStatement(limit);
 }
 
-void Bank::recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType) {
-    Transaction* newTransaction = new Transaction(amount, transactionType, customer->getCustomerAccount().getBalance());
-    customer->getCustomerAccount().addTransaction(newTransaction);
+void Bank::recordTransaction(Account* bankAccount, double amount, Transaction::TransactionType transactionType) {
+    Transaction* newTransaction = new Transaction(amount, transactionType, bankAccount->getBalance());
+    bankAccount->addTransaction(newTransaction);
 }
 
-void Bank::recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType, long destinationAccNo) {
-    Transaction* newTransaction = new Transaction(amount, transactionType, customer->getCustomerAccount().getBalance(), destinationAccNo);
-    customer->getCustomerAccount().addTransaction(newTransaction);
+void Bank::recordTransaction(Account* bankAccount, double amount, Transaction::TransactionType transactionType, long destinationAccNo) {
+    Transaction* newTransaction = new Transaction(amount, transactionType, bankAccount->getBalance(), destinationAccNo);
+    bankAccount->addTransaction(newTransaction);
 }
 
 Bank::~Bank() {
-    for (int userIndex = 0; userIndex < userCount; userIndex++) {
-        delete *(users + userIndex);
-    }
-    free(users);
+
 }
 
-std::string Bank::getAuthenticationError() const {
+User::UserType Bank::getUserType() const {
+    return userType;
+}
+
+std::string Bank::getErrorMessage() const {
     std::string authenticationError;
-    switch(currentAuthenticationErrorState) {
+    switch(authenticationErrorState) {
         case Authenticator::WRONG_PASSWORD: {
             authenticationError = PRINT_WRONG_PASSWORD;
             break;

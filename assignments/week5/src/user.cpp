@@ -2,10 +2,9 @@
 
 #include "user.h"
 
-User::User(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, UserType userType, Account::AccountType accountType) 
+User::User(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, UserType userType) 
     : userID{userID},
     userType{userType},
-    accountType{accountType},
     userPassword{userPassword},
     userLastName{userLastName},
     userFirstName{userFirstName} {
@@ -16,12 +15,8 @@ User::User() {
 
 }
 
-bool User::checkUserPassword(std::string attemptedPassword) const {
-    bool passwordMatch = false;
-    if (attemptedPassword == userPassword) {
-        passwordMatch = true;
-    }
-    return passwordMatch;
+std::string User::getPassword() const {
+    return userPassword;
 }
 
 std::string User::getUserID() const {

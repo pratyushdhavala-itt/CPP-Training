@@ -1,8 +1,6 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-#include "date_time.h"
-
 class Transaction {
 
 public:
@@ -19,10 +17,9 @@ private:
     double closingBalance;
     double transactionAmount;
     TransactionType transactionType;
-    DateTime timeStamp;
     double postTransactionBalance;
     long destinationAccountNo;
-    static const int BASE_TRANSACTION_ID = 1000;
+    static const int BASE_TRANSACTION_ID = 99063000;
 
 public:
 
@@ -31,6 +28,7 @@ public:
     Transaction(double transactionAmount, TransactionType transactionType, double postTransactionBalance);
     Transaction(double transactionAmount, TransactionType transactionType, double postTransactionBalance, long destinationAccountNo);
 
+    std::string getTimeStamp();
     std::string toString();
     std::string transactionTypeToString(TransactionType transactionType);
 };

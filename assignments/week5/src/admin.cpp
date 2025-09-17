@@ -11,8 +11,7 @@ Admin::Admin()
            PRINT_DEFAULT_ADMIN_LAST_NAME, 
            PRINT_DEFAULT_ADMIN_ID, 
            PRINT_DEFAULT_ADMIN_PASSWORD, 
-           ADMIN, 
-           Account::ADMIN_ACCOUNT), 
+            ADMIN), 
     employeeID{++adminCount + 1000} {}
 
 Admin::Admin(std::string userFirstName, 
@@ -22,9 +21,9 @@ Admin::Admin(std::string userFirstName,
     : User(userFirstName, 
         userLastName, 
         userID, 
-        userPassword, 
-        ADMIN, 
-        Account::ADMIN_ACCOUNT){}
+        userPassword,
+        ADMIN), 
+        employeeID{++adminCount + 1000}{}
 
 void Admin::showMenu() const {
     std::cout <<  PRINT_ADMIN_MENU << std::endl;

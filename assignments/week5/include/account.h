@@ -23,17 +23,19 @@ private:
     double balance;
     Transaction** transactions;
     int transactionCount;
+    AccountType accountType;
 
 public:
 
     Account();
 
-    double getBalance() const;
-    void setBalance(double balance);
-    long getAccountNumber() const;
-    void addTransaction(Transaction* transaction);
-    Transaction** getAllTransactions() const;
-    int getTransactionCount() const;
+    virtual double getBalance() const = 0;
+    virtual void setBalance(double balance) = 0;
+    virtual long getAccountNumber() const;
+    virtual void addTransaction(Transaction* transaction);
+    virtual Transaction** getAllTransactions() const;
+    virtual int getTransactionCount() const;
+    virtual AccountType getAccountType() const = 0;
 
     ~Account();
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 
 #include "transaction.h"
 #include "constants.h"
@@ -13,9 +14,28 @@ Transaction::Transaction(double transactionAmount, TransactionType transactionTy
     transactionType{transactionType}, 
     destinationAccountNo{destinationAccountNo} , 
     transactionID{BASE_TRANSACTION_ID + (++transactionCount)},
-    timeStamp{DateTime()},
     postTransactionBalance{postTransactionBalance} {
 
+}
+
+std::string Transaction::getTimeStamp() {
+
+    std::time_t timeNow = std::time(nullptr);
+    std::tm* localTime = std::localtime(&timeNow);
+
+    int day = localTime->tm_mday;
+    int month = localTime->tm_mon + 1;
+    int year = localTime->tm_year + 1900;
+    int hour = localTime->tm_hour;
+    int minute = localTime->tm_min;
+    int second = localTime->tm_sec;
+
+    return std::to_string(day) + PRINT_SLASH +
+           std::to_string(month) + PRINT_SLASH +
+           std::to_string(year) + PRINT_SPACE +
+           std::to_string(hour) + PRINT_COLON +
+           std::to_string(minute) + PRINT_COLON +
+           std::to_string(second);
 }
 
 std::string Transaction::toString() {
@@ -42,7 +62,7 @@ std::string Transaction::toString() {
     }
 
     return std::string(PRINT_LINE_SEPARATOR) + '\n' +
-        PRINT_OUTPUT_TRANSACTION_TIMESTAMP + timeStamp.toString() + '\n' +
+        PRINT_OUTPUT_TRANSACTION_TIMESTAMP + getTimeStamp() + '\n' +
         PRINT_OUTPUT_TRANSACTION_ID + std::to_string(transactionID) + '\n' + 
         PRINT_OUTPUT_TRANSACTION_TYPE + transactionTypeToString + '\n' +
         PRINT_OUTPUT_TRANSACTION_AMOUNT + std::to_string(transactionAmount) + '\n' +

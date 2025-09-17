@@ -40,3 +40,7 @@ Account::~Account() {
     }
     free(transactions);
 }
+
+Account::AccountType Account::getAccountType() const {
+    return accountType;
+}

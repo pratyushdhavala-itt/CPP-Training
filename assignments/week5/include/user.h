@@ -20,15 +20,14 @@ protected:
     std::string userFirstName;
     std::string userLastName;
     UserType userType;
-    Account::AccountType accountType;
 
 public:
 
     User();
-    User(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, UserType userType, Account::AccountType accountType);
+    User(std::string userFirstName, std::string userLastName, std::string userID, std::string userPassword, UserType userType);
 
     std::string getUserID() const;
-    bool checkUserPassword(std::string password) const;
+    std::string getPassword() const;
     UserType getUserType() const;
     std::string getUserFullName() const;
 

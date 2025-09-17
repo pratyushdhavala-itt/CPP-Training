@@ -33,14 +33,15 @@ int main() {
 
         bank.login(userID, attemptedPassword);
 
-        if (bank.getCurrentUserState() != Bank::AUTHENTICATED) {
-            std::cout << bank.getAuthenticationError() << std::endl;
+        if (bank.getAuthenticationErrorState() != Authenticator::NO_ERROR) {
+            
+            std::cout << bank.getErrorMessage() << std::endl;
             continue;
         }
         std::cout << bank.getLoginMessage() << std::endl;
-        if (bank.getCurrentUserType() == User::CUSTOMER) {
+        if (bank.getUserType() == User::CUSTOMER) {
             performCustomerBankOperation(bank);
-        } else if (bank.getCurrentUserType() == User::ADMIN) {
+        } else if (bank.getUserType() == User::ADMIN) {
             performAdminBankOperation(bank);
         }
     }   

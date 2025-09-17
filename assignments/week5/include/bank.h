@@ -16,10 +16,7 @@ public:
         SUCCESS = 1,
         FAILURE = 2,
     };
-    enum AuthenticationState {
-        AUTHENTICATED = 1,
-        UNAUTHENTICATED = 2,
-    };
+
 
 private:
 
@@ -27,21 +24,17 @@ private:
 
     int userCount;
     static const int MAX_AMOUNT = 99999999;
-    User** users;
     Authenticator authenticator;
-    User* currentUser;
-    Customer* currentCustomer;
     Admin* currentAdmin;
-    AuthenticationState currentAuthenticationState;
     TransactionState currentTransactionState;
-    Authenticator::AuthenticationErrorState currentAuthenticationErrorState;
+    Authenticator::AuthenticationErrorState authenticationErrorState;
+    Account* bankAccount;
+    User::UserType userType;
 
-    void setCustomerOrAdmin();
     int getUserIndex(std::string& userID);
-    Customer* findUserByAccountNo(long accountNumber);
     std::string helperGetAccountStatement(int limit) const;
-    void recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType);
-    void recordTransaction(Customer* customer, double amount, Transaction::TransactionType transactionType, long destinationAccNo);
+    void recordTransaction(Account* bankAccount, double amount, Transaction::TransactionType transactionType);
+    void recordTransaction(Account* bankAccount, double amount, Transaction::TransactionType transactionType, long destinationAccNo);
     
 public:
 
@@ -49,11 +42,10 @@ public:
 
     void login(std::string& userID, std::string& attemptedPassword);
     std::string getLoginMessage() const;
-    AuthenticationState getCurrentUserState() const;
-    std::string getAuthenticationError() const;
-    User::UserType getCurrentUserType() const;
+    std::string getErrorMessage() const;
+    Authenticator::AuthenticationErrorState getAuthenticationErrorState();
     TransactionState getCurrentTransactionState() const;
-    User* findUserById(std::string& userID) const;
+    User::UserType getUserType() const;
     void showMenu() const;
     void logout();
 
