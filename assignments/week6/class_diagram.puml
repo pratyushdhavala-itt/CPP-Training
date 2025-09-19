@@ -1,0 +1,40 @@
+@startuml Parser
+interface IParser {
+    +parseFile(path: string): void
+}
+
+class JSONParser {
+    +parseFile(path: string): void
+}
+
+class XMLParser {
+    +parseFile(path: string): void
+}
+
+class CSVParser {
+    +parseFile(path: string): void
+}
+
+class ParserFactory {
+    +detectFormat(path: string): Format
+    +createParser(f: Format): IParser
+}
+
+class ParseException {
+    +ParseException(msg: string, line: int = -1, col: int = -1)
+}
+
+enum Format {
+  JSON
+  XML
+  CSV
+  Unknown
+}
+
+IParser <|.. JSONParser
+IParser <|.. XMLParser
+IParser <|.. CSVParser
+
+ParserFactory --> IParser : creates
+
+@enduml
