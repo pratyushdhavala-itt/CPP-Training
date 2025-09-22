@@ -1,0 +1,15 @@
+2025-09-22 16:30:01,152 [INFO] [WebServer] - Server starting on port 8080.
+2025-09-22 16:30:01,155 [INFO] [ConfigLoader] - Configuration file 'server.conf' loaded successfully.
+2025-09-22 16:30:02,341 [INFO] [WebServer] - Server started successfully. Listening for connections.
+2025-09-22 16:31:15,050 [INFO] [AuthService] - User 'admin' attempting to log in from 192.168.1.10.
+2025-09-22 16:31:15,052 [ERROR] [AuthService] - Failed login attempt for user 'admin': Invalid password.
+2025-09-22 16:31:22,813 [INFO] [AuthService] - User 'guest' attempting to log in from 203.0.113.25.
+2025-09-22 16:31:23,115 [INFO] [AuthService] - User 'guest' logged in successfully.
+2025-09-22 16:31:23,450 [DEBUG] [Database] - Executing query: SELECT * FROM products WHERE category='electronics'.
+2025-09-22 16:32:05,678 [WARN] [APIService] - API endpoint /v1/data is deprecated. Use /v2/data instead.
+2025-09-22 16:32:05,991 [INFO] [RequestHandler] - GET request for /v1/data from 203.0.113.25 returned status 200.
+2025-09-22 16:33:10,234 [INFO] [RequestHandler] - GET request for /index.html from 198.51.100.5 returned status 200.
+2025-09-22 16:33:12,501 [INFO] [ImageService] - Resizing image 'banner.jpg' to 800x600.
+2025-09-22 16:34:02,745 [ERROR] [RequestHandler] - File not found for GET request /styles/main.css. Returning 404.
+2025-09-22 16:35:30,189 [DEBUG] [CacheManager] - Cache hit for key 'user:guest:session'.
+2025-09-22 16:36:00,002 [INFO] [WebServer] - Received shutdown signal. Gracefully closing connections.
