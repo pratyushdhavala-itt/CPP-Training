@@ -5,22 +5,14 @@
 #include "parser_exception.h"
 #include "constants.h"
 
-std::string Parser::readFile(const std::string& filePath) const {
+Parser::Parser(const std::string& filename) : filename{filename} {
 
-    std::ifstream file(filePath);
+    std::fstream file;
+    file.open(filename);
+
     if (!file) {
-        throw ParseException(PRINT_FILE_ERROR + filePath);
+        throw std::runtime_error("Could not open file: " + filename);
     }
-
-    std::string fileContent;
-    std::string currentLine;
-
-    while (std::getline(file, currentLine)) {
-        fileContent += currentLine + PRINT_NEXT_LINE; 
-    }
-    return fileContent;
 }
 
-std::string Parser::getParsedData() const {
-    return parsedData;
-}
+Parser::~Parser(){}

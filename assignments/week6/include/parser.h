@@ -2,12 +2,13 @@
 #define PARSER_H
 
 #include <iostream>
+#include <fstream>
 
 class Parser {
 
 protected:
 
-    std::string parsedData;
+    std::string filename;
 
 public:
 
@@ -18,11 +19,11 @@ public:
         UNKNOWN = 4,
     };
 
-    std::string readFile(const std::string& filePath) const;
-    std::string getParsedData() const;
-
-    virtual void parse(const std::string& content) = 0;
-
+    Parser(const std::string& filename);
+    virtual void parse() = 0;
+    virtual std::string getParsedData() = 0;
+    FileFormat fileFormat;
+    virtual ~Parser();
 };
 
 #endif

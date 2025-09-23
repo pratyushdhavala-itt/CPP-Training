@@ -1,24 +1,29 @@
 #include <iostream>
+#include <fstream>
 
 #include "parser.h"
 #include "parser_factory.h"
 #include "parser_exception.h"
 #include "constants.h"
+#include "input_output.h"
 
 int main() {
 
     while (true) {
-        std::string filePath;
+        std::string filename;
         std::cout << PRINT_ENTER_FILE;
-        std::getline(std::cin, filePath);
+        std::getline(std::cin, filename);
 
         Parser* parser = nullptr;
         try {
-            parser = ParserFactory::getParser(filePath);
+            parser = ParserFactory::getParser(RELATIVE_FILE_PATH + filename);
 
-            parser->parse(filePath);
+            parser->parse();
 
-            std::cout << parser->getParsedData() << std::endl;
+            parser->getParsedData();
+
+            performOperations(parser);
+
         } catch(const ParseException& p) {
             std::cout << PRINT_ERROR << p.what() << std::endl;
         }

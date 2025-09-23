@@ -8,13 +8,13 @@
 #include "constants.h"
 #include "parser_exception.h"
 
-Parser::FileFormat ParserFactory::detectFileFormat(const std::string& filePath) {
+Parser::FileFormat ParserFactory::detectFileFormat(const std::string& filename) {
     Parser::FileFormat fileFormat;
-    int extensionIndex = filePath.find_last_of('.');
+    int extensionIndex = filename.find_last_of('.');
     if (extensionIndex == std::string::npos) {
         return Parser::UNKNOWN;
     }
-    std::string extension = filePath.substr(extensionIndex + 1);
+    std::string extension = filename.substr(extensionIndex + 1);
     for (char& currentChar : extension) {
         currentChar = std::tolower(currentChar);
     }
@@ -30,28 +30,31 @@ Parser::FileFormat ParserFactory::detectFileFormat(const std::string& filePath) 
     return fileFormat;
 }
 
-Parser* ParserFactory::getParser(const std::string& filePath) {
+Parser* ParserFactory::getParser(const std::string& filename) {
     
     Parser::FileFormat fileFormat;  
     Parser* parser = nullptr;
 
-    fileFormat = detectFileFormat(filePath);
+    fileFormat = detectFileFormat(filename);
 
     switch(fileFormat) {
         case Parser::JSON:
-            parser = new JSONParser();
+            parser = new JSONParser(filename);
+            parser->fileFormat = Parser::JSON;
             break;
 
         case Parser::XML:
-            parser = new XMLParser();
+            parser = new XMLParser(filename);
+            parser->fileFormat = Parser::XML;
             break;
 
         case Parser::CSV:
-            parser = new CSVParser();
+            parser = new CSVParser(filename);
+            parser->fileFormat = Parser::CSV;
             break;
 
         default:
-            throw ParseException("Unsupported or unknown file format: " + filePath); 
+            throw ParseException("Unsupported or unknown file format: " + filename); 
     }
     return parser;
 }
