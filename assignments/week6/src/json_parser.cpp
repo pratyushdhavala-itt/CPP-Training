@@ -5,8 +5,9 @@
 
 #include "json_parser.h"
 #include "constants.h"
+#include "parser_exception.h"
 
-JSONParser::JSONParser(const std::string& filename) : Parser(filename), file(filename) {}
+JSONParser::JSONParser(const std::string& filename) : Parser(filename), file(filename), books{nullptr} {}
 
 void JSONParser::parse() {
 
@@ -16,14 +17,14 @@ void JSONParser::parse() {
     jsonDocument.ParseStream(stream);
 
     if (jsonDocument.HasParseError()) {
-        throw std::runtime_error("Error parsing JSON file");
+        throw ParseException(PRINT_JSON_EXCEPTION);
     }
 
-    if (!jsonDocument.HasMember("library") || !jsonDocument["library"].IsArray()) {
-        throw std::runtime_error("Invalid JSON: missing 'library' array");
+    if (!jsonDocument.HasMember(JSON::LIBRARY) || !jsonDocument[JSON::LIBRARY].IsArray()) {
+        throw ParseException(PRINT_JSON_EXCEPTION_TWO);
     }
 
-    const rapidjson::Value& libArray = jsonDocument["library"];
+    const rapidjson::Value& libArray = jsonDocument[JSON::LIBRARY];
     bookCount = libArray.Size();
 
     books = new Book[bookCount];
@@ -84,5 +85,9 @@ std::string JSONParser::getParsedData() {
 }
 
 JSONParser::~JSONParser() {
-    delete[] books;
+
+    if (books) {
+        delete[] books;
+    }
+    
 }

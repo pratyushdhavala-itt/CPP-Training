@@ -20,12 +20,18 @@ int main() {
 
             parser->parse();
 
-            parser->getParsedData();
+            std::cout << parser->getParsedData() << std::endl;
 
             performOperations(parser);
 
+            if (exitParser()) {
+                break;
+            }
+
         } catch(const ParseException& p) {
             std::cout << PRINT_ERROR << p.what() << std::endl;
-        }
+        } catch (const std::runtime_error r) {
+            std::cout << r.what() << std::endl;
+        } 
     }
 }

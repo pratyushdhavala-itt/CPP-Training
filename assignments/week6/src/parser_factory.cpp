@@ -37,24 +37,30 @@ Parser* ParserFactory::getParser(const std::string& filename) {
 
     fileFormat = detectFileFormat(filename);
 
-    switch(fileFormat) {
-        case Parser::JSON:
-            parser = new JSONParser(filename);
-            parser->fileFormat = Parser::JSON;
-            break;
+    try {
+        switch(fileFormat) {
+            case Parser::JSON:
+                parser = new JSONParser(filename);
+                parser->fileFormat = Parser::JSON;
+                break;
 
-        case Parser::XML:
-            parser = new XMLParser(filename);
-            parser->fileFormat = Parser::XML;
-            break;
+            case Parser::XML:
+                parser = new XMLParser(filename);
+                parser->fileFormat = Parser::XML;
+                break;
 
-        case Parser::CSV:
-            parser = new CSVParser(filename);
-            parser->fileFormat = Parser::CSV;
-            break;
+            case Parser::CSV:
+                parser = new CSVParser(filename);
+                parser->fileFormat = Parser::CSV;
+                break;
 
-        default:
-            throw ParseException("Unsupported or unknown file format: " + filename); 
+            default:
+                throw ParseException(PRINT_FACTORY_EXCEPTION + filename); 
+        }
+    } catch (const ParseException& p) {
+        throw;
+    } catch (const std::runtime_error& r) {
+        throw ParseException(r.what());
     }
     return parser;
 }

@@ -5,27 +5,33 @@
 #include "csv_parser.h"
 #include "person.h"
 #include "constants.h"
+#include "parser_exception.h"
 
-CSVParser::CSVParser(const std::string& filename) : Parser(filename), fileReader(filename), personCount{0} {
+using namespace csv;
+
+CSVParser::CSVParser(const std::string& filename) try : Parser(filename), fileReader(filename, csv::CSVFormat().variable_columns(csv::VariableColumnPolicy::THROW)), personCount{0}, persons{nullptr} {
 
     for (auto& row : csv::CSVReader(filename)) {
         personCount++;
     }
     persons = new Person[personCount];
     
-}   
+} catch (const std::runtime_error& r) {
+    throw ParseException(r.what());
+}
 
 void CSVParser::parse() {
 
     int personIndex = 0;
     for (csv::CSVRow& row : fileReader) {
-
+        if (row.size() != fileReader.get_col_names().size()) {
+            throw ParseException(PRINT_CSV_EXCEPTION + std::to_string(personIndex + 1));
+        }
         persons[personIndex].id = row[CSV::ID].get<int>();
-        persons[personIndex].name = row[CSV::NAME].get<>();
+        persons[personIndex].name = row[CSV::NAME].get<std::string>();
         persons[personIndex].age = row[CSV::AGE].get<int>();
-        persons[personIndex].city = row[CSV::CITY].get<>();
+        persons[personIndex].city = row[CSV::CITY].get<std::string>();
         persons[personIndex].department = row[CSV::DEPARTMENT].get<>();
-
         personIndex++;
     }
 }
@@ -83,5 +89,7 @@ std::string CSVParser::getByDepartment(const std::string& dept) {
 }
 
 CSVParser::~CSVParser() {
-    delete[] persons;
+    if (persons) {
+        delete[] persons;
+    }
 }

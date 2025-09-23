@@ -11,7 +11,7 @@ Parser::Parser(const std::string& filename) : filename{filename} {
     file.open(filename);
 
     if (!file) {
-        throw std::runtime_error("Could not open file: " + filename);
+        throw ParseException("Could not open file: " + filename);
     }
 }
 

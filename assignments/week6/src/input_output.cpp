@@ -5,6 +5,26 @@
 #include "xml_parser.h"
 #include "constants.h"
 
+enum Constants {
+    ONE = 1,
+    TWO = 2,
+    THREE = 3,
+    INPUT_LIMIT = 1000,
+};
+
+bool exitParser() {
+    std::cout << PRINT_CONTINUE_PROGRAM;
+    char choice;
+    std::cin >> choice;
+    std::cin.ignore(INPUT_LIMIT, '\n');
+    bool result = false;
+    if (!(choice == 'y' || choice == 'Y')) {
+        result = true;
+        std::cout << PRINT_EXIT_PROGRAM << std::endl;
+    }
+    return result;
+}
+
 int getValidOption(int minOption, int maxOption) {
     int option;
     while (true) {
@@ -13,12 +33,12 @@ int getValidOption(int minOption, int maxOption) {
         if (std::cin.fail() || option < minOption || option > maxOption) {
             std::cout << PRINT_INVALID_OPTION;
             std::cin.clear();
-            std::cin.ignore(1000, '\n');
+            std::cin.ignore(INPUT_LIMIT, '\n');
         } else {
             return option;
         }
     }
-    std::cin.ignore(1000, '\n');
+    std::cin.ignore(INPUT_LIMIT, '\n');
 }
 
 double getValidDouble() {
@@ -26,14 +46,14 @@ double getValidDouble() {
     while (true) {
         std::cin >> value;
         if (std::cin.fail()) {
-            std::cout << "Invalid input. Please enter a valid number.\n";
+            std::cout << PRINT_INVALID_INPUT;
             std::cin.clear();
-            std::cin.ignore(1000, '\n');
+            std::cin.ignore(INPUT_LIMIT, '\n');
         } else {
             return value;
         }
     }
-    std::cin.ignore(1000, '\n');
+    std::cin.ignore(INPUT_LIMIT, '\n');
 }
 
 void performOperations(Parser* parser) {
@@ -41,7 +61,7 @@ void performOperations(Parser* parser) {
     switch (fileFormat) {
         case Parser::JSON: {
             JSONParser* jsonParser = dynamic_cast<JSONParser*>(parser);
-            perfromJsonOperations(jsonParser);
+            performJsonOperations(jsonParser);
             break;
         }
         case Parser::XML: {
@@ -57,47 +77,47 @@ void performOperations(Parser* parser) {
     }
 }
 
-void perfromJsonOperations(JSONParser* jsonParser) {
+void performJsonOperations(JSONParser* jsonParser) {
     std::cout << PRINT_CHOOSE_JSON_OPERATION;
     int option = 0;
-    option = getValidOption(1, 2);
-    if (option == 1) {
-        std::cout << "Please enter the book genre: ";
+    option = getValidOption(ONE, TWO);
+    if (option == ONE) {
+        std::cout << PRINT_ENTER_BOOK_GENRE;
         std::string input;
-        std::cin.ignore(1000, '\n');
+        std::cin.ignore(INPUT_LIMIT, '\n');
         std::getline(std::cin, input);
         std::cout << jsonParser->getByGenre(input) << std::endl;
-    } else {
-        std::cout << "Please enter the rating: ";
+    } else if (option == TWO) {
+        std::cout << PRINT_ENTER_BOOK_RATING;
         double input = getValidDouble();
         std::cout << jsonParser->ratingFilter(input) << std::endl;
-    }
+    } 
 }
 
 void performXmlOperations(XMLParser* xmlParser) {
 
     int option = 0;
     std::cout << PRINT_CHOOSE_XML_OPERATION;
-    option = getValidOption(1, 3);
+    option = getValidOption(ONE, THREE);
     std::string input;
     switch(option) {
-        case 1:
-            std::cout << "Please enter the airline: ";
-            std::cin.ignore(1000, '\n');
+        case ONE:
+            std::cout << PRINT_ENTER_AIRLINE;
+            std::cin.ignore(INPUT_LIMIT, '\n');
             std::getline(std::cin, input);
             std::cout << xmlParser->getByAirline(input) << std::endl;
             break;
 
-        case 2:
-            std::cout << "Please enter the origin: ";
-            std::cin.ignore(1000, '\n');
+        case TWO:
+            std::cout << PRINT_ENTER_ORIGIN;
+            std::cin.ignore(INPUT_LIMIT, '\n');
             std::getline(std::cin, input);
             std::cout << xmlParser->getByOrigin(input) << std::endl;
             break;
         
-        case 3:
-            std::cout << "Please enter the destination: ";
-            std::cin.ignore(1000, '\n');
+        case THREE:
+            std::cout << PRINT_ENTER_DESTINATION;
+            std::cin.ignore(INPUT_LIMIT, '\n');
             std::getline(std::cin, input);
             std::cout << xmlParser->getByDestination(input) << std::endl;
             break;
@@ -108,25 +128,25 @@ void performCsvOperations(CSVParser* csvParser) {
 
     int option = 0;
     std::cout << PRINT_CHOOSE_CSV_OPERATION;
-    option = getValidOption(1, 3);
+    option = getValidOption(ONE, THREE);
     std::string input;
     switch(option) {
-        case 1: {
-            std::cout << "Please enter the ID: ";
+        case ONE: {
+            std::cout << PRINT_ENTER_ID;
             int intInput = getValidInt();
             std::cout << csvParser->getById(intInput) << std::endl;
             break;
         }
-        case 2: {
-            std::cout << "Please enter the city: ";
-            std::cin.ignore(1000, '\n');
+        case TWO: {
+            std::cout << PRINT_ENTER_CITY;
+            std::cin.ignore(INPUT_LIMIT, '\n');
             std::getline(std::cin, input);
             std::cout << csvParser->getByCity(input) << std::endl;
             break;
         }
-        case 3: {
-            std::cout << "Please enter the department: ";
-            std::cin.ignore(1000, '\n');
+        case THREE: {
+            std::cout << PRINT_ENTER_DEPT;
+            std::cin.ignore(INPUT_LIMIT, '\n');
             std::getline(std::cin, input);
             std::cout << csvParser->getByDepartment(input) << std::endl;
             break;
@@ -140,9 +160,9 @@ int getValidInt() {
         std::cin >> value;
 
         if (std::cin.fail()) {
-            std::cout << "Invalid input. Please enter a valid integer.\n";
+            std::cout << PRINT_INVALID_INPUT;
             std::cin.clear(); 
-            std::cin.ignore(1000, '\n'); 
+            std::cin.ignore(INPUT_LIMIT, '\n'); 
         } else {
             return value;
         }

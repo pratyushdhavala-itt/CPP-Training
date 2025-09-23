@@ -4,10 +4,11 @@
 #include "pugiconfig.hpp"
 #include "xml_parser.h"
 #include "constants.h"
+#include "parser_exception.h"
 
 using namespace std;
 
-XMLParser::XMLParser(const std::string& filename) : Parser(filename) {}
+XMLParser::XMLParser(const std::string& filename) : Parser(filename), flights{nullptr} {}
 
 void XMLParser::parse() {
 
@@ -15,13 +16,13 @@ void XMLParser::parse() {
     pugi::xml_parse_result result = document.load_file(filename.c_str());
 
     if (!result) {
-        std::cerr << "XML parsed with errors: " << result.description() << std::endl;
+        throw ParseException(PRINT_XML_EXCEPTION + std::string(result.description()));
     }
 
-    pugi::xml_node flightsNode = document.child("Flights");
+    pugi::xml_node flightsNode = document.child(XML::FLIGHTS);
 
     flightCount = 0;
-    for (pugi::xml_node flight : flightsNode.children("Flight")) {
+    for (pugi::xml_node flight : flightsNode.children(XML::FLIGHT)) {
         flightCount++;
     }
 
@@ -97,5 +98,9 @@ std::string XMLParser::getByAirline(const std::string& airline) {
 }
 
 XMLParser::~XMLParser() {
-    delete[] flights;
+
+    if (flights) {
+        delete[] flights;
+    }
+    
 }
