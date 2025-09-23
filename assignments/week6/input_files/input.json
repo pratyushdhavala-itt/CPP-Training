@@ -1,0 +1,124 @@
+{
+  "library": [
+    {
+      "id": 1,
+      "title": "The Silent Patient",
+      "author": "Alex Michaelides",
+      "genre": "Thriller",
+      "year": 2019,
+      "rating": 4.1
+    },
+    {
+      "id": 2,
+      "title": "Educated",
+      "author": "Tara Westover",
+      "genre": "Memoir",
+      "year": 2018,
+      "rating": 4.5
+    },
+    {
+      "id": 3,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "genre": "Self-Help",
+      "year": 2018,
+      "rating": 4.7
+    },
+    {
+      "id": 4,
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "genre": "Science Fiction",
+      "year": 1965,
+      "rating": 4.6
+    },
+    {
+      "id": 5,
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "genre": "History",
+      "year": 2011,
+      "rating": 4.4
+    },
+    {
+      "id": 6,
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "genre": "Fantasy",
+      "year": 1937,
+      "rating": 4.8
+    },
+    {
+      "id": 7,
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "genre": "Classic",
+      "year": 1951,
+      "rating": 3.9
+    },
+    {
+      "id": 8,
+      "title": "Thinking, Fast and Slow",
+      "author": "Daniel Kahneman",
+      "genre": "Psychology",
+      "year": 2011,
+      "rating": 4.2
+    },
+    {
+      "id": 9,
+      "title": "1984",
+      "author": "George Orwell",
+      "genre": "Dystopian",
+      "year": 1949,
+      "rating": 4.7
+    },
+    {
+      "id": 10,
+      "title": "Becoming",
+      "author": "Michelle Obama",
+      "genre": "Autobiography",
+      "year": 2018,
+      "rating": 4.6
+    },
+    {
+      "id": 11,
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "genre": "Fiction",
+      "year": 1988,
+      "rating": 4.3
+    },
+    {
+      "id": 12,
+      "title": "Brave New World",
+      "author": "Aldous Huxley",
+      "genre": "Dystopian",
+      "year": 1932,
+      "rating": 4.1
+    },
+    {
+      "id": 13,
+      "title": "Meditations",
+      "author": "Marcus Aurelius",
+      "genre": "Philosophy",
+      "year": 180,
+      "rating": 4.5
+    },
+    {
+      "id": 14,
+      "title": "The Pragmatic Programmer",
+      "author": "Andrew Hunt",
+      "genre": "Programming",
+      "year": 1999,
+      "rating": 4.8
+    },
+    {
+      "id": 15,
+      "title": "Clean Code",
+      "author": "Robert C. Martin",
+      "genre": "Programming",
+      "year": 2008,
+      "rating": 4.7
+    }
+  ]
+}

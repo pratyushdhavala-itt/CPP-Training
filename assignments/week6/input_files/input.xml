@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flights>
+    <Flight id="AI101">
+        <Airline>Air India</Airline>
+        <Origin>Delhi</Origin>
+        <Destination>New York</Destination>
+        <Departure>2025-09-24T05:30:00</Departure>
+        <Arrival>2025-09-24T13:15:00</Arrival>
+        <Duration>15h 45m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="EK202">
+        <Airline>Emirates</Airline>
+        <Origin>Dubai</Origin>
+        <Destination>London</Destination>
+        <Departure>2025-09-24T09:00:00</Departure>
+        <Arrival>2025-09-24T13:30:00</Arrival>
+        <Duration>7h 30m</Duration>
+        <Status>Delayed</Status>
+    </Flight>
+    <Flight id="BA305">
+        <Airline>British Airways</Airline>
+        <Origin>London</Origin>
+        <Destination>Paris</Destination>
+        <Departure>2025-09-24T11:00:00</Departure>
+        <Arrival>2025-09-24T12:15:00</Arrival>
+        <Duration>1h 15m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="LH760">
+        <Airline>Lufthansa</Airline>
+        <Origin>Frankfurt</Origin>
+        <Destination>Delhi</Destination>
+        <Departure>2025-09-24T13:20:00</Departure>
+        <Arrival>2025-09-25T01:05:00</Arrival>
+        <Duration>7h 45m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="SQ403">
+        <Airline>Singapore Airlines</Airline>
+        <Origin>Singapore</Origin>
+        <Destination>Delhi</Destination>
+        <Departure>2025-09-24T20:00:00</Departure>
+        <Arrival>2025-09-24T23:00:00</Arrival>
+        <Duration>5h 00m</Duration>
+        <Status>Cancelled</Status>
+    </Flight>
+    <Flight id="QF12">
+        <Airline>Qantas</Airline>
+        <Origin>Sydney</Origin>
+        <Destination>Los Angeles</Destination>
+        <Departure>2025-09-24T22:00:00</Departure>
+        <Arrival>2025-09-24T17:00:00</Arrival>
+        <Duration>13h 00m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="AA77">
+        <Airline>American Airlines</Airline>
+        <Origin>Washington DC</Origin>
+        <Destination>Paris</Destination>
+        <Departure>2025-09-24T19:00:00</Departure>
+        <Arrival>2025-09-25T07:45:00</Arrival>
+        <Duration>8h 45m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="CX709">
+        <Airline>Cathay Pacific</Airline>
+        <Origin>Hong Kong</Origin>
+        <Destination>Bangkok</Destination>
+        <Departure>2025-09-24T15:30:00</Departure>
+        <Arrival>2025-09-24T17:30:00</Arrival>
+        <Duration>2h 00m</Duration>
+        <Status>Delayed</Status>
+    </Flight>
+    <Flight id="AF227">
+        <Airline>Air France</Airline>
+        <Origin>Paris</Origin>
+        <Destination>Bangalore</Destination>
+        <Departure>2025-09-24T12:00:00</Departure>
+        <Arrival>2025-09-25T01:10:00</Arrival>
+        <Duration>9h 10m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="JL32">
+        <Airline>Japan Airlines</Airline>
+        <Origin>Tokyo</Origin>
+        <Destination>Singapore</Destination>
+        <Departure>2025-09-24T08:15:00</Departure>
+        <Arrival>2025-09-24T14:45:00</Arrival>
+        <Duration>6h 30m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="AI202">
+        <Airline>Air India</Airline>
+        <Origin>Mumbai</Origin>
+        <Destination>Dubai</Destination>
+        <Departure>2025-09-24T21:45:00</Departure>
+        <Arrival>2025-09-24T23:45:00</Arrival>
+        <Duration>2h 00m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="UA839">
+        <Airline>United Airlines</Airline>
+        <Origin>San Francisco</Origin>
+        <Destination>Sydney</Destination>
+        <Departure>2025-09-24T23:00:00</Departure>
+        <Arrival>2025-09-26T07:00:00</Arrival>
+        <Duration>15h 00m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="AI560">
+        <Airline>Air India</Airline>
+        <Origin>Hyderabad</Origin>
+        <Destination>Bangalore</Destination>
+        <Departure>2025-09-24T06:30:00</Departure>
+        <Arrival>2025-09-24T07:30:00</Arrival>
+        <Duration>1h 00m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+    <Flight id="6E205">
+        <Airline>IndiGo</Airline>
+        <Origin>Pune</Origin>
+        <Destination>Delhi</Destination>
+        <Departure>2025-09-24T18:20:00</Departure>
+        <Arrival>2025-09-24T20:20:00</Arrival>
+        <Duration>2h 00m</Duration>
+        <Status>Delayed</Status>
+    </Flight>
+    <Flight id="VJ903">
+        <Airline>VietJet Air</Airline>
+        <Origin>Ho Chi Minh City</Origin>
+        <Destination>Hanoi</Destination>
+        <Departure>2025-09-24T10:00:00</Departure>
+        <Arrival>2025-09-24T11:50:00</Arrival>
+        <Duration>1h 50m</Duration>
+        <Status>On Time</Status>
+    </Flight>
+</Flights>

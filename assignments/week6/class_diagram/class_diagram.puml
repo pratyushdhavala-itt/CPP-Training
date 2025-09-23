@@ -1,0 +1,47 @@
+@startuml Parser
+interface Parser {
+
+    -parsedData: string
+    #readFile(filePath: string): string
+    +getParsedData(): string
+    +parse(string): void
+}
+
+class JSONParser {
+    +parse(string): void
+}
+
+class XMLParser {
+    +parse(string): void
+}
+
+class CSVParser {
+    +parse(string): void
+}
+
+class ParserFactory {
+    +detectFormat(path: string): Format
+    +createParser(f: Format): IParser
+}
+
+class ParseException {
+    +ParseException(msg: string)
+}
+
+enum Format {
+  JSON
+  XML
+  CSV
+  Unknown
+}
+
+Parser <|.. JSONParser
+Parser <|.. XMLParser
+Parser <|.. CSVParser
+
+ParserFactory --> Parser 
+
+Parser ..> ParseException
+Parser --> Format
+
+@enduml
