@@ -1,8 +1,0 @@
-{
-  "person": {
-    "name": "Alice",
-    "skills": ["C++", "Python"],
-    "address": { "city": "Bangalore", "zip": 560001 }
-  }
-}
-
