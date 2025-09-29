@@ -12,6 +12,7 @@ int main() {
 
     Authenticator auth;
     Bank& bank = Bank::getBankInstance(&auth);
+    InputValidation inputValidation;
 
     while (true) {
 
@@ -20,14 +21,14 @@ int main() {
 
         std::cout << PRINT_ENTER_USER_ID;
         std::getline(std::cin, userID);
-        if (!InputValidation::isValidUserID(userID)) {
+        if (!inputValidation.isValidUserID(userID)) {
             std::cout << PRINT_INVALID_USER_FORMAT << std::endl;
             continue;
         }
 
         std::cout << PRINT_ENTER_PASSWORD;
         std::getline(std::cin, attemptedPassword);
-        if (!InputValidation::isValidPassword(attemptedPassword)) {
+        if (!inputValidation.isValidPassword(attemptedPassword)) {
             std::cout << PRINT_INVALID_PASSWORD_FORMAT << std::endl;
             continue;
         }
@@ -41,9 +42,9 @@ int main() {
         }
         std::cout << bank.getLoginMessage() << std::endl;
         if (bank.getUserType() == User::CUSTOMER) {
-            performCustomerBankOperation(bank);
+            performCustomerBankOperation(bank, inputValidation);
         } else if (bank.getUserType() == User::ADMIN) {
-            performAdminBankOperation(bank);
+            performAdminBankOperation(bank, inputValidation);
         }
     }   
 }

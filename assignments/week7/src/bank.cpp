@@ -119,6 +119,7 @@ void Bank::withdraw(double amount) {
 
     double currentBalance = getCustomerBalance();
     if (amount > currentBalance) {
+        std::cout << PRINT_INSUFFICIENT_BALANCE << std::endl;
         setCurrentTransactionState(FAILURE);
         return;
     }
@@ -135,16 +136,19 @@ std::string Bank::getLoginMessage() const {
 void Bank::transfer(long receiverAccountNumber, double amount) {
 
     double senderCurrentBalance = getCustomerBalance();
-
     if (amount > MAX_AMOUNT || amount > senderCurrentBalance) {
+        std::cout << PRINT_INSUFFICIENT_BALANCE << std::endl;
+        setCurrentTransactionState(FAILURE);
+        return;
+    }
+    if (receiverAccountNumber == getCustomerAccount()->getAccountNumber()) {
+        std::cout << PRINT_NO_SELF_TRANSFER << std::endl;
         setCurrentTransactionState(FAILURE);
         return;
     }
 
     Account* receiverAccount = getAccountByNumber(receiverAccountNumber);
-
     if (receiverAccount) {
-
         double receiverCurrentBalance = receiverAccount->getBalance();
         double receiverNewBalance = receiverCurrentBalance + amount;
         receiverAccount->setBalance(receiverNewBalance);
@@ -159,7 +163,6 @@ void Bank::transfer(long receiverAccountNumber, double amount) {
         
         recordTransaction(senderAccountNumber, receiverAccount, amount, Transaction::RECD_TRANSFER_TRANSACTION, receiverNewBalance);
         recordTransaction(receiverAccountNumber, getCustomerAccount(), amount, Transaction::SENT_TRANSFER_TRANSACTION, senderNewBalance);
-    
     } else {
         std::cout << PRINT_DEST_ACC_DOES_NOT_EXIST << std::endl; 
         setCurrentTransactionState(FAILURE);
@@ -288,6 +291,8 @@ void Bank::deleteUser(User::UserDetails& userDetails) {
         free(allUsers);
         allUsers = nullptr;
     }
+
+    setCurrentTransactionState(SUCCESS);
 }
 
 int Bank::getUserIndex(std::string& userID) {

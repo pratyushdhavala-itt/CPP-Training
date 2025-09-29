@@ -79,6 +79,8 @@ inline const char* PRINT_OUTPUT_TRANSACTION_AMOUNT = "Amount: ";
 inline const char* PRINT_OUTPUT_TRANSACTION_BALANCE = "Balance: ";
 inline const char* PRINT_LOGIN_WELCOME = "\nWelcome ";
 inline const char* PRINT_NEXT_LINE = "\n";
-inline const char* PRINT_NO_CUSTOMER = "No customers yet! ! !";
+inline const char* PRINT_NO_CUSTOMER = "\nNo customers yet! ! !";
+inline const char* PRINT_INSUFFICIENT_BALANCE = "\nInsufficient balance";
+inline const char* PRINT_NO_SELF_TRANSFER = "\nCannot transfer to self";
 
 #endif

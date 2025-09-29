@@ -49,6 +49,9 @@ TEST_P(BankWithdrawUnitTest, GivenInitialBalance_WhenWithdrawPerformed_ThenBalan
     if (testCase.expectedState == Bank::SUCCESS) {
         EXPECT_CALL(*mockAccount, setBalance(testCase.expectedBalance))
             .Times(1);
+
+        EXPECT_CALL(*mockAccount, addTransaction(testing::_))
+            .Times(1);
     } else {
         EXPECT_CALL(*mockAccount, setBalance(testing::_)).Times(0);
     }

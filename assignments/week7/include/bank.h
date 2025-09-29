@@ -19,7 +19,7 @@ public:
     };
 
 
-private:
+protected:
 
     Bank(Authenticator* auth);
 
@@ -30,10 +30,6 @@ private:
     TransactionState currentTransactionState;
     Authenticator::AuthenticationErrorState authenticationErrorState;
     User::UserType userType;
-
-    virtual std::string helperGetAccountStatement(int limit) const;
-    virtual void recordTransaction(double amount, Transaction::TransactionType transactionType, double newBalance);
-    virtual void recordTransaction(long otherAccNo, Account* currentTransactionAccount, double amount, Transaction::TransactionType transactionType, double newBalance);
 
 public:
     static const int MAX_AMOUNT = 99999999;
@@ -49,6 +45,9 @@ public:
     virtual TransactionState getCurrentTransactionState() const;
     virtual void setCurrentTransactionState(TransactionState currentTransactionState);
     virtual User::UserType getUserType() const;
+    virtual std::string helperGetAccountStatement(int limit) const;
+    virtual void recordTransaction(double amount, Transaction::TransactionType transactionType, double newBalance);
+    virtual void recordTransaction(long otherAccNo, Account* currentTransactionAccount, double amount, Transaction::TransactionType transactionType, double newBalance);
     virtual void showMenu() const;
     virtual void setCurrentUser(User* user);
     virtual User* getCurrentUser();

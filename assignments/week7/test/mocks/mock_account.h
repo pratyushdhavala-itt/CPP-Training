@@ -9,4 +9,5 @@ public:
     MOCK_METHOD(long, getAccountNumber, (), (const, override));
     MOCK_METHOD(int, getTransactionCount, (), (const, override));
     MOCK_METHOD(Transaction**, getAllTransactions, (), (const, override));
+    MOCK_METHOD(void, addTransaction, (Transaction* t), (override));
 };

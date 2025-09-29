@@ -4,7 +4,6 @@
 #include "customer.h"
 #include "mock_account.h"
 #include "constants.h"
-
 class BankGetterSetterTest : public ::testing::Test {
 protected:
     Bank* bank;
@@ -15,17 +14,26 @@ protected:
     void SetUp() override {
         bank = &Bank::getBankInstance(&auth);
         mockAccount = new MockAccount();
-
         newUserDetails = {"pratyushd", "1234", "Pratyush", "Dhavala"};
-
     }
 
     void TearDown() override {
-
         bank->reset(); 
         delete mockAccount;
     }
 };
+
+TEST_F(BankGetterSetterTest,
+       GivenTransaction_WhenRecordTransactionCalled_ThenTransactionIsAddedToAccount) {
+
+    User* customer = new Customer(newUserDetails);
+    customer->createAccount(mockAccount);
+    bank->setCurrentUser(customer);
+
+    EXPECT_CALL(*mockAccount, addTransaction(testing::_));
+
+    bank->recordTransaction(1000, Transaction::DEPOSIT_TRANSACTION, 2000);
+}
 
 TEST_F(BankGetterSetterTest, 
        GivenErrorState_WhenGetAuthenticationErrorStateCalled_ThenCorrectStateIsReturned) {

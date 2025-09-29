@@ -51,6 +51,10 @@ TEST_P(BankDepositUnitTest, GivenInitialBalance_WhenDepositPerformed_ThenBalance
 
         EXPECT_CALL(*mockAccount, setBalance(testCase.expectedBalance))
             .Times(1);
+
+        EXPECT_CALL(*mockAccount, addTransaction(testing::_))
+            .Times(1);
+
     } else if (testCase.expectedState == Bank::FAILURE) {
 
         EXPECT_CALL(*mockAccount, getBalance())

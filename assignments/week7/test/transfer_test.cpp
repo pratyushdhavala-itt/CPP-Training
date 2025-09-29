@@ -13,6 +13,7 @@ struct TransferTestCase {
     double expectedReceiverBalance;
     Bank::TransactionState expectedState;
     bool receiverExists;
+    bool selfTransfer;
 };
 
 class BankTransferUnitTest : public ::testing::TestWithParam<TransferTestCase> {
@@ -30,11 +31,8 @@ protected:
         User::UserDetails senderDetails{"pratyushd", "1234", "Pratyush", "Dhavala"};
         senderCustomer = new Customer(senderDetails);
         senderMockAccount = new MockAccount();
-        ON_CALL(*senderMockAccount, getAccountNumber()).WillByDefault(testing::Return(1001));
-
         senderCustomer->createAccount(senderMockAccount);
         bank->addUser(senderCustomer);
-
         bank->setCurrentUser(senderCustomer);
 
         if (GetParam().receiverExists) {
@@ -42,8 +40,6 @@ protected:
             User::UserDetails receiverDetails{"praneyd", "1234", "Praney", "Dhavala"};
             receiverCustomer = new Customer(receiverDetails);
             receiverMockAccount = new MockAccount();
-            ON_CALL(*receiverMockAccount, getAccountNumber()).WillByDefault(testing::Return(1002));
-
             receiverCustomer->createAccount(receiverMockAccount);
             bank->addUser(receiverCustomer);
         } else {
@@ -70,6 +66,14 @@ TEST_P(BankTransferUnitTest,
        GivenSenderAndReceiver_WhenTransferPerformed_ThenBalancesAndStateAreCorrect) {
     
     TransferTestCase testCase = GetParam();
+    
+    if (GetParam().selfTransfer && GetParam().receiverExists) {
+        EXPECT_CALL(*receiverMockAccount, getAccountNumber()).WillRepeatedly(testing::Return(1001));
+    } else if (GetParam().receiverExists) {
+        EXPECT_CALL(*receiverMockAccount, getAccountNumber()).WillRepeatedly(testing::Return(1002));
+    }
+
+    EXPECT_CALL(*senderMockAccount, getAccountNumber()).WillRepeatedly(testing::Return(1001));
 
     EXPECT_CALL(*senderMockAccount, getBalance())
         .WillOnce(testing::Return(testCase.senderInitialBalance));
@@ -81,9 +85,13 @@ TEST_P(BankTransferUnitTest,
             .Times(1);
         EXPECT_CALL(*senderMockAccount, setBalance(testCase.expectedSenderBalance))
             .Times(1);
+        EXPECT_CALL(*senderMockAccount, addTransaction(testing::_))
+            .Times(1);
+        EXPECT_CALL(*receiverMockAccount, addTransaction(testing::_))
+            .Times(1);
+            
     } else {
-        // EXPECT_CALL(*receiverMockAccount, getBalance()).Times(0);
-        // EXPECT_CALL(*receiverMockAccount, setBalance(testing::_)).Times(0);
+
         EXPECT_CALL(*senderMockAccount, setBalance(testing::_)).Times(0);
     }
 
@@ -92,14 +100,14 @@ TEST_P(BankTransferUnitTest,
     EXPECT_EQ(bank->getCurrentTransactionState(), testCase.expectedState);
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    TransferScenarios,
-    BankTransferUnitTest,
+INSTANTIATE_TEST_SUITE_P(TransferScenarios, BankTransferUnitTest,
     ::testing::Values(
-        TransferTestCase{500, 10000, 8000, 9500, 8500, Bank::SUCCESS, true},           // normal transfer
-        TransferTestCase{10000, 10000, 2000, 0, 12000, Bank::SUCCESS, true},           // transfer full balance
-        TransferTestCase{15000, 10000, 5000, 10000, 5000, Bank::FAILURE, true},        // insufficient funds
-        TransferTestCase{Bank::MAX_AMOUNT + 1, 20000, 5000, 20000, 5000, Bank::FAILURE, true}, // exceeds max
-        TransferTestCase{500, 10000, 5000, 10000, 5000, Bank::FAILURE, false}          // receiver doesn't exist
+        TransferTestCase{500, 10000, 8000, 9500, 8500, Bank::SUCCESS, true, false},           
+        TransferTestCase{10000, 10000, 2000, 0, 12000, Bank::SUCCESS, true, false},           
+        TransferTestCase{15000, 10000, 5000, 10000, 5000, Bank::FAILURE, true, false},        
+        TransferTestCase{Bank::MAX_AMOUNT + 1, 20000, 5000, 20000, 5000, Bank::FAILURE, true, false}, 
+        TransferTestCase{500, 10000, 5000, 10000, 5000, Bank::FAILURE, false, false},
+        TransferTestCase{500, 10000, 10000, 10000, 10000, Bank::FAILURE, true, true}
+    
     )
 );

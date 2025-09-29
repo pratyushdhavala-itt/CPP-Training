@@ -46,6 +46,7 @@ bool InputValidation::isValidAmount(const char* input) {
     }
     if (input == nullptr || *input == '\0') {
         result = false;
+        return result;
     }
     for(int index = 0; input[index] != '\0'; index++) {
         char c = input[index];
@@ -80,6 +81,7 @@ bool InputValidation::isValidAccountNumber(const char* accountNumber) {
 
     if (accountNumber == nullptr || *accountNumber == '\0') {
         result = false;
+        return result;
     }
     if (strlen(accountNumber) != ACCOUNT_NO_LENGTH) {
         result = false;
@@ -120,6 +122,7 @@ bool InputValidation::isValidMenuChoice(const char* input) {
     bool result = true;
     if (input == nullptr || *input == '\0') {
         result = false;
+        return result;
     }
     if (strlen(input) != INPUT_MENU_LENGTH) {
         result = false;

@@ -7,13 +7,13 @@ class InputValidation {
 
 public:
 
-    static bool isValidUserID(const std::string& userID);
-    static bool isValidPassword(const std::string& password);
-    static bool isValidAmount(const char* amount);
-    static bool isInputTooLong();
-    static bool isValidAccountNumber(const char* accountNumber);
-    static bool isValidName(const std::string& userName);
-    static bool isValidMenuChoice(const char* input);
+    virtual bool isValidUserID(const std::string& userID);
+    virtual bool isValidPassword(const std::string& password);
+    virtual bool isValidAmount(const char* amount);
+    virtual bool isInputTooLong();
+    virtual bool isValidAccountNumber(const char* accountNumber);
+    virtual bool isValidName(const std::string& userName);
+    virtual bool isValidMenuChoice(const char* input);
 };
 
 #endif
