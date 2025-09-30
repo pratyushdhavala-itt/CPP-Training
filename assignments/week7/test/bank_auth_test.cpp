@@ -5,7 +5,6 @@
 #include "customer.h"
 #include "constants.h"
 
-
 class BankAuthTest : public ::testing::Test {
 protected:
 
@@ -28,8 +27,7 @@ protected:
     }
 };
 
-TEST_F(BankAuthTest, 
-       GivenValidUserCredentials_WhenLoginCalled_ThenCurrentUserIsSetAndNoError) {
+TEST_F(BankAuthTest, GivenValidUserCredentials_WhenLoginCalled_ThenCurrentUserIsSetAndNoError) {
 
     EXPECT_CALL(mockAuth, authenticate(testing::_, testing::_))
         .WillOnce(testing::Return(Authenticator::AUTHENTICATED));
@@ -45,8 +43,7 @@ TEST_F(BankAuthTest,
     EXPECT_STREQ(bank->getErrorMessage().c_str(), "");
 }
 
-TEST_F(BankAuthTest,
-       GivenValidUserWithWrongPassword_WhenLoginCalled_ThenAuthenticationFailsAndErrorIsWrongPassword) {
+TEST_F(BankAuthTest, GivenValidUserWithWrongPassword_WhenLoginCalled_ThenAuthenticationFailsAndErrorIsWrongPassword) {
 
     EXPECT_CALL(mockAuth, authenticate(testing::_, testing::_))
         .WillOnce(testing::Return(Authenticator::UNAUTHENTICATED));
@@ -62,8 +59,7 @@ TEST_F(BankAuthTest,
     EXPECT_STREQ(bank->getErrorMessage().c_str(), PRINT_WRONG_PASSWORD);
 }
 
-TEST_F(BankAuthTest,
-       GivenNonExistentUser_WhenLoginCalled_ThenAuthenticationFailsAndErrorIsWrongUserName) {
+TEST_F(BankAuthTest, GivenNonExistentUser_WhenLoginCalled_ThenAuthenticationFailsAndErrorIsWrongUserName) {
 
     std::string attemptedId = "praneyd", attemptedPassword = "my_password";
 
@@ -74,8 +70,7 @@ TEST_F(BankAuthTest,
     EXPECT_STREQ(bank->getErrorMessage().c_str(), PRINT_WRONG_USER_NAME);
 }
 
-TEST_F(BankAuthTest,
-       GivenAuthenticatedUser_WhenLogoutCalled_ThenAuthenticationResetsAndCurrentUserIsCleared) {
+TEST_F(BankAuthTest, GivenAuthenticatedUser_WhenLogoutCalled_ThenAuthenticationResetsAndCurrentUserIsCleared) {
 
     EXPECT_CALL(mockAuth, authenticate(testing::_, testing::_))
         .WillOnce(testing::Return(Authenticator::AUTHENTICATED));
@@ -94,8 +89,7 @@ TEST_F(BankAuthTest,
     EXPECT_EQ(bank->getAuthenticationErrorState(), Authenticator::NO_ERROR);
 }
 
-TEST_F(BankAuthTest,
-       GivenAuthenticatedUser_WhenGetLoginMessageCalled_ThenCorrectWelcomeMessageIsReturned) {
+TEST_F(BankAuthTest, GivenAuthenticatedUser_WhenGetLoginMessageCalled_ThenCorrectWelcomeMessageIsReturned) {
 
     EXPECT_CALL(mockAuth, authenticate(testing::_, testing::_))
         .WillOnce(testing::Return(Authenticator::AUTHENTICATED));

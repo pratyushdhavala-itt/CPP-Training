@@ -82,5 +82,6 @@ inline const char* PRINT_NEXT_LINE = "\n";
 inline const char* PRINT_NO_CUSTOMER = "\nNo customers yet! ! !";
 inline const char* PRINT_INSUFFICIENT_BALANCE = "\nInsufficient balance";
 inline const char* PRINT_NO_SELF_TRANSFER = "\nCannot transfer to self";
+inline const char* PRINT_CREATE_USER_WITH_ACCOUNT_NO = "Created User with Account Number: ";
 
 #endif

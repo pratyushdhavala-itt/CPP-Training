@@ -256,7 +256,9 @@ User* Bank::createUser(User::UserDetails& userDetails, Account::AccountType acco
             newAccount = new CurrentAccount();
         }
         newUser->createAccount(newAccount);
+        std::cout << PRINT_CREATE_USER_WITH_ACCOUNT_NO << newAccount->getAccountNumber();
     }
+    
     return newUser;
 }
 

@@ -75,7 +75,6 @@ INSTANTIATE_TEST_SUITE_P(
         DepositTestCase{500, 10000, 10500, Bank::SUCCESS},                
         DepositTestCase{Bank::MAX_AMOUNT, 10000, 10000 + Bank::MAX_AMOUNT, Bank::SUCCESS}, 
         DepositTestCase{Bank::MAX_AMOUNT + 1, 10000, 10000, Bank::FAILURE},
-        DepositTestCase{0, 10000, 10000, Bank::SUCCESS}              
-        //DepositTestCase{-100, 10000, 9900, Bank::SUCCESS}                  
+        DepositTestCase{0, 10000, 10000, Bank::SUCCESS}                            
     )
 );

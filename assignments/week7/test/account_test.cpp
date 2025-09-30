@@ -5,8 +5,7 @@
 #include "user.h"
 #include "customer.h"
 
-TEST(AccountTest,
-     GivenNewSavingsAccount_WhenConstructed_ThenInitialBalanceAndUniqueAccountNumberAreSet) {
+TEST(AccountTest, GivenNewAccount_WhenConstructed_ThenInitialBalanceAndAccountNumberAreSet) {
     
     Account* bankAccount = new SavingsAccount();
 
@@ -14,21 +13,15 @@ TEST(AccountTest,
     EXPECT_EQ(bankAccount->getAccountNumber(), Account::DEFAULT_ACC_NO + 1);
 }
 
-TEST(AccountTest,
-     GivenAccount_WhenSetBalanceCalled_ThenGetBalanceReturnsUpdatedValue) {
+TEST(AccountTest, GivenAccount_WhenSetBalanceCalled_ThenGetBalanceReturnsUpdatedValue) {
     
     Account* bankAccount = new SavingsAccount();
-
-    EXPECT_EQ(bankAccount->getBalance(), Account::INITIAL_BALANCE);
-
     bankAccount->setBalance(8700.0);
 
     EXPECT_EQ(bankAccount->getBalance(), 8700.0);
-
 }
 
-TEST(AccountTest,
-     GivenSavingsAccount_WhenTransactionsAreAdded_ThenTheyAreStoredAndCountIsCorrect) {
+TEST(AccountTest, GivenAccount_WhenTransactionsAreAdded_ThenTheyAreStoredAndCountIsCorrect) {
 
     Account* bankAccount = new SavingsAccount();
 
@@ -50,8 +43,7 @@ TEST(AccountTest,
     EXPECT_EQ(*(allTransactions + 1), transactionTwo);
 }
 
-TEST(AccountTest,
-     GivenMultipleSavingsAccounts_WhenConstructed_ThenEachHasUniqueAccountNumber) {
+TEST(AccountTest, GivenMultipleAccounts_WhenConstructed_ThenEachHasUniqueAccountNumber) {
     
     Account* bankAccountOne = new SavingsAccount();
     Account* bankAccountTwo = new CurrentAccount();

@@ -65,10 +65,9 @@ INSTANTIATE_TEST_SUITE_P(
     WithdrawScenarios,
     BankWithdrawUnitTest,
     ::testing::Values(
-        WithdrawTestCase{500, 10000, 9500, Bank::SUCCESS},      // normal withdraw
-        WithdrawTestCase{10000, 10000, 0, Bank::SUCCESS},       // withdraw full balance
-        WithdrawTestCase{15000, 10000, 10000, Bank::FAILURE},   // withdraw more than balance
-        WithdrawTestCase{0, 10000, 10000, Bank::SUCCESS}      // withdraw zero
-        //WithdrawTestCase{-500, 10000, 10500, Bank::SUCCESS}     // withdraw negative (bug: acts like deposit)
+        WithdrawTestCase{500, 10000, 9500, Bank::SUCCESS},      
+        WithdrawTestCase{10000, 10000, 0, Bank::SUCCESS},      
+        WithdrawTestCase{15000, 10000, 10000, Bank::FAILURE},   
+        WithdrawTestCase{0, 10000, 10000, Bank::SUCCESS}
     )
 );

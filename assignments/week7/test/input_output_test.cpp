@@ -278,8 +278,6 @@ TEST_F(TakeInputTest, GivenDeleteUserChoice_WhenPerformOperation_ThenUserIsDelet
     EXPECT_CALL(*mockInputValidation, isInputTooLong())
         .WillRepeatedly(testing::Return(false));
 
-    //User::UserDetails dummyDetails{"prat", "my_password", "Pratyush", "Dhavala"};
-
     EXPECT_CALL(*mockBank, showMenu()).Times(2);
     EXPECT_CALL(*mockInputValidation, isValidUserID(testing::_))
         .WillOnce(testing::Return(true));
