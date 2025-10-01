@@ -1,0 +1,71 @@
+@startuml
+
+class Song {
+    - string title
+    - string artist
+    - string filePath
+    + Song(string title, string artist, string filePath)
+    + string getTitle() const
+    + string getArtist() const
+    + string getFilePath() const
+}
+
+class Playlist {
+    - string name
+    - list<Song> songs
+    - list<Song>::iterator currentSong
+    + Playlist(string name)
+    + void addSong(const Song& song)
+    + void removeSong(const Song& song)
+    + void moveSong(const Song& song, int newPos)
+    + Song* getCurrentSong()
+    + void nextSong()
+    + void prevSong()
+    + void listSongs() const
+    + string getName() const
+}
+
+class PlaylistManager {
+    - map<string, Playlist> playlists
+    + void createPlaylist(string name)
+    + void deletePlaylist(string name)
+    + Playlist* getPlaylist(string name)
+    + void listPlaylists() const
+}
+
+class MusicLibrary {
+    - vector<Song> songs
+    + void addToLibrary(const Song& song)
+    + Song* getSong(int index)
+    + void listSongs() const
+}
+
+class MusicPlayer {
+    - Playlist* currentPlaylist
+    - bool isPlaying
+    - sf::Music music
+    + MusicPlayer()
+    + void loadPlaylist(Playlist* p)
+    + void play()
+    + void pause()
+    + void stop()
+    + void next()
+    + void previous()
+}
+
+class MusicException {
+    - string message
+    + MusicException(const string& msg)
+    + const char* what() const
+}
+
+Playlist *-- Song
+PlaylistManager *-- Playlist
+MusicPlayer --> Playlist
+MusicLibrary *-- Song
+MusicPlayer ..> MusicException
+PlaylistManager ..> MusicException
+Playlist ..> MusicException
+MusicLibrary ..> MusicException
+
+@enduml
