@@ -12,6 +12,10 @@ void MusicPlayer::loadPlaylist(Playlist& playlist) {
     currentPlaylist = &playlist;
 }
 
+Playlist* MusicPlayer::getLoadedPlaylist() const {
+    return currentPlaylist;
+}
+
 const Song& MusicPlayer::getCurrentSong() {
     return *this->currentSong;
 }

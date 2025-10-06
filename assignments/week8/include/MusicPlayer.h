@@ -24,6 +24,7 @@ public:
     void next();
     void previous();
     const Song& getCurrentSong();
+    Playlist* getLoadedPlaylist() const;
 };
 
 #endif

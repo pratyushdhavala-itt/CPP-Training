@@ -3,8 +3,7 @@
 
 Song::Song(const std::string& title, const std::string& artist, const std::string& filePath) 
     : title{title}, artist{artist}, filePath{filePath} {}
-
-
+    
 const std::string& Song::getSongTitle() const {
 
     return title;
@@ -27,7 +26,5 @@ void Song::setFilePath(const std::string& filePath) {
 
 bool Song::operator==(const Song& otherSong) const {
 
-    return (title == otherSong.title) && 
-           (artist == otherSong.artist) &&
-           (filePath == otherSong.filePath);
+    return (title == otherSong.title) && (artist == otherSong.artist) && (filePath == otherSong.filePath);
 }

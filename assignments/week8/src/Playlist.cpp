@@ -8,6 +8,7 @@
 
 Playlist::Playlist(const std::string& playlistName, std::list<Song> songs) 
     : playlistName{playlistName}, songs{songs} {
+    currentSong = this->songs.begin();
 }
 
 const std::string& Playlist::getPlaylistName() const {
@@ -39,7 +40,7 @@ void Playlist::moveSong(int currentPositionIndex, int newPositionIndex) {
     std::list<Song>::iterator currentPositionIt = songs.begin();
     std::list<Song>::iterator newPositionIt = songs.begin();
     std::advance(currentPositionIt, currentPositionIndex);
-    std::advance(newPositionIt, newPositionIndex);
+    std::advance(newPositionIt, newPositionIndex + 1);
     songs.splice(newPositionIt, songs, currentPositionIt);
 }
 
