@@ -21,8 +21,10 @@ const Song& MusicPlayer::getCurrentSong() {
 }
 
 void MusicPlayer::play() {
-    currentSong = &currentPlaylist->getCurrentSong();
-    backendPlayer->load(currentSong->getFilePath());
+    if (currentSong == nullptr) {
+        currentSong = &currentPlaylist->getCurrentSong();
+        backendPlayer->load(currentSong->getFilePath());
+    }
     backendPlayer->play();
 }
 
@@ -36,10 +38,12 @@ void MusicPlayer::stop() {
 
 void MusicPlayer::next() {
     currentPlaylist->nextSong();
+    currentSong = nullptr;
     play();
 }
 
 void MusicPlayer::previous() {
     currentPlaylist->previousSong();
+    currentSong = nullptr;
     play();
 }

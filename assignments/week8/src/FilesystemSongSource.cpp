@@ -3,6 +3,7 @@
 #include "MusicPlayerException.h"
 #include "Song.h"
 #include "FilesystemSongSource.h"
+#include "constants.h"
 
 FilesystemSongSource::FilesystemSongSource(std::string directoryName) : directoryName{directoryName} {}
 
@@ -12,7 +13,7 @@ std::vector<Song> FilesystemSongSource::loadSongs() {
 
     try {
         if (!std::filesystem::exists(directoryName)) {
-            throw MusicPlayerException("Music directory not found ! ! !");
+            throw MusicPlayerException(PRINT_MUSIC_DIRECTORY_NOT_FOUND);
         }
         std::filesystem::directory_iterator it(directoryName);
         std::filesystem::directory_iterator end;
@@ -33,6 +34,6 @@ std::vector<Song> FilesystemSongSource::loadSongs() {
         }
         return songs;
     } catch (const std::filesystem::filesystem_error& e) {
-        throw MusicPlayerException("Error accessing directory: " + std::string(e.what()));
+        throw MusicPlayerException(std::string(PRINT_MUSIC_DIRECTORY_ERROR) + std::string(e.what()));
     }
 }

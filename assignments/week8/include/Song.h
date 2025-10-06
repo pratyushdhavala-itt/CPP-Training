@@ -20,6 +20,7 @@ public:
     const std::string& getSongArtist() const;
     const std::string& getFilePath() const;
     void setFilePath(const std::string& filePath);
+    std::string toString() const;
 
     bool operator==(const Song& otherSong) const;
 };

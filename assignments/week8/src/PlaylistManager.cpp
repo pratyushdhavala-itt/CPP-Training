@@ -4,7 +4,8 @@
 #include "PlaylistManager.h"
 #include "Playlist.h"
 #include "MusicPlayerException.h"
-#include "functors.h"
+#include "AppendItemToString.h"
+#include "constants.h"
 
 PlaylistManager::PlaylistManager(const std::map<std::string, Playlist>& playlists) 
     : playlists{playlists} {
@@ -13,7 +14,7 @@ PlaylistManager::PlaylistManager(const std::map<std::string, Playlist>& playlist
 Playlist* PlaylistManager::getPlaylist(const std::string& playlistName) {
     std::map<std::string, Playlist>::iterator it = playlists.find(playlistName);
     if (it == playlists.end()) {
-        throw MusicPlayerException("\nPlaylist with this name does not exist ! ! !");
+        throw MusicPlayerException(PRINT_PLAYLIST_DOES_NOT_EXIST);
 
     }
     return &it->second;
@@ -26,7 +27,7 @@ int PlaylistManager::getPlaylistCount() const {
 
 void PlaylistManager::createPlaylist(const std::string& playlistName) {
     if (playlists.find(playlistName) != playlists.end()) {
-        throw MusicPlayerException("\nPlaylist with same name already exitst ! ! !");
+        throw MusicPlayerException(PRINT_PLAYLIST_ALREADY_EXISTS);
     }
     std::list<Song> songs;
     Playlist playlist(playlistName, songs);
@@ -40,18 +41,19 @@ void PlaylistManager::addPlaylist(const Playlist& playlist) {
 
 void PlaylistManager::deletePlaylist(const std::string& playlistName) {
     if (playlists.find(playlistName) == playlists.end()) {
-        throw MusicPlayerException("\nPlaylist with this name does not exist ! ! !");
+        throw MusicPlayerException(PRINT_PLAYLIST_DOES_NOT_EXIST);
     }
     playlists.erase(playlistName);
 }
 
 std::string PlaylistManager::showAllPlaylists() const {
     int index = 1;
-    std::string allPlaylists = "\nList of all playlists:-";
-    std::for_each(playlists.begin(), playlists.end(), AppendPlaylistToString(allPlaylists));
+    std::string allPlaylists = PRINT_PLAYLISTS;
+    std::for_each(playlists.begin(), playlists.end(), 
+        AppendItemToString<std::pair<const std::string, Playlist>>(allPlaylists));
 
     if (playlists.empty()) {
-        allPlaylists = "\nNo playlists ! ! !";
+        allPlaylists = PRINT_NO_PLAYLISTS;
     }
     return allPlaylists;
 }

@@ -4,7 +4,8 @@
 #include "Playlist.h"
 #include "Song.h"
 #include "MusicPlayerException.h"
-#include "functors.h"
+#include "AppendItemToString.h"
+#include "constants.h"
 
 Playlist::Playlist(const std::string& playlistName, std::list<Song> songs) 
     : playlistName{playlistName}, songs{songs} {
@@ -30,7 +31,7 @@ void Playlist::addSong(const Song& song) {
 
 void Playlist::removeSong(const Song& song) {
     if (songs.empty()) {
-        throw MusicPlayerException("No songs to remove ! ! !");
+        throw MusicPlayerException(PRINT_NO_SONGS_TO_REMOVE);
     }
     songs.remove(song);
 }
@@ -64,10 +65,10 @@ void Playlist::previousSong() {
 }
 
 const std::string Playlist::showAllSongs() const {
-    std::string songList = "\nCurrent songs in your playlist:-";
-    std::for_each(songs.begin(), songs.end(), AppendSongToString(songList));
+    std::string songList = PRINT_CURRENT_SONGS;
+    std::for_each(songs.begin(), songs.end(), AppendItemToString<Song>(songList));
     if (songs.empty()) {
-        songList = "\nNo songs in the playlist ! ! !";
+        songList = PRINT_NO_SONGS_IN_PLAYLIST;
     }
     return songList;
 }
