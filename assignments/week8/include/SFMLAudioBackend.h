@@ -9,7 +9,6 @@ class SFMLAudioBackend : public IAudioBackend {
 private:
 
     sf::Music music;
-    bool isPlaying = false;
 
 public:
 

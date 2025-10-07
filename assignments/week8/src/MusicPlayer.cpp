@@ -3,6 +3,7 @@
 #include "MusicPlayer.h"
 #include "Playlist.h"
 #include "Song.h"
+#include "MusicPlayerException.h"
 
 MusicPlayer::MusicPlayer(IAudioBackend* backendPlayer)
     : backendPlayer{backendPlayer}, currentSong{nullptr} {}
@@ -29,7 +30,11 @@ void MusicPlayer::play() {
 }
 
 void MusicPlayer::pause() {
-    backendPlayer->pause();
+    try {
+        backendPlayer->pause();
+    } catch (const MusicPlayerException& m) {
+        throw;
+    }
 }
 
 void MusicPlayer::stop() {

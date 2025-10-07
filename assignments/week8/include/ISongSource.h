@@ -10,7 +10,6 @@ public:
 
     virtual ~ISongSource() = default;
     virtual std::vector<Song> loadSongs() = 0;
-
 };
 
 #endif 

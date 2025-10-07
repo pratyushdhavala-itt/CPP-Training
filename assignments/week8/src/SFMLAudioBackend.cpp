@@ -1,4 +1,4 @@
-
+#include "MusicPlayerException.h"
 #include "SFMLAudioBackend.h"
 
 bool SFMLAudioBackend::load(const std::string& filePath) {
@@ -10,6 +10,9 @@ void SFMLAudioBackend::play() {
 }
 
 void SFMLAudioBackend::pause() {
+    if (music.getStatus() != sf::SoundSource::Status::Playing) {
+        throw MusicPlayerException("No song playing ! ! !");
+    }
     music.pause();
 }
 

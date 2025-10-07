@@ -68,8 +68,12 @@ void startMusicPlayer(int choice, std::string& playlistName, MusicPlayer& musicP
                     std::cout << PRINT_PLAYING + musicPlayer.getCurrentSong().getSongTitle() + PRINT_BY_ARTIST + musicPlayer.getCurrentSong().getSongArtist(); 
                     break;
                 case 2:
-                    musicPlayer.pause();
-                    std::cout << PRINT_SONG_PAUSED << std::endl;
+                    try {       
+                        musicPlayer.pause();
+                        std::cout << PRINT_SONG_PAUSED << std::endl;
+                    } catch (const MusicPlayerException& m) {
+                        std::cout << m.what() << std::endl;
+                    }
                     break;
                 case 3:
                     musicPlayer.next();

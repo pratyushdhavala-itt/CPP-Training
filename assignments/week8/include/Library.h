@@ -6,6 +6,7 @@
 #include "Song.h"
 #include "ISongSource.h"
 #include "AppendItemToString.h"
+#include "constants.h"
 
 template <typename T>
 class Library {
@@ -28,7 +29,7 @@ public:
 
     const std::string showAllItems() const {
 
-        std::string itemList = "\nList of songs in the library:-";
+        std::string itemList = PRINT_SONG_LIST;
         std::for_each(items.begin(), items.end(), AppendItemToString<T>(itemList));
         return itemList;
     }

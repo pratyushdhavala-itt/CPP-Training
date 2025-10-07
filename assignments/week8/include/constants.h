@@ -39,5 +39,6 @@ inline const char* PRINT_PLAYLIST_ALREADY_EXISTS = "\nPlaylist with same name al
 inline const char* PRINT_PLAYLISTS = "\nList of all playlists:-\n";
 inline const char* PRINT_NO_PLAYLISTS = "\nNo playlists ! ! !\n";
 inline const char* SEPARATOR = " - ";
+inline const char* PRINT_SONG_LIST =  "\nList of songs in the library:-";
 
 #endif
