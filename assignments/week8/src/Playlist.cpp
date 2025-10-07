@@ -23,6 +23,9 @@ std::list<Song> Playlist::getAllSongs() const {
 }
 
 void Playlist::addSong(const Song& song) {
+
+    std::list<Song>::iterator it = std::find(songs.begin(), songs.end(), song);
+    if (it != songs.end()) throw MusicPlayerException(PRINT_SONG_ALREADY_ADDED);
     songs.push_back(song);
     if (songs.size() == 1) {
         currentSong = songs.begin();

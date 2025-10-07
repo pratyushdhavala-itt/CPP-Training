@@ -11,7 +11,8 @@ inline const char* PRINT_WELCOME = "\nWelcome to the Music Player ! ! !\n";
 inline const char* PRINT_MUSIC_PLAYER_MENU = "\n---------- Music Player Menu ----------\nPlease select from the below options:-\n   1. Play\n   2. Pause\n   3. Next\n   4. Previous\n   5. Exit Music Player\nEnter your option: ";
 inline const char* PRINT_EDIT_PLAYLIST_MENU = "\nPlease choose your choice from the below options:-\n   1. Add a song from the music library\n   2. Remove a song from the playlist\n   3. Change a song's position\nEnter your option: ";
 inline const char* PRINT_ENTER_SONG_INDEX_TO_ADD = "\nPlease enter the song's serial number to be added: ";
-inline const char* PRINT_SONG_ADDED = "\nSong successfully added ! ! !\nEnter (1) if you want to add another song. Enter (0) to go back to main menu\nEnter your choice: ";
+inline const char* PRINT_SONG_ADDED = "\nSong successfully added ! ! !\n";
+inline const char* PRINT_ADD_ANOTHER_SONG = "\nEnter (1) if you want to add another song. Enter (0) to go back to main menu\nEnter your choice: ";
 inline const char* PRINT_ENTER_SONG_INDEX_TO_REMOVE = "\nPlease enter the song's serial number to be removed: ";
 inline const char* PRINT_SONG_REMOVED = "\nSong successfully removed ! ! !\nEnter (1) if you want to remove another song. Enter (0) to go back to main menu\nEnter your choice: ";
 inline const char* PRINT_ENTER_PLAYLIST_NAME = "\nEnter your playlist's name: ";
@@ -39,6 +40,7 @@ inline const char* PRINT_PLAYLIST_ALREADY_EXISTS = "\nPlaylist with same name al
 inline const char* PRINT_PLAYLISTS = "\nList of all playlists:-\n";
 inline const char* PRINT_NO_PLAYLISTS = "\nNo playlists ! ! !\n";
 inline const char* SEPARATOR = " - ";
-inline const char* PRINT_SONG_LIST =  "\nList of songs in the library:-";
+inline const char* PRINT_SONG_LIST = "\nList of songs in the library:-";
+inline const char* PRINT_SONG_ALREADY_ADDED = "\nThis song has already been added\n";
 
 #endif

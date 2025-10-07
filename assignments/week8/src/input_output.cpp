@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <thread>
 #include "input_output.h"
 #include "Library.h"
 #include "Playlist.h"
@@ -102,8 +103,13 @@ void addSongToPlaylist(int choice, Playlist* playlist, Library<Song>& musicLibra
         std::cout << PRINT_ENTER_SONG_INDEX_TO_ADD;
         int songIndex = inputChoice(1, musicLibrary.getItemCount()) - 1;
         Song song = musicLibrary.getItemByIndex(songIndex);
-        playlist->addSong(song);
-        std::cout << PRINT_SONG_ADDED;
+        try {
+            playlist->addSong(song);
+            std::cout << PRINT_SONG_ADDED;
+        } catch (const MusicPlayerException& m) {
+            std::cout << m.what() << std::endl;
+        }
+        std::cout << PRINT_ADD_ANOTHER_SONG << std::endl;
         choice = inputChoice(0, 1);
         if (choice == 0) break;
     }
