@@ -42,7 +42,11 @@ void MusicPlayer::pause() {
 }
 
 void MusicPlayer::stop() {
-    audioPlayer->stop();
+    try {
+        audioPlayer->stop();
+    } catch (const MusicPlayerException& m) {
+        throw;
+    }
 }
 
 void MusicPlayer::next() {

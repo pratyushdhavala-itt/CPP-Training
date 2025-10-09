@@ -20,5 +20,8 @@ void SFMLAudioPlayer::pause() {
 }
 
 void SFMLAudioPlayer::stop() {
+    if (music.getStatus() != sf::SoundSource::Status::Playing) {
+        throw MusicPlayerException("No song playing ! ! !");
+    }
     music.stop();
 }

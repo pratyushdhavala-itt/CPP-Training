@@ -7,7 +7,7 @@
 #include "AppendItemToString.h"
 #include "constants.h"
 
-Playlist::Playlist(const std::string& playlistName, std::list<Song> songs) 
+Playlist::Playlist(const std::string& playlistName, std::list<Song>& songs) 
     : playlistName{playlistName}, songs{songs} {
     currentSong = this->songs.begin();
 }
@@ -17,7 +17,7 @@ const std::string& Playlist::getPlaylistName() const {
     return playlistName;
 }
 
-std::list<Song> Playlist::getAllSongs() const {
+const std::list<Song>& Playlist::getAllSongs() const {
 
     return songs;
 }
@@ -81,7 +81,9 @@ int Playlist::getSongCount() {
 }
 
 Song Playlist::getSongByIndex(int songIndex) {
-
+    if (songIndex >= songs.size() || songIndex < 0) {
+        throw MusicPlayerException("Invalid index accessed");
+    }
     std::list<Song>::iterator it = songs.begin();
     std::advance(it, songIndex);
     return *it;

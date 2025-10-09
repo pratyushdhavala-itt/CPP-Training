@@ -7,6 +7,7 @@
 #include "ISongSource.h"
 #include "AppendItemToString.h"
 #include "constants.h"
+#include "MusicPlayerException.h"
 
 template <typename T>
 class Library {
@@ -18,30 +19,34 @@ private:
 public:
 
     Library(std::vector<T> items) : items{items} {
-        
         this->items.reserve(20);
     }
 
     void addItemToLibrary(const T& item) {
-
         items.push_back(item);
     }
 
     const std::string toString() const {
-
-        std::string itemList = PRINT_SONG_LIST;
-        std::for_each(items.begin(), items.end(), AppendItemToString<T>(itemList));
+        std::string itemList;
+        if (items.empty()) {
+            itemList = "\nNo songs in the library ! ! !\n";
+        } else {
+            itemList = PRINT_SONG_LIST;
+            std::for_each(items.begin(), items.end(), AppendItemToString<T>(itemList));
+        }
         return itemList;
     }
 
     const std::vector<T>& getAllItems() const {
-
         return items;
     }
 
     const T& getItemByIndex(int index) const {
-
-        return items[index];
+        try {
+            return items.at(index);
+        } catch (const std::out_of_range& m) {
+            throw MusicPlayerException("Invalid index accessed ! ! !");
+        }
     }
 
     void loadItems(ISongSource& songSource) {

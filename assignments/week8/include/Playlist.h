@@ -15,9 +15,9 @@ private:
 
 public:
 
-    Playlist(const std::string& playlistName, std::list<Song> songs);
+    Playlist(const std::string& playlistName, std::list<Song>& songs);
 
-    std::list<Song> getAllSongs() const;
+    const std::list<Song>& getAllSongs() const;
     const std::string& getPlaylistName() const;
     void addSong(const Song& song);
     void removeSong(const Song& song);

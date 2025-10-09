@@ -6,32 +6,26 @@ Song::Song(const std::string& title, const std::string& artist, const std::strin
     : title{title}, artist{artist}, filePath{filePath} {}
     
 const std::string& Song::getSongTitle() const {
-
     return title;
 }
 
 const std::string& Song::getSongArtist() const {
-
     return artist;
 }
 
 const std::string& Song::getFilePath() const {
-
     return filePath;
 }
 
 void Song::setFilePath(const std::string& filePath) {
-
     this->filePath = filePath;
 }
 
 std::string Song::toString() const {
-
     std::string output = getSongArtist() + SEPARATOR + getSongTitle();
     return output;
 }
 
 bool Song::operator==(const Song& otherSong) const {
-
     return (title == otherSong.title) && (artist == otherSong.artist) && (filePath == otherSong.filePath);
 }

@@ -40,11 +40,9 @@ TEST_F(PlaylistManagerTest, GivenPlaylists_WhenPlaylistManagerConstructed_ThenPl
 TEST_F(PlaylistManagerTest, GivenPlaylistName_WhenCreatePlaylistCalled_ThenPlaylistAdded) {
     
     manager->createPlaylist("Study");
-
-    EXPECT_EQ(manager->getPlaylistCount(), 2);
-
     Playlist* newPlaylist = manager->getPlaylist("Study");
-
+    
+    EXPECT_EQ(manager->getPlaylistCount(), 2);
     EXPECT_EQ(newPlaylist->getPlaylistName(), "Study");
 }
 

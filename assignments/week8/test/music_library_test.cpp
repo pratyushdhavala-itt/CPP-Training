@@ -79,3 +79,27 @@ TEST_F(MusicLibraryTest, GivenMockSongSource_WhenLoadCalled_ThenLibraryLoadsMock
     EXPECT_EQ(library->getItemByIndex(0).getSongTitle(), "Believer");
     EXPECT_EQ(library->getItemByIndex(1).getSongTitle(), "Radioactive");
 }
+
+TEST_F(MusicLibraryTest, GivenLibrary_WhenInvalidIndexAccessed_ThenThrowException) {
+
+   EXPECT_THROW(library->getItemByIndex(10), MusicPlayerException);
+}
+
+TEST_F(MusicLibraryTest, GivenLibrary_WhenGetAllSongsCalled_ThenReturnSameContainer) {
+
+    EXPECT_EQ(testSongs, library->getAllItems());
+}
+
+TEST_F(MusicLibraryTest, GivenLibrary_WhenGetAllSongsCalled_ThenContainerNotManipulated) {
+    Song songOne{"Believer", "Imagine Dragons", "/path/to/believer/"};
+    Song songTwo{"Radioactive", "Imagine Dragons", "/path/to/radioactive/"};
+    EXPECT_EQ(library->getAllItems()[0], songOne);
+    EXPECT_EQ(library->getAllItems()[1], songTwo);
+}
+
+TEST_F(MusicLibraryTest, GivenEmptyLibrary_WhenToStringCalled_ThenReturnNoSongMessage) {
+    std::vector<Song> emptyList;
+    Library<Song> emptyLibrary(emptyList);
+    std::string expected = "\nNo songs in the library ! ! !\n";
+    EXPECT_EQ(emptyLibrary.toString(), expected);
+}

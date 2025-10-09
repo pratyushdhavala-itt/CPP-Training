@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <list>
+#include <algorithm>
 #include "Playlist.h"
 #include "Song.h"
 #include "MusicPlayerException.h"
@@ -24,9 +25,21 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenConstructed_ThenMembersInitializedCorrect
 
 TEST_F(PlaylistTest, GivenPlaylist_WhenGetAllSongsCalled_ThenCorrectListOfSongsReturned) {
 
-    std::list<Song> songsCopy = playlist.getAllSongs();
+    EXPECT_EQ(playlist.getAllSongs(), testSongs);
+}
 
-    EXPECT_EQ(testSongs, songsCopy);
+TEST_F(PlaylistTest, GivenPlaylist_WhenGetAllSongsCalled_ThenSongsNotManipulated) {
+
+    Song songOne{"In My Life", "The Beatles", "/path/to/beatles/"};
+    Song songTwo{"Piano Man", "Billy Joel", "/path/to/piano-man/"};
+    Song songThree{"Wonderwall", "Oasis", "/path/to/wonderwall/"};
+    auto it = playlist.getAllSongs().begin();
+    ASSERT_EQ(*it, songOne);
+    it++;
+    ASSERT_EQ(*it, songTwo);
+    it++;
+    ASSERT_EQ(*it, songThree);
+
 }
 
 TEST_F(PlaylistTest, GivenPlaylist_WhenNewSongAdded_ThenSongCountIncreases) {
@@ -38,6 +51,15 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenNewSongAdded_ThenSongCountIncreases) {
     EXPECT_EQ(playlist.getSongCount(), 4);
 }
 
+TEST_F(PlaylistTest, GivenPlaylist_WhenNewSongAdded_ThenNewSongIsLastNode) {
+
+    Song testSong{"Let It Happen", "Tame Impala", "/path/to/let-it-happen/"};
+
+    playlist.addSong(testSong);
+
+    EXPECT_EQ(playlist.getAllSongs().back(), testSong);
+}
+
 TEST_F(PlaylistTest, GivenPlaylist_WhenSongRemoved_ThenSongCountDecreases) {
 
     playlist.removeSong(songThree);
@@ -45,9 +67,18 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenSongRemoved_ThenSongCountDecreases) {
     EXPECT_EQ(playlist.getSongCount(), 2);
 }
 
-TEST_F(PlaylistTest, GivenEmptyPlaylist_WhenCalledRemoveSong_ThenThrowException) {
+TEST_F(PlaylistTest, GivenPlaylist_WhenSongRemoved_ThenFindSongReturnsEndIterator) {
 
-    Playlist emptyPlaylist("empty-playlist", {});
+    playlist.removeSong(songThree);
+    std::list<Song> songList = playlist.getAllSongs();
+    auto it = std::find(songList.begin(), songList.end(), songThree);
+
+    EXPECT_EQ(it, songList.end());
+}
+
+TEST_F(PlaylistTest, GivenEmptyPlaylist_WhenCalledRemoveSong_ThenThrowException) {
+    std::list<Song> temp;
+    Playlist emptyPlaylist("empty-playlist", temp);
 
     EXPECT_THROW(emptyPlaylist.removeSong(songOne), MusicPlayerException);
 }
@@ -106,7 +137,14 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenShowAllSongsCalled_ReturnNonEmptyStrign) 
 }
 
 TEST_F(PlaylistTest, GivenEmptyPlaylist_WhenShowAllSongsCalled_ReturnNoSongs) {
-    Playlist emptyPlaylist("empty-playlist", {});
+    std::list<Song> temp;
+    Playlist emptyPlaylist("empty-playlist", temp);
     std::string result = emptyPlaylist.toString();
     EXPECT_NE(result.find("No songs in the playlist"), std::string::npos);
+}
+
+TEST_F(PlaylistTest, GivenPlaylist_WhenInvalidIndexAccessed_ThenThrowException) {
+
+    EXPECT_THROW(playlist.getSongByIndex(3), MusicPlayerException);
+    EXPECT_THROW(playlist.getSongByIndex(-1), MusicPlayerException);
 }

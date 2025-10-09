@@ -24,7 +24,6 @@ int PlaylistManager::getPlaylistCount() const {
     return playlists.size();
 }
 
-
 void PlaylistManager::createPlaylist(const std::string& playlistName) {
     if (playlists.find(playlistName) != playlists.end()) {
         throw MusicPlayerException(PRINT_PLAYLIST_ALREADY_EXISTS);

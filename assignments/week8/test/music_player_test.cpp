@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include "MusicPlayer.h"
 #include "IAudioPlayer.h"
+#include "MusicPlayerException.h"
 
 class MockAudioPlayer : public IAudioPlayer {
 
@@ -29,6 +30,7 @@ protected:
         std::list<Song> songs{songOne, songTwo};
         playlist = new Playlist("coldplay songs", songs);
         player = new MusicPlayer(&mockPlayer);
+        player->loadPlaylist(*playlist);
     }
 
     void TearDown() override {
@@ -38,87 +40,120 @@ protected:
     }
 };
 
-TEST_F(MusicPlayerTest, GivenPlaylist_WhenLoadPlaylistCalled_ThenPlaylistIsLoaded) {
-    
-    player->loadPlaylist(*playlist);
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenLoadPlaylistCalled_ThenPlaylistIsLoaded) {
     
     EXPECT_EQ(player->getLoadedPlaylist(), playlist);
 }
 
-TEST_F(MusicPlayerTest, GivenLoadedPlaylist_WhenPlayCalled_ThenBackendLoadAndPlayCalled) {
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenLoadPlaylistCalled_ThenPlaylistNotManipulated) {
+    Song songOne{"Fix You", "Coldplay", "/path/to/fix-you/"};
+    Song songTwo{"Yellow", "Coldplay", "/path/to/yellow/"};
     
-    player->loadPlaylist(*playlist);
+    EXPECT_EQ(player->getLoadedPlaylist()->getSongByIndex(0), songOne);
+    EXPECT_EQ(player->getLoadedPlaylist()->getSongByIndex(1), songTwo);
+}
+
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenPlayCalled_ThenBackendLoadAndPlayCalled) {
     
     EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
 
     EXPECT_CALL(mockPlayer, play());
 
+    player->play();
+}
+
+TEST_F(MusicPlayerTest, GivenMusicPlayerBackendFailed_WhenPlayCalled_ThenThrowException) {
+    
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(mockPlayer, play())
+        .WillOnce(testing::Throw(MusicPlayerException("Backend failure ! ! ! Try again later ! ! !")));
+
+    EXPECT_THROW(player->play(), MusicPlayerException);
+}
+
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenPlayCalled_ThenCurrentSongIsFirstSong) {
+    
     player->play();
     const Song& current = player->getCurrentSong();
     
     EXPECT_EQ(current.getSongTitle(), "Fix You");
 }
 
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenConstructed_ThenCurrentSongIsNull) {
+
+    EXPECT_EQ(player->getCurrentSong(), nullptr);
+}
+
+TEST_F(MusicPlayerTest, GivenMusicPlayer_WhenPlayCalled_ThenCurrentSongIsNotNull) {
+    
+    player->play();
+
+    EXPECT_NE(player->getCurrentSong(), nullptr);
+}
+
+
 TEST_F(MusicPlayerTest, GivenPlayingSong_WhenPauseCalled_ThenBackendPauseCalled) {
     
-    player->loadPlaylist(*playlist);
-
-    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
-        .WillOnce(testing::Return(true));
-
-    EXPECT_CALL(mockPlayer, play());
     EXPECT_CALL(mockPlayer, pause());
 
-    player->play();
     player->pause();
 }
 
 TEST_F(MusicPlayerTest, GivenPlayingSong_WhenStopCalled_ThenBackendStopCalled) {
-    
-    player->loadPlaylist(*playlist);
 
-    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
-        .WillOnce(testing::Return(true));
-
-    EXPECT_CALL(mockPlayer, play());
     EXPECT_CALL(mockPlayer, stop());
 
-    player->play();
     player->stop();
 }
 
-TEST_F(MusicPlayerTest, GivenPlaylist_WhenNextCalled_ThenNextSongPlayed) {
+TEST_F(MusicPlayerTest, GivenNoSongPlayingSong_WhenPauseCalled_ThenThrowException) {
 
-    player->loadPlaylist(*playlist);
+    EXPECT_CALL(mockPlayer, pause())
+        .WillOnce(testing::Throw(MusicPlayerException("No song playing ! ! !")));
 
-    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
-        .WillOnce(testing::Return(true));
+    EXPECT_THROW(player->pause(), MusicPlayerException);
+}
+
+TEST_F(MusicPlayerTest, GivenNoSongPlayingSong_WhenStopCalled_ThenThrowException) {
+
+    EXPECT_CALL(mockPlayer, stop())
+        .WillOnce(testing::Throw(MusicPlayerException("No song playing ! ! !")));
+
+    EXPECT_THROW(player->stop(), MusicPlayerException);
+}
+
+TEST_F(MusicPlayerTest, GivenPlaylist_WhenNextCalled_ThenExpectBackendCalls) {
+
     EXPECT_CALL(mockPlayer, play())
-        .Times(2);
+        .Times(1);
     EXPECT_CALL(mockPlayer, load("/path/to/yellow/"))
         .WillOnce(testing::Return(true));
 
-    player->play();    
+    player->next();   
+}
+
+TEST_F(MusicPlayerTest, GivenPlaylist_WhenNextCalled_ThenCurrentSongChangedToNextSong) {
+
     player->next();   
 
     EXPECT_EQ(player->getCurrentSong().getSongTitle(), "Yellow");
 }
 
-TEST_F(MusicPlayerTest, GivenPlaylist_WhenPreviousCalled_ThenPreviousSongPlayed) {
+TEST_F(MusicPlayerTest, GivenPlaylist_WhenPreviousCalled_ThenExpectBackendCalls) {
     
-    player->loadPlaylist(*playlist);
-
-    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
-        .WillOnce(testing::Return(true));
-
     EXPECT_CALL(mockPlayer, play())
-        .Times(2);
-
+        .Times(1);
     EXPECT_CALL(mockPlayer, load("/path/to/yellow/"))
         .WillOnce(testing::Return(true));
 
-    player->play();     
+    player->previous(); 
+}
+
+TEST_F(MusicPlayerTest, GivenPlaylist_WhenPreviousCalled_ThenCurrentSongChangedToPreviousSong) {
+    
     player->previous(); 
 
     EXPECT_EQ(player->getCurrentSong().getSongTitle(), "Yellow");
