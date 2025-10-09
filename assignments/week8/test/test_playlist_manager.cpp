@@ -90,7 +90,7 @@ TEST_F(PlaylistManagerTest, GivenInvalidPlaylistName_WhenGetPlaylistCalled_ThenT
 
 TEST_F(PlaylistManagerTest, GivenPlaylistManager_WhenShowAllPlaylistsCalled_ThenReturnsStringWithNames) {
     
-    std::string result = manager->showAllPlaylists();
+    std::string result = manager->toString();
     
     EXPECT_THAT(result, testing::AllOf(
         testing::HasSubstr("Rock Classics")
@@ -100,7 +100,7 @@ TEST_F(PlaylistManagerTest, GivenPlaylistManager_WhenShowAllPlaylistsCalled_Then
 TEST_F(PlaylistManagerTest, GivenNoPlaylists_WhenShowAllPlaylistsCalled_ThenReturnsEmptyMessage) {
     
     PlaylistManager emptyManager({});
-    std::string result = emptyManager.showAllPlaylists();
+    std::string result = emptyManager.toString();
     
     EXPECT_THAT(result, testing::AllOf(
         testing::HasSubstr("No playlists")

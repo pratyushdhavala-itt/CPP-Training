@@ -60,7 +60,7 @@ TEST_F(MusicLibraryTest, GivenLibrary_WhenNewSongAdded_ThenSongCountIncreases) {
 
 TEST_F(MusicLibraryTest, GivenLibrary_WhenShowAllSongsCalled_ThenReturnsStringWithSongs) {
     
-    std::string list = library->showAllItems();
+    std::string list = library->toString();
 
     EXPECT_THAT(list, testing::AllOf(
         testing::HasSubstr("Imagine"),

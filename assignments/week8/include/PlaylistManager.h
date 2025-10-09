@@ -19,7 +19,7 @@ public:
     void createPlaylist(const std::string& playlistName);
     void addPlaylist(const Playlist& playlist);
     void deletePlaylist(const std::string& playlistName);
-    std::string showAllPlaylists() const;
+    std::string toString() const;
     int getPlaylistCount() const;
 };
 

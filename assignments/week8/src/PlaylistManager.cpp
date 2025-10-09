@@ -46,7 +46,7 @@ void PlaylistManager::deletePlaylist(const std::string& playlistName) {
     playlists.erase(playlistName);
 }
 
-std::string PlaylistManager::showAllPlaylists() const {
+std::string PlaylistManager::toString() const {
     int index = 1;
     std::string allPlaylists = PRINT_PLAYLISTS;
     std::for_each(playlists.begin(), playlists.end(), 

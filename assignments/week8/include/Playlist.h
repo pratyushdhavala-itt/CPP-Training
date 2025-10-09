@@ -25,7 +25,7 @@ public:
     Song& getCurrentSong() const;
     void nextSong();
     void previousSong();
-    const std::string showAllSongs() const;
+    const std::string toString() const;
     int getSongCount();
     Song getSongByIndex(int songIndex);
 };

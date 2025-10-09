@@ -67,7 +67,7 @@ void Playlist::previousSong() {
     }
 }
 
-const std::string Playlist::showAllSongs() const {
+const std::string Playlist::toString() const {
     std::string songList = PRINT_CURRENT_SONGS;
     std::for_each(songs.begin(), songs.end(), AppendItemToString<Song>(songList));
     if (songs.empty()) {

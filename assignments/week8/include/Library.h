@@ -27,7 +27,7 @@ public:
         items.push_back(item);
     }
 
-    const std::string showAllItems() const {
+    const std::string toString() const {
 
         std::string itemList = PRINT_SONG_LIST;
         std::for_each(items.begin(), items.end(), AppendItemToString<T>(itemList));

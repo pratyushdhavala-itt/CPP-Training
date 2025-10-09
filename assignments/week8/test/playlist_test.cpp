@@ -96,7 +96,7 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenGetSongByIndexCalled_ThenReturnCorrectSon
 
 TEST_F(PlaylistTest, GivenPlaylist_WhenShowAllSongsCalled_ReturnNonEmptyStrign) {
 
-    std::string list = playlist.showAllSongs();
+    std::string list = playlist.toString();
 
     EXPECT_THAT(list, testing::AllOf(
         testing::HasSubstr("Piano Man"),
@@ -107,6 +107,6 @@ TEST_F(PlaylistTest, GivenPlaylist_WhenShowAllSongsCalled_ReturnNonEmptyStrign) 
 
 TEST_F(PlaylistTest, GivenEmptyPlaylist_WhenShowAllSongsCalled_ReturnNoSongs) {
     Playlist emptyPlaylist("empty-playlist", {});
-    std::string result = emptyPlaylist.showAllSongs();
+    std::string result = emptyPlaylist.toString();
     EXPECT_NE(result.find("No songs in the playlist"), std::string::npos);
 }

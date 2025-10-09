@@ -35,14 +35,14 @@ void deletePlaylist(std::string& playlistName, PlaylistManager& playlistManager)
 }
 
 void viewPlaylists(int choice, std::string& playlistName, PlaylistManager& playlistManager) {
-    std::cout << playlistManager.showAllPlaylists() << std::endl;
+    std::cout << playlistManager.toString() << std::endl;
     if (playlistManager.getPlaylistCount() == 0) return;
     std::cout << PRINT_VIEW_PLAYLIST_MENU;
     choice = inputChoice(1, 2);
     if (choice == 1) {
         inputPlaylist(playlistName);
         Playlist* playlist = playlistManager.getPlaylist(playlistName);
-        std::cout << playlist->showAllSongs() << std::endl;
+        std::cout << playlist->toString() << std::endl;
     }
 }
 
@@ -102,7 +102,7 @@ void startMusicPlayer(int choice, std::string& playlistName, MusicPlayer& musicP
 }
 
 void addSongToPlaylist(int choice, Playlist* playlist, Library<Song>& musicLibrary) {
-    std::cout << musicLibrary.showAllItems() << std::endl;
+    std::cout << musicLibrary.toString() << std::endl;
     while (true) {
         std::cout << PRINT_ENTER_SONG_INDEX_TO_ADD;
         int songIndex = inputChoice(1, musicLibrary.getItemCount()) - 1;
@@ -120,7 +120,7 @@ void addSongToPlaylist(int choice, Playlist* playlist, Library<Song>& musicLibra
 }
 
 void removeSongFromPlaylist(int choice, Playlist* playlist) {
-    std::cout << playlist->showAllSongs() << std::endl;
+    std::cout << playlist->toString() << std::endl;
     while (true) {
         if (playlist->getSongCount() == 0) {
             std::cout << PRINT_NO_SONGS_TO_REMOVE << std::endl;
@@ -137,7 +137,7 @@ void removeSongFromPlaylist(int choice, Playlist* playlist) {
 }
 
 void moveSongInPlaylist(int choice, Playlist* playlist) {
-    std::cout << playlist->showAllSongs() << std::endl;
+    std::cout << playlist->toString() << std::endl;
     while (true) {
         if (playlist->getSongCount() == 0) {
             std::cout << PRINT_NO_SONGS_TO_REMOVE << std::endl;

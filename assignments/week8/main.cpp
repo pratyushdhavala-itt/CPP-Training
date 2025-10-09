@@ -34,7 +34,7 @@ int main() {
         int choice = inputChoice(1, 6);
         switch(choice) {
             case 1: 
-                std::cout << musicLibrary.showAllItems() << std::endl;
+                std::cout << musicLibrary.toString() << std::endl;
                 break;
             case 2: 
                 viewPlaylists(choice, playlistName, playlistManager);
