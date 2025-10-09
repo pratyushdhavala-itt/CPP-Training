@@ -65,8 +65,12 @@ void startMusicPlayer(int choice, std::string& playlistName, MusicPlayer& musicP
             choice = inputChoice(1, 5);
             switch(choice) {
                 case 1:
-                    musicPlayer.play();
-                    std::cout << PRINT_PLAYING + musicPlayer.getCurrentSong().getSongTitle() + PRINT_BY_ARTIST + musicPlayer.getCurrentSong().getSongArtist(); 
+                    try {
+                        musicPlayer.play();
+                        std::cout << PRINT_PLAYING + musicPlayer.getCurrentSong().getSongTitle() + PRINT_BY_ARTIST + musicPlayer.getCurrentSong().getSongArtist(); 
+                    } catch (const MusicPlayerException& m) {
+                        std::cout << m.what() << std::endl;
+                    }
                     break;
                 case 2:
                     try {       

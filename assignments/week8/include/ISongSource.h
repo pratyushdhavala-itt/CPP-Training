@@ -9,7 +9,7 @@ class ISongSource {
 public:
 
     virtual ~ISongSource() = default;
-    virtual std::vector<Song> loadSongs() = 0;
+    virtual void loadSongs(std::vector<Song>& songs) = 0;
 };
 
 #endif 

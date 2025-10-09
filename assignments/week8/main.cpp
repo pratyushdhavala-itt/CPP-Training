@@ -9,12 +9,12 @@
 #include "PlaylistManager.h"
 #include "Playlist.h"
 #include "MusicPlayerException.h"
-#include "SFMLAudioBackend.h"
+#include "SFMLAudioPlayer.h"
 #include "FilesystemSongSource.h"
 #include "input_output.h"
 
 int main() {
-    SFMLAudioBackend sfmlPlayer;
+    SFMLAudioPlayer sfmlPlayer;
     MusicPlayer musicPlayer(&sfmlPlayer);
     std::vector<Song> songs;
     std::map<std::string, Playlist> playlists;

@@ -46,7 +46,7 @@ public:
 
     void loadItems(ISongSource& songSource) {
 
-        this->items = songSource.loadSongs();
+        songSource.loadSongs(items);
     }
 
     int getItemCount() const {

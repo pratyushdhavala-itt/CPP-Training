@@ -1,10 +1,10 @@
-#ifndef SFML_AUDIO_BACKEND
-#define SFML_AUDIO_BACKEND
+#ifndef SFML_AUDIO_PLAYER
+#define SFML_AUDIO_PLAYER
 
 #include <SFML/Audio.hpp>
-#include "IAudioBackend.h"
+#include "IAudioPlayer.h"
 
-class SFMLAudioBackend : public IAudioBackend {
+class SFMLAudioPlayer : public IAudioPlayer {
 
 private:
 

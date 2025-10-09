@@ -3,19 +3,19 @@
 
 #include <SFML/Audio.hpp>
 #include "Playlist.h"
-#include "IAudioBackend.h"
+#include "IAudioPlayer.h"
 
 class MusicPlayer {
 
 private:
 
-    IAudioBackend* backendPlayer;
+    IAudioPlayer* audioPlayer;
     Playlist* currentPlaylist;
     Song* currentSong;
 
 public:
 
-    MusicPlayer(IAudioBackend* backendPlayer);
+    MusicPlayer(IAudioPlayer* backendPlayer);
 
     void loadPlaylist(Playlist& playlist);
     void play();

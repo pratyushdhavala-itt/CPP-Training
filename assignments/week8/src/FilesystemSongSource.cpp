@@ -7,9 +7,7 @@
 
 FilesystemSongSource::FilesystemSongSource(std::string directoryName) : directoryName{directoryName} {}
 
-std::vector<Song> FilesystemSongSource::loadSongs() {
-
-    std::vector<Song> songs;
+void FilesystemSongSource::loadSongs(std::vector<Song>& songs) {
 
     try {
         if (!std::filesystem::exists(directoryName)) {
@@ -32,7 +30,6 @@ std::vector<Song> FilesystemSongSource::loadSongs() {
                 }
             }
         }
-        return songs;
     } catch (const std::filesystem::filesystem_error& e) {
         throw MusicPlayerException(std::string(PRINT_MUSIC_DIRECTORY_ERROR) + std::string(e.what()));
     }

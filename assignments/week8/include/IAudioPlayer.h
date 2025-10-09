@@ -1,13 +1,13 @@
-#ifndef I_AUDIO_BACKEND_H
-#define I_AUDIO_BACKEND_H
+#ifndef I_AUDIO_PLAYER_H
+#define I_AUDIO_PLAYER_H
 
 #include <string>
 
-class IAudioBackend {
+class IAudioPlayer {
 
 public:
 
-    virtual ~IAudioBackend() = default;
+    virtual ~IAudioPlayer() = default;
 
     virtual bool load(const std::string& filePath) = 0;
     virtual void play() = 0;

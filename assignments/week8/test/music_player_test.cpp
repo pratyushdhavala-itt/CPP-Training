@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "MusicPlayer.h"
-#include "IAudioBackend.h"
+#include "IAudioPlayer.h"
 
-class MockAudioBackend : public IAudioBackend {
+class MockAudioPlayer : public IAudioPlayer {
 
 public:
 
@@ -17,7 +17,7 @@ class MusicPlayerTest : public ::testing::Test {
 
 protected:
 
-    MockAudioBackend mockBackend;
+    MockAudioPlayer mockPlayer;
     MusicPlayer* player;
     Playlist* playlist;
 
@@ -28,7 +28,7 @@ protected:
 
         std::list<Song> songs{songOne, songTwo};
         playlist = new Playlist("coldplay songs", songs);
-        player = new MusicPlayer(&mockBackend);
+        player = new MusicPlayer(&mockPlayer);
     }
 
     void TearDown() override {
@@ -49,10 +49,10 @@ TEST_F(MusicPlayerTest, GivenLoadedPlaylist_WhenPlayCalled_ThenBackendLoadAndPla
     
     player->loadPlaylist(*playlist);
     
-    EXPECT_CALL(mockBackend, load("/path/to/fix-you/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
 
-    EXPECT_CALL(mockBackend, play());
+    EXPECT_CALL(mockPlayer, play());
 
     player->play();
     const Song& current = player->getCurrentSong();
@@ -64,11 +64,11 @@ TEST_F(MusicPlayerTest, GivenPlayingSong_WhenPauseCalled_ThenBackendPauseCalled)
     
     player->loadPlaylist(*playlist);
 
-    EXPECT_CALL(mockBackend, load("/path/to/fix-you/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
 
-    EXPECT_CALL(mockBackend, play());
-    EXPECT_CALL(mockBackend, pause());
+    EXPECT_CALL(mockPlayer, play());
+    EXPECT_CALL(mockPlayer, pause());
 
     player->play();
     player->pause();
@@ -78,11 +78,11 @@ TEST_F(MusicPlayerTest, GivenPlayingSong_WhenStopCalled_ThenBackendStopCalled) {
     
     player->loadPlaylist(*playlist);
 
-    EXPECT_CALL(mockBackend, load("/path/to/fix-you/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
 
-    EXPECT_CALL(mockBackend, play());
-    EXPECT_CALL(mockBackend, stop());
+    EXPECT_CALL(mockPlayer, play());
+    EXPECT_CALL(mockPlayer, stop());
 
     player->play();
     player->stop();
@@ -92,11 +92,11 @@ TEST_F(MusicPlayerTest, GivenPlaylist_WhenNextCalled_ThenNextSongPlayed) {
 
     player->loadPlaylist(*playlist);
 
-    EXPECT_CALL(mockBackend, load("/path/to/fix-you/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
-    EXPECT_CALL(mockBackend, play())
+    EXPECT_CALL(mockPlayer, play())
         .Times(2);
-    EXPECT_CALL(mockBackend, load("/path/to/yellow/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/yellow/"))
         .WillOnce(testing::Return(true));
 
     player->play();    
@@ -109,13 +109,13 @@ TEST_F(MusicPlayerTest, GivenPlaylist_WhenPreviousCalled_ThenPreviousSongPlayed)
     
     player->loadPlaylist(*playlist);
 
-    EXPECT_CALL(mockBackend, load("/path/to/fix-you/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/fix-you/"))
         .WillOnce(testing::Return(true));
 
-    EXPECT_CALL(mockBackend, play())
+    EXPECT_CALL(mockPlayer, play())
         .Times(2);
 
-    EXPECT_CALL(mockBackend, load("/path/to/yellow/"))
+    EXPECT_CALL(mockPlayer, load("/path/to/yellow/"))
         .WillOnce(testing::Return(true));
 
     player->play();     

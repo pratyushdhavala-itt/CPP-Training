@@ -9,7 +9,7 @@ class MockSongSource : public ISongSource {
 
 public:
 
-    MOCK_METHOD(std::vector<Song>, loadSongs, (), (override));
+    MOCK_METHOD(void, loadSongs, (std::vector<Song>&), (override));
 
 };
 
@@ -19,11 +19,12 @@ protected:
 
     Library<Song>* library;
     MockSongSource mockSource;
+    std::vector<Song> testSongs;
 
     void SetUp() override {
         Song songOne{"Believer", "Imagine Dragons", "/path/to/believer/"};
         Song songTwo{"Radioactive", "Imagine Dragons", "/path/to/radioactive/"};
-        std::vector<Song> testSongs {songOne, songTwo};
+        testSongs.assign({songOne, songTwo});
 
         library = new Library<Song>(testSongs);
     }
@@ -69,18 +70,12 @@ TEST_F(MusicLibraryTest, GivenLibrary_WhenShowAllSongsCalled_ThenReturnsStringWi
 
 TEST_F(MusicLibraryTest, GivenMockSongSource_WhenLoadCalled_ThenLibraryLoadsMockedSongs) {
 
-    std::vector<Song> mockSongs{
-        {"Summer Of '69", "Bryan Adams", "/path/to/summer/"},
-        {"It's My Life", "Bon Jovi", "/path/to/jovi/"}
-    };
-
-    EXPECT_CALL(mockSource, loadSongs())
-        .Times(1)
-        .WillOnce(::testing::Return(mockSongs));
+    EXPECT_CALL(mockSource, loadSongs(testSongs))
+        .Times(1);
 
     library->loadItems(mockSource);
 
     EXPECT_EQ(library->getItemCount(), 2);
-    EXPECT_EQ(library->getItemByIndex(0).getSongTitle(), "Summer Of '69");
-    EXPECT_EQ(library->getItemByIndex(1).getSongTitle(), "It's My Life");
+    EXPECT_EQ(library->getItemByIndex(0).getSongTitle(), "Believer");
+    EXPECT_EQ(library->getItemByIndex(1).getSongTitle(), "Radioactive");
 }

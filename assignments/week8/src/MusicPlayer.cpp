@@ -5,8 +5,8 @@
 #include "Song.h"
 #include "MusicPlayerException.h"
 
-MusicPlayer::MusicPlayer(IAudioBackend* backendPlayer)
-    : backendPlayer{backendPlayer}, currentSong{nullptr} {}
+MusicPlayer::MusicPlayer(IAudioPlayer* audioPlayer)
+    : audioPlayer{audioPlayer}, currentSong{nullptr} {}
 
 void MusicPlayer::loadPlaylist(Playlist& playlist) {
 
@@ -24,21 +24,25 @@ const Song& MusicPlayer::getCurrentSong() {
 void MusicPlayer::play() {
     if (currentSong == nullptr) {
         currentSong = &currentPlaylist->getCurrentSong();
-        backendPlayer->load(currentSong->getFilePath());
+        audioPlayer->load(currentSong->getFilePath());
     }
-    backendPlayer->play();
+    try {
+        audioPlayer->play();
+    } catch (const MusicPlayerException& m) {
+        throw;
+    }
 }
 
 void MusicPlayer::pause() {
     try {
-        backendPlayer->pause();
+        audioPlayer->pause();
     } catch (const MusicPlayerException& m) {
         throw;
     }
 }
 
 void MusicPlayer::stop() {
-    backendPlayer->stop();
+    audioPlayer->stop();
 }
 
 void MusicPlayer::next() {

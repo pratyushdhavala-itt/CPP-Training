@@ -16,7 +16,7 @@ public:
 
     FilesystemSongSource(std::string directoryName);
 
-    std::vector<Song> loadSongs() override;
+    void loadSongs(std::vector<Song>& songs) override;
 };
 
 #endif

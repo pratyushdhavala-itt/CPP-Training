@@ -29,7 +29,8 @@ protected:
 TEST_F(FilesystemSongSourceTest, GivenDirectory_WhenLoadSongsCalled_ThenSongsParsed) {
     
     FilesystemSongSource source(testDirectory);
-    std::vector<Song> songs = source.loadSongs();
+    std::vector<Song> songs;
+    source.loadSongs(songs);
 
     EXPECT_EQ(songs.size(), 2);
 
@@ -41,15 +42,17 @@ TEST_F(FilesystemSongSourceTest, GivenDirectory_WhenLoadSongsCalled_ThenSongsPar
 }
 
 TEST_F(FilesystemSongSourceTest, GivenInvalidDirectory_WhenLoadSongsCalled_ThenThrowsException) {
-    
+    std::vector<Song> songs;
+
     FilesystemSongSource source("does_not_exist");
-    EXPECT_THROW(source.loadSongs(), MusicPlayerException);
+    EXPECT_THROW(source.loadSongs(songs), MusicPlayerException);
 }
 
 TEST_F(FilesystemSongSourceTest, GivenInvalidFileName_WhenLoadSongsCalled_ThenSkipSong) {
     
     FilesystemSongSource source(testDirectory);
-    std::vector<Song> songs = source.loadSongs();
+    std::vector<Song> songs;
+    source.loadSongs(songs);
 
     bool hasInvalidFile = false;
     for (const auto& s : songs) {
