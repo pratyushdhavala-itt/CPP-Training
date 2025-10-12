@@ -1,35 +1,44 @@
 #include <iostream>
 #include <thread>
 #include "Lane.h"
-#include "Semaphore.h"
+#include "TrafficSignal.h"
+#include "constants.h"
 
-Lane::Lane(int id, int numberOfCars, Semaphore* signal, std::mutex& ioLock) : id{id}, numberOfCars{numberOfCars}, signal{*signal}, ioLock{ioLock} {}
+Lane::Lane(int id, int totalNumberOfCars, TrafficSignal* trafficSignal, std::mutex* printMutex) : id{id}, totalNumberOfCars{totalNumberOfCars}, trafficSignal{trafficSignal}, printMutex{printMutex} {
+    numberOfCarsRemaining = totalNumberOfCars;
+}
 
 int Lane::getCarCount() const {
-    return numberOfCars;
+    return totalNumberOfCars;
+}
+
+int Lane::getCurrentCarCount() const {
+    return numberOfCarsRemaining;
 }
 
 int Lane::getId() const {
     return id;
 }
 
-void Lane::simulate() {
-    signal.wait();
-    {
-        std::lock_guard<std::mutex> lock(ioLock);
-        std::cout << "Lane " << id << " is green" << std::endl;
-    }
+void Lane::crossTrafficSignal() {
+    while (numberOfCarsRemaining > 0) {
+        trafficSignal->waitForGreenLight();
 
-    for (int i = 0; i < numberOfCars; i++) {
-        {
-            std::lock_guard<std::mutex> lock(ioLock);
-            std::cout << "Car " << (i + 1) << " from Lane " << id << " passing..." << std::endl;   
+        while (trafficSignal->isGreenLight() && numberOfCarsRemaining > 0) {
+            {
+                std::lock_guard<std::mutex> lock(*printMutex);
+                std::cout << PRINT_CAR << (totalNumberOfCars - numberOfCarsRemaining + 1) << PRINT_CAR_LANE << id << PRINT_PASSING << std::endl;
+            }
+            numberOfCarsRemaining--;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-    {
-        std::lock_guard<std::mutex> lock(ioLock);
-        std::cout << "Lane " << id << " is red now" << std::endl;
-    }
+}
 
+TrafficSignal* Lane::getTrafficSignal() {
+    return trafficSignal;
+}
+
+Lane::~Lane() {
+    delete trafficSignal;
 }
