@@ -31,6 +31,9 @@ public:
 
     virtual void setRedLight();
 
+    virtual std::mutex& getMutex();
+
+    virtual ~TrafficSignal() = default;
 };
 
 #endif

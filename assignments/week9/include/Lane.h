@@ -11,23 +11,28 @@ private:
     int totalNumberOfCars;
     int numberOfCarsRemaining;
     TrafficSignal* trafficSignal;
-    std::mutex* printMutex;
+    std::mutex* printMtx;
 
 public:
 
+    std::condition_variable printCv;
+    bool canWrite = false;
+
     Lane(int id, int numberOfCars, TrafficSignal* trafficSignal, std::mutex* printMutex);
 
-    int getCarCount() const;
+    virtual int getCarCount() const;
 
-    int getCurrentCarCount() const;
+    virtual int getCurrentCarCount() const;
 
-    int getId() const;
+    virtual int getId() const;
 
-    void crossTrafficSignal();
+    virtual void crossTrafficSignal();
 
-    TrafficSignal* getTrafficSignal();
+    virtual void addCars(int numberOfCarsToBeAdded);
 
-    ~Lane();
+    virtual TrafficSignal* getTrafficSignal();
+
+    virtual ~Lane();
 
 };
 

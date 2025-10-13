@@ -7,6 +7,10 @@
 
 TrafficSignal::TrafficSignal(TrafficLight trafficLight) : trafficLight{trafficLight} {}
 
+std::mutex& TrafficSignal::getMutex() {
+    return mtx;
+}
+
 void TrafficSignal::waitForGreenLight() {
     std::unique_lock<std::mutex> lock(mtx);
     cv.wait(lock, [this]() { return trafficLight == GREEN; });
