@@ -12,12 +12,11 @@ private:
 
 std::vector<Lane*>& lanes;
 std::mutex* printMtx;
-const int TRAFFIC_WAIT_TIME_SECONDS = 5;
+const int TRAFFIC_WAIT_TIME_SECONDS = 3.5;
 
 public:
 
     TrafficController(std::vector<Lane*>& lanes, std::mutex*);
-
     void controlTraffic();
     std::string allLanesStatusToString(int currentGreenLaneId);
     std::string remainingCarsStatusToString();

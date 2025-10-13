@@ -49,7 +49,3 @@ void Lane::addCars(int numberOfCarsToBeAdded) {
     totalNumberOfCars += numberOfCarsToBeAdded;
     numberOfCarsRemaining += numberOfCarsToBeAdded;
 }
-
-Lane::~Lane() {
-    delete trafficSignal;
-}

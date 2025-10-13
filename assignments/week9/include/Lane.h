@@ -32,7 +32,7 @@ public:
 
     virtual TrafficSignal* getTrafficSignal();
 
-    virtual ~Lane();
+    virtual ~Lane() = default;
 
 };
 

@@ -6,110 +6,114 @@
 #include <future>
 #include "TrafficSignal.h"
 #include "Lane.h"
+#include "Writer.h"
+
+extern bool allCarsPassed;
 
 class MockTrafficSignal : public TrafficSignal {
 public:
-    MOCK_METHOD(void, waitForGreenLight, (), ());
-    MOCK_METHOD(void, setGreenLight, (), ());
-    MOCK_METHOD(void, setRedLight, (), ());
-    MOCK_METHOD(bool, isGreenLight, (), ());
+    MOCK_METHOD(void, waitForGreenLight, (), (override));
+    MOCK_METHOD(void, setGreenLight, (), (override));
+    MOCK_METHOD(bool, isGreenLight, (), (override));
+    MOCK_METHOD(void, setRedLight, (), (override));
 };
 
-class LaneTest : public testing::Test {
+class MockWriter : public IWriter {
+public:
+    MOCK_METHOD(void, Call, (const std::string& content, std::ios_base::openmode mode));
+    void operator()(const std::string& content, std::ios_base::openmode mode) {
+        Call(content, mode);
+    }
+};
 
+class LaneTest : public ::testing::Test {
 protected:
-
-    Lane* lane;
-    MockTrafficSignal* mockTrafficSignal;
+    MockTrafficSignal mockSignal;
+    MockWriter mockWriter;
     std::mutex printMtx;
+    Lane* lane;
 
     void SetUp() override {
-
-        int laneId = 1;
-        int totalNumberOfCars = 5;
-        mockTrafficSignal = new MockTrafficSignal;
-        lane = new Lane(laneId, totalNumberOfCars, mockTrafficSignal, &printMtx);
-
-        ON_CALL(*mockTrafficSignal, isGreenLight())
-            .WillByDefault(testing::Return(false));
+        allCarsPassed = false;
+        lane = new Lane(1, 3, &mockSignal, &printMtx);
     }
 
     void TearDown() override {
-        delete lane;
+        allCarsPassed = true;
     }
-
 };
 
-TEST_F(LaneTest, GivenLane_WhenConstructed_ThenTrafficLightIsRed) {
-
-    ASSERT_NE(lane->getTrafficSignal(), nullptr);
-    EXPECT_FALSE(lane->getTrafficSignal()->isGreenLight());
-}
-
-TEST_F(LaneTest, GivenLane_WhenGetIdCalled_ThenCorrectIdRetrieved) {
-
+TEST_F(LaneTest, GivenConstructorParams_WhenLaneCreated_ThenValuesAreInitializedCorrectly) {
     EXPECT_EQ(lane->getId(), 1);
+    EXPECT_EQ(lane->getCarCount(), 3);
+    EXPECT_EQ(lane->getCurrentCarCount(), 3);
+    EXPECT_EQ(lane->getTrafficSignal(), &mockSignal);
 }
 
-TEST_F(LaneTest, GivenLane_WhenGetCarCountCalled_ThenCorrectCarCountRetrieved) {
+TEST_F(LaneTest, GivenLane_WhenCarsAdded_ThenTotalAndRemainingIncrease) {
+    int initialTotal = lane->getCarCount();
+    int initialRemaining = lane->getCurrentCarCount();
 
-    EXPECT_EQ(lane->getCarCount(), 5);
+    lane->addCars(2);
+
+    EXPECT_EQ(lane->getCarCount(), initialTotal + 2);
+    EXPECT_EQ(lane->getCurrentCarCount(), initialRemaining + 2);
 }
 
-TEST_F(LaneTest, GivenLane_WhenConstructed_ThenCurrentCarCountEqualsTotalCarCount) {
+TEST_F(LaneTest, GivenGreenLight_WhenCrossTrafficSignalCalled_ThenCarsPassUntilNoneLeft) {
+    EXPECT_CALL(mockSignal, waitForGreenLight()).Times(1);
+    EXPECT_CALL(mockSignal, isGreenLight()).WillRepeatedly(testing::Return(true));
 
-    EXPECT_EQ(lane->getCarCount(), lane->getCurrentCarCount());
-}
+    lane->canWrite = true;
 
-TEST_F(LaneTest, GivenLane_WhenCrossTrafficSignalCalled_ThenExpectTrafficSignalCalls) {
-
-    EXPECT_CALL(*mockTrafficSignal, waitForGreenLight())
-        .Times(1);
-
-    EXPECT_CALL(*mockTrafficSignal, isGreenLight())
-        .WillRepeatedly(testing::Return(true));
-
-    lane->crossTrafficSignal();
-}
-
-TEST_F(LaneTest, GivenLane_WhenCarCountIsZero_ThenNoErrorOccured) {
-
-    int laneId = 2;
-    int totalNumberOfCars = 0;
-    lane = new Lane(laneId, totalNumberOfCars, mockTrafficSignal, &printMtx);
-
-    ON_CALL(*mockTrafficSignal, isGreenLight())
-        .WillByDefault(testing::Return(true));
-
-    std::thread laneThread(&Lane::crossTrafficSignal, lane);
-    laneThread.join();
-
-    ASSERT_EQ(lane->getCarCount(), 0);
-    EXPECT_EQ(lane->getCurrentCarCount(), 0);
-}
-
-TEST_F(LaneTest, GivenLane_WhenRedLight_ThenNoCarCrosses) {
-
-    std::future testResult = std::async(std::launch::async, [&]() {
+    std::thread t([&]() {
         lane->crossTrafficSignal();
     });
 
-    EXPECT_EQ(lane->getCurrentCarCount(), lane->getCarCount());
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    allCarsPassed = true;
 
-    EXPECT_CALL(*mockTrafficSignal, isGreenLight())
-        .WillRepeatedly(testing::Return(true));
+    t.join();
+
+    EXPECT_EQ(lane->getCurrentCarCount(), 0);
+}
+
+TEST_F(LaneTest, GivenRedLight_WhenCrossTrafficSignalCalled_ThenCarsPassUntilNoneLeft) {
+    EXPECT_CALL(mockSignal, waitForGreenLight()).Times(testing::AtLeast(1));
+    EXPECT_CALL(mockSignal, isGreenLight())
+        .WillRepeatedly(testing::Return(false));
+
+    allCarsPassed = false;
+    
+    std::thread t([&]() {
+        lane->crossTrafficSignal();
+    });
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    EXPECT_EQ(lane->getCurrentCarCount(), 3);
+
+    allCarsPassed = true;
+    t.join();
 }
 
 
-TEST_F(LaneTest, GivenLane_WhenGreenLight_ThenSomeCarsCrossSignal) {
+TEST_F(LaneTest, GivenZeroCarsRemaining_WhenCrossTrafficSignalCalled_ThenNoActionTaken) {
+    EXPECT_CALL(mockSignal, waitForGreenLight()).Times(testing::AtLeast(1));
+    EXPECT_CALL(mockSignal, isGreenLight()).WillRepeatedly(testing::Return(true));
 
-    std::thread laneThread(&Lane::crossTrafficSignal, lane);
-    EXPECT_CALL(*mockTrafficSignal, isGreenLight())
-        .WillRepeatedly(testing::Return(true));
+    lane->addCars(-lane->getCurrentCarCount());
+    EXPECT_EQ(lane->getCurrentCarCount(), 0);
 
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    laneThread.join();
+    lane->canWrite = true;
+    allCarsPassed = false;
 
-    EXPECT_LT(lane->getCurrentCarCount(), lane->getCarCount());
+    std::thread t([&]() {
+        lane->crossTrafficSignal();
+    });
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    allCarsPassed = true; 
+    t.join();
+
+    EXPECT_EQ(lane->getCurrentCarCount(), 0);
 }
-

@@ -21,11 +21,11 @@ void TrafficController::controlTraffic() {
         if (allCarsPassed) break;
         sortLanes();
         for (Lane* lane : lanes) {
-            if (lane->getCurrentCarCount() == 0) continue;
-            lane->getTrafficSignal()->setGreenLight();
-            writeSignalStatusToFile(fileWriter, lane);
-            std::this_thread::sleep_for(std::chrono::seconds(TRAFFIC_WAIT_TIME_SECONDS));
             writeRemainingCarStatusToFile(fileWriter, lane);
+            if (lane->getCurrentCarCount() == 0) continue;
+            writeSignalStatusToFile(fileWriter, lane);
+            lane->getTrafficSignal()->setGreenLight();
+            std::this_thread::sleep_for(std::chrono::seconds(TRAFFIC_WAIT_TIME_SECONDS));
             std::this_thread::sleep_for(std::chrono::seconds(2));
             lane->getTrafficSignal()->setRedLight();
         }
@@ -37,7 +37,7 @@ void TrafficController::writeRemainingCarStatusToFile(IWriter& writer, Lane* lan
     lane->canWrite = false;
     {
         std::unique_lock<std::mutex> lock(*printMtx);
-        writer(remainingCarsStatus, std::ios::app);
+        writer(remainingCarsStatus, std::ios::out);
     }
     lane->canWrite = true;
 }
@@ -47,7 +47,7 @@ void TrafficController::writeSignalStatusToFile(IWriter& writer, Lane* lane) {
     lane->canWrite = false;
     {
         std::unique_lock<std::mutex> lock(*printMtx);
-        writer(allLanesStatus, std::ios::out);
+        writer(allLanesStatus, std::ios::app);
     }
     lane->canWrite = true;
     lane->printCv.notify_all();
