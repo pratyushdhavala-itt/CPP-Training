@@ -124,7 +124,7 @@ TEST_F(InputChoiceTestFixture, GivenValidLaneAndCars_WhenCalled_ThenAddCarsInvok
     EXPECT_CALL(lane1, addCars).Times(0);
 
     addMoreCars(lanes);
-    EXPECT_TRUE(allCarsPassed);
+    EXPECT_TRUE(exitProgram);
 }
 
 TEST_F(InputChoiceTestFixture, GivenMinusOneLaneNumber_WhenCalled_ThenExitsAndSetsAllCarsPassed) {
@@ -136,10 +136,10 @@ TEST_F(InputChoiceTestFixture, GivenMinusOneLaneNumber_WhenCalled_ThenExitsAndSe
 
     EXPECT_CALL(lane, addCars).Times(0);
 
-    allCarsPassed = false;
+    exitProgram = false;
     addMoreCars(lanes);
     EXPECT_THAT(testOutput.str(), testing::HasSubstr(PRINT_END_PROGRAM_AFTER_CROSSING));
-    EXPECT_TRUE(allCarsPassed);
+    EXPECT_TRUE(exitProgram);
 }
 
 TEST_F(InputChoiceTestFixture, GivenMinusOneCarsInput_WhenCalled_ThenRetriesAndAddsCarsAfterValidInput) {
@@ -150,7 +150,7 @@ TEST_F(InputChoiceTestFixture, GivenMinusOneCarsInput_WhenCalled_ThenRetriesAndA
 
     EXPECT_CALL(lane, addCars(2)).Times(1);
 
-    allCarsPassed = false;
+    exitProgram = false;
     addMoreCars(lanes);
 
     EXPECT_THAT(testOutput.str(), testing::HasSubstr(PRINT_INVALID_INPUT_TWO));
@@ -166,10 +166,10 @@ TEST_F(InputChoiceTestFixture, GivenMultipleInputs_WhenCalled_ThenUpdatesMultipl
     EXPECT_CALL(lane1, addCars(3)).Times(1);
     EXPECT_CALL(lane2, addCars(5)).Times(1);
 
-    allCarsPassed = false;
+    exitProgram = false;
     addMoreCars(lanes);
 
-    EXPECT_TRUE(allCarsPassed);
+    EXPECT_TRUE(exitProgram);
 }
 
 TEST_F(InputChoiceTestFixture, GivenInputs_WhenCalled_ThenPrintsPrompts) {

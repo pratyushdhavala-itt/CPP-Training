@@ -5,7 +5,7 @@
 #include "WriteToFile.h"
 #include "constants.h"
 
-extern bool allCarsPassed;
+extern bool exitProgram;
 
 Lane::Lane(int id, int totalNumberOfCars, TrafficSignal* trafficSignal, std::mutex* printMtx) : id{id}, totalNumberOfCars{totalNumberOfCars}, trafficSignal{trafficSignal}, printMtx{printMtx} {
     numberOfCarsRemaining = totalNumberOfCars;
@@ -25,7 +25,7 @@ int Lane::getId() const {
 
 void Lane::crossTrafficSignal() {
     WriteToFile writer;
-    while (!allCarsPassed) {
+    while (!(exitProgram && getCurrentCarCount() == 0)) {
         trafficSignal->waitForGreenLight();
 
         while (trafficSignal->isGreenLight() && numberOfCarsRemaining > 0) {

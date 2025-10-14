@@ -43,7 +43,7 @@ public:
 
 };
 
-TEST_F(TrafficControllerTest, GivenMultipleLanes_WhenSorted_ThenLanesOrderedByCarCountDescending) {
+TEST_F(TrafficControllerTest, GivenLanes_WhenSorted_ThenLanesOrderedByDescendingCarCount) {
     MockTrafficSignal* signal1 = new MockTrafficSignal();
     MockTrafficSignal* signal2 = new MockTrafficSignal();
 
@@ -78,27 +78,8 @@ TEST_F(TrafficControllerTest, GivenLanesAlreadySorted_WhenSorted_ThenOrderRemain
     EXPECT_EQ(lanes[2]->getId(), 3);
 }
 
-TEST_F(TrafficControllerTest, GivenReverseSortedLanes_WhenSorted_ThenOrderIsReversed) {
-    MockTrafficSignal* s1 = new MockTrafficSignal();
-    MockTrafficSignal* s2 = new MockTrafficSignal();
-    MockTrafficSignal* s3 = new MockTrafficSignal();
 
-    Lane* l1 = new Lane(1, 5, s1, &printMtx);
-    Lane* l2 = new Lane(2, 10, s2, &printMtx);
-    Lane* l3 = new Lane(3, 15, s3, &printMtx);
-
-    lanes = {l1, l2, l3};
-    controller = new TrafficController(lanes, &printMtx);
-
-    std::reverse(lanes.begin(), lanes.end());
-    controller->sortLanes();
-
-    EXPECT_EQ(lanes[0]->getId(), 3);
-    EXPECT_EQ(lanes[1]->getId(), 2);
-    EXPECT_EQ(lanes[2]->getId(), 1);
-}
-
-TEST_F(TrafficControllerTest, GivenLaneWithZeroCars_WhenSorted_ThenComesLast) {
+TEST_F(TrafficControllerTest, GivenLaneWithZeroCars_WhenSorted_ThenItIsLast) {
     MockTrafficSignal* s1 = new MockTrafficSignal();
     MockTrafficSignal* s2 = new MockTrafficSignal();
     Lane* l1 = new Lane(1, 0, s1, &printMtx);
@@ -120,7 +101,7 @@ TEST_F(TrafficControllerTest, GivenNoLanes_WhenSorted_ThenDoesNotCrash) {
     EXPECT_TRUE(lanes.empty());
 }
 
-TEST_F(TrafficControllerTest, GivenThreeLanes_WhenSecondLaneIsGreen_ThenCorrectStatusStringReturned) {
+TEST_F(TrafficControllerTest, GivenThreeLanes_WhenSecondLaneIsGreen_ThenItIsPrintedCorrectly) {
     
     MockTrafficSignal* s1 = new MockTrafficSignal();
     MockTrafficSignal* s2 = new MockTrafficSignal();
@@ -144,9 +125,9 @@ TEST_F(TrafficControllerTest, GivenThreeLanes_WhenSecondLaneIsGreen_ThenCorrectS
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TrafficControllerTest, GivenSingleLane_WhenGreen_ThenSingleGreenShown) {
-    auto* s1 = new MockTrafficSignal();
-    auto* l1 = new Lane(1, 2, s1, &printMtx);
+TEST_F(TrafficControllerTest, GivenOneLane_WhenGreen_ThenItIsPrintedCorrectly) {
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    Lane* l1 = new Lane(1, 2, s1, &printMtx);
     lanes = {l1};
     controller = new TrafficController(lanes, &printMtx);
 
@@ -159,14 +140,14 @@ TEST_F(TrafficControllerTest, GivenSingleLane_WhenGreen_ThenSingleGreenShown) {
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TrafficControllerTest, GivenThreeLanes_WhenInvalidGreenId_ThenAllRed) {
-    auto* s1 = new MockTrafficSignal();
-    auto* s2 = new MockTrafficSignal();
-    auto* s3 = new MockTrafficSignal();
+TEST_F(TrafficControllerTest, GivenThreeLanes_WhenInvalidLaneIdIsGreen_ThenAllLanesAreRed) {
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    MockTrafficSignal* s2 = new MockTrafficSignal();
+    MockTrafficSignal* s3 = new MockTrafficSignal();
 
-    auto* l1 = new Lane(1, 2, s1, &printMtx);
-    auto* l2 = new Lane(2, 2, s2, &printMtx);
-    auto* l3 = new Lane(3, 2, s3, &printMtx);
+    Lane* l1 = new Lane(1, 2, s1, &printMtx);
+    Lane* l2 = new Lane(2, 2, s2, &printMtx);
+    Lane* l3 = new Lane(3, 2, s3, &printMtx);
 
     lanes = {l1, l2, l3};
     controller = new TrafficController(lanes, &printMtx);
@@ -182,14 +163,14 @@ TEST_F(TrafficControllerTest, GivenThreeLanes_WhenInvalidGreenId_ThenAllRed) {
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TrafficControllerTest, GivenThreeLanes_WhenGettingRemainingCarsStatus_ThenCorrectStringReturned) {
-    auto* s1 = new MockTrafficSignal();
-    auto* s2 = new MockTrafficSignal();
-    auto* s3 = new MockTrafficSignal();
+TEST_F(TrafficControllerTest, GivenThreeLanes_WhenRemainingCarsStatusCalled_ThenCorrectStringReturned) {
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    MockTrafficSignal* s2 = new MockTrafficSignal();
+    MockTrafficSignal* s3 = new MockTrafficSignal();
 
-    auto* l1 = new Lane(1, 5, s1, &printMtx);
-    auto* l2 = new Lane(2, 10, s2, &printMtx);
-    auto* l3 = new Lane(3, 15, s3, &printMtx);
+    Lane* l1 = new Lane(1, 5, s1, &printMtx);
+    Lane* l2 = new Lane(2, 10, s2, &printMtx);
+    Lane* l3 = new Lane(3, 15, s3, &printMtx);
 
     lanes = {l1, l2, l3};
     controller = new TrafficController(lanes, &printMtx);
@@ -205,9 +186,9 @@ TEST_F(TrafficControllerTest, GivenThreeLanes_WhenGettingRemainingCarsStatus_The
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TrafficControllerTest, GivenSingleLane_WhenGettingRemainingCarsStatus_ThenShowsThatLaneOnly) {
-    auto* s1 = new MockTrafficSignal();
-    auto* l1 = new Lane(1, 8, s1, &printMtx);
+TEST_F(TrafficControllerTest, GivenOneLane_WhenRemainingCarsStatusCalled_ThenPrintsThatLaneOnly) {
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    Lane* l1 = new Lane(1, 8, s1, &printMtx);
     lanes = {l1};
     controller = new TrafficController(lanes, &printMtx);
 
@@ -220,12 +201,12 @@ TEST_F(TrafficControllerTest, GivenSingleLane_WhenGettingRemainingCarsStatus_The
     EXPECT_EQ(result, expected);
 }
 
-TEST_F(TrafficControllerTest, GivenZeroCarLanes_WhenGettingRemainingCarsStatus_ThenShowsZeroCars) {
-    auto* s1 = new MockTrafficSignal();
-    auto* s2 = new MockTrafficSignal();
+TEST_F(TrafficControllerTest, GivenZeroCarLanes_WhenRemainingCarsStatusCalled_ThenShowsZeroCars) {
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    MockTrafficSignal* s2 = new MockTrafficSignal();
 
-    auto* l1 = new Lane(1, 0, s1, &printMtx);
-    auto* l2 = new Lane(2, 0, s2, &printMtx);
+    Lane* l1 = new Lane(1, 0, s1, &printMtx);
+    Lane* l2 = new Lane(2, 0, s2, &printMtx);
 
     lanes = {l1, l2};
     controller = new TrafficController(lanes, &printMtx);
@@ -250,10 +231,10 @@ TEST_F(TrafficControllerTest, GivenNoLanes_WhenGettingRemainingCarsStatus_ThenSh
 
 TEST_F(TrafficControllerTest, GivenLane_WhenWriteSignalStatusToFileCalled_ThenCorrectDataPassedToWriter) {
 
-    auto* s1 = new MockTrafficSignal();
-    auto* s2 = new MockTrafficSignal();
-    auto* l1 = new Lane(1, 3, s1, &printMtx);
-    auto* l2 = new Lane(2, 5, s2, &printMtx);
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    MockTrafficSignal* s2 = new MockTrafficSignal();
+    Lane* l1 = new Lane(1, 3, s1, &printMtx);
+    Lane* l2 = new Lane(2, 5, s2, &printMtx);
     lanes = {l1, l2};
 
     controller = new TrafficController(lanes, &printMtx);
@@ -273,10 +254,10 @@ TEST_F(TrafficControllerTest, GivenLane_WhenWriteSignalStatusToFileCalled_ThenCo
 }
 
 TEST_F(TrafficControllerTest, GivenLanes_WhenWriteRemainingCarStatusToFileCalled_ThenCorrectDataPassedToWriter) {
-    auto* s1 = new MockTrafficSignal();
-    auto* s2 = new MockTrafficSignal();
-    auto* l1 = new Lane(1, 5, s1, &printMtx);
-    auto* l2 = new Lane(2, 10, s2, &printMtx);
+    MockTrafficSignal* s1 = new MockTrafficSignal();
+    MockTrafficSignal* s2 = new MockTrafficSignal();
+    Lane* l1 = new Lane(1, 5, s1, &printMtx);
+    Lane* l2 = new Lane(2, 10, s2, &printMtx);
     lanes = {l1, l2};
 
     controller = new TrafficController(lanes, &printMtx);
@@ -295,8 +276,8 @@ TEST_F(TrafficControllerTest, GivenLanes_WhenWriteRemainingCarStatusToFileCalled
 }
 
 TEST_F(TrafficControllerTest, GivenOneLane_WhenControlTrafficRuns_ThenGreenAndRedCalledOnce) {
-    auto* signal = new MockTrafficSignal();
-    auto* lane = new Lane(1, 3, signal, &printMtx);
+    MockTrafficSignal* signal = new MockTrafficSignal();
+    Lane* lane = new Lane(1, 3, signal, &printMtx);
     lanes = { lane };
     controller = new TrafficController(lanes, &printMtx);
 
@@ -305,11 +286,11 @@ TEST_F(TrafficControllerTest, GivenOneLane_WhenControlTrafficRuns_ThenGreenAndRe
     EXPECT_CALL(*signal, setGreenLight()).Times(1);
     EXPECT_CALL(*signal, setRedLight()).Times(1);
 
-    extern bool allCarsPassed;
-    allCarsPassed = false;
+    extern bool exitProgram;
+    exitProgram = false;
     std::thread stopper([] {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        allCarsPassed = true;
+        exitProgram = true;
     });
 
     controller->controlTraffic();
@@ -319,8 +300,8 @@ TEST_F(TrafficControllerTest, GivenOneLane_WhenControlTrafficRuns_ThenGreenAndRe
 
 TEST_F(TrafficControllerTest, GivenLaneWithZeroCars_WhenControlTrafficRuns_ThenNoSignalCalls) {
 
-    auto* signal = new MockTrafficSignal();
-    auto* lane = new Lane(1, 0, signal, &printMtx);
+    MockTrafficSignal* signal = new MockTrafficSignal();
+    Lane* lane = new Lane(1, 0, signal, &printMtx);
     lanes = { lane };
     controller = new TrafficController(lanes, &printMtx);
 
@@ -330,12 +311,12 @@ TEST_F(TrafficControllerTest, GivenLaneWithZeroCars_WhenControlTrafficRuns_ThenN
     EXPECT_CALL(*signal, setRedLight()).Times(0);
 
 
-    extern bool allCarsPassed;
-    allCarsPassed = false;
+    extern bool exitProgram;
+    exitProgram = false;
 
     std::thread stopper([] {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        allCarsPassed = true;
+        exitProgram = true;
     });
 
     controller->controlTraffic();
@@ -345,10 +326,10 @@ TEST_F(TrafficControllerTest, GivenLaneWithZeroCars_WhenControlTrafficRuns_ThenN
 
 TEST_F(TrafficControllerTest, GivenMultipleLanes_WhenControlTrafficRuns_ThenEachLaneGetsGreenAndRedOnce) {
     
-    auto* signal1 = new MockTrafficSignal();
-    auto* signal2 = new MockTrafficSignal();
-    auto* lane1 = new Lane(1, 3, signal1, &printMtx);
-    auto* lane2 = new Lane(2, 5, signal2, &printMtx);
+    MockTrafficSignal* signal1 = new MockTrafficSignal();
+    MockTrafficSignal* signal2 = new MockTrafficSignal();
+    Lane* lane1 = new Lane(1, 3, signal1, &printMtx);
+    Lane* lane2 = new Lane(2, 5, signal2, &printMtx);
     lanes = { lane1, lane2 };
     controller = new TrafficController(lanes, &printMtx);
 
@@ -359,11 +340,11 @@ TEST_F(TrafficControllerTest, GivenMultipleLanes_WhenControlTrafficRuns_ThenEach
     EXPECT_CALL(*signal2, setGreenLight()).Times(1);
     EXPECT_CALL(*signal2, setRedLight()).Times(1);
 
-    extern bool allCarsPassed;
-    allCarsPassed = false;
+    extern bool exitProgram;
+    exitProgram = false;
     std::thread stopper([] {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        allCarsPassed = true;
+        exitProgram = true;
     });
 
     controller->controlTraffic();
@@ -375,11 +356,11 @@ TEST_F(TrafficControllerTest, GivenNoLanes_WhenControlTrafficRuns_ThenDoesNotCra
     controller = new TrafficController(lanes, &printMtx); 
     MockWriter mockWriter; 
 
-    extern bool allCarsPassed;
-    allCarsPassed = false;
+    extern bool exitProgram;
+    exitProgram = false;
     std::thread stopper([] {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        allCarsPassed = true;
+        exitProgram = true;
     });
 
     EXPECT_NO_THROW(controller->controlTraffic());

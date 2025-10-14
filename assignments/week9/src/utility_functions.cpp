@@ -7,7 +7,7 @@ void addMoreCars(std::vector<Lane*>& lanes) {
         std::cout << PRINT_ENTER_LANE_NUMBER;
         laneNumber = inputChoice(1, lanes.size(), true);
         if (laneNumber == -1) {
-            allCarsPassed = true;
+            exitProgram = true;
             std::cout << PRINT_END_PROGRAM_AFTER_CROSSING << std::endl;
             break;
         }

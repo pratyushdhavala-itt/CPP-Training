@@ -11,14 +11,24 @@
 #include "WriteToFile.h"
 #include "Writer.h"
 
-extern bool allCarsPassed;
+extern bool exitProgram;
 
 TrafficController::TrafficController(std::vector<Lane*>& lanes, std::mutex* printMtx) : lanes{lanes}, printMtx{printMtx} {}
 
 void TrafficController::controlTraffic() {
     WriteToFile fileWriter;
     while (true) {
-        if (allCarsPassed) break;
+    bool allCarsPassed = true;
+        for (Lane* lane : lanes) {
+            if (lane->getCurrentCarCount() > 0) {
+                allCarsPassed = false;
+                break;
+            }
+        }
+        if (exitProgram && allCarsPassed) {
+            writeRemainingCarStatusToFile(fileWriter);
+            break;
+        }
         sortLanes();
         for (Lane* lane : lanes) {
             writeRemainingCarStatusToFile(fileWriter, lane);
@@ -33,13 +43,14 @@ void TrafficController::controlTraffic() {
 }
 
 void TrafficController::writeRemainingCarStatusToFile(IWriter& writer, Lane* lane) {
+    
     std::string remainingCarsStatus = remainingCarsStatusToString();
-    lane->canWrite = false;
+    if (lane != nullptr) lane->canWrite = false;
     {
         std::unique_lock<std::mutex> lock(*printMtx);
         writer(remainingCarsStatus, std::ios::out);
     }
-    lane->canWrite = true;
+    if (lane != nullptr) lane->canWrite = true;
 }
 
 void TrafficController::writeSignalStatusToFile(IWriter& writer, Lane* lane) {

@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-inline bool allCarsPassed = false;
+inline bool exitProgram = false;
 
 inline const char* PRINT_ENTER_NUMBER_OF_LANES = "\nEnter number of lanes: ";
 inline const char* PRINT_ENTER_NUMBER_OF_CARS = "\nEnter number of cars in lane ";

@@ -69,13 +69,13 @@ TEST_F(TrafficSignalTest, GivenLightIsGreen_WhenWaitForGreenLightCalled_ThenRetu
     EXPECT_TRUE(trafficSignal.isGreenLight());
 }
 
-TEST_F(TrafficSignalTest, GivenGreenLight_WhenRedLightSet_ThenSignalTurnsRedWithoutNotifyingThreads) {
+TEST_F(TrafficSignalTest, GivenGreenLight_WhenRedLightSet_ThenSignalTurnsAndThreadIsBlocked) {
 
     trafficSignal.setGreenLight();
-    EXPECT_TRUE(trafficSignal.isGreenLight());
+    ASSERT_TRUE(trafficSignal.isGreenLight());
 
     trafficSignal.setRedLight();
-    EXPECT_FALSE(trafficSignal.isGreenLight());
+    ASSERT_FALSE(trafficSignal.isGreenLight());
 
     bool threadUnblocked = false;
 
@@ -92,9 +92,9 @@ TEST_F(TrafficSignalTest, GivenGreenLight_WhenRedLightSet_ThenSignalTurnsRedWith
     t.join();
 }
 
-TEST_F(TrafficSignalTest, GivenMultipleWaitingThreads_WhenGreenLightSet_ThenOnlyOneUnblocks) {
+TEST_F(TrafficSignalTest, GivenMultipleWaitingThreads_WhenGreenLightSet_ThenOnlyOneThreadUnblocks) {
     constexpr int numThreads = 3;
-    std::atomic<int> unblockedCount{0};
+    std::atomic<int> unblockedCount = 0;
     std::vector<std::thread> threads;
 
     for (int i = 0; i < numThreads; ++i) {
@@ -122,9 +122,9 @@ TEST_F(TrafficSignalTest, GivenMultipleWaitingThreads_WhenGreenLightSet_ThenOnly
     }
 }
 
-TEST_F(TrafficSignalTest, GivenMultipleSequentialSignals_WhenGreenLightSetRepeatedly_ThenEachThreadUnblocksOnce) {
+TEST_F(TrafficSignalTest, GivenMultipleSignals_WhenGreenLightSetRepeatedly_ThenEachThreadUnblocksOnce) {
     constexpr int numThreads = 3;
-    std::atomic<int> unblockedCount{0};
+    std::atomic<int> unblockedCount = 0;
     std::vector<std::thread> threads;
 
     for (int i = 0; i < numThreads; ++i) {

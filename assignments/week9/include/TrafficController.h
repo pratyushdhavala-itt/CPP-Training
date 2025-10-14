@@ -22,7 +22,7 @@ public:
     std::string remainingCarsStatusToString();
     void sortLanes();
     void writeSignalStatusToFile(IWriter& writer, Lane* lane);
-    void writeRemainingCarStatusToFile(IWriter& writer, Lane* lane);
+    void writeRemainingCarStatusToFile(IWriter& writer, Lane* lane = nullptr);
 
 };
 
