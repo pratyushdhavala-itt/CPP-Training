@@ -1,0 +1,65 @@
+@startuml
+
+enum Direction {
+    UP
+    DOWN
+}
+
+enum ElevatorState {
+    GOING_UP
+    GOING_DOWN
+    IDLE
+}
+
+class Elevator {
+    -int elevatorId
+    -int currentFloor
+    -ElevatorState currentState;
+    -mutex mtx
+    -condition_variable cv
+    -queue<TravelRequest> elevatorQueue
+    +Elevator(id: int)
+    +runElevator(): void
+    +getElevatorState(): ElevatorState
+    +getCurrentFloor(): int
+    +moveToFloor(int destinationFloor): void
+    +stop(): void
+    +run(): void
+}
+
+struct TravelRequest {
+    +static inline int totalPersonCount = 1;
+    +Direction direction;
+    +int personId;
+    +int sourceFloor;
+    +int destinationFloor;
+    +TravelRequest(Direction direction, int sourceFloor, int destinationFloor);
+}
+
+class ElevatorController {
+    -Elevator& e1
+    -Elevator& e2
+    -std::queue<TravelRequest> commonElevatorQueue;
+    +ElevatorController(Elevator&, Elevator&)
+    +addRequestToQueue(TravelRequest request): void
+    +assignRequestToElevator(): void
+    +canBeAssigned(TravelRequest request): bool
+    +getNextRequest(): TravelRequest
+    +controlElevator(): void
+    +run(): void
+    +stop(): void
+}
+
+class ElevatorException {
+    +ElevatorException(std::string mesage)
+}
+
+ElevatorController --> Elevator
+ElevatorController --> TravelRequest
+Elevator --> TravelRequest
+Elevator --> ElevatorState
+TravelRequest --> Direction
+ElevatorController ..> ElevatorException
+Elevator ..> ElevatorException
+
+@enduml
