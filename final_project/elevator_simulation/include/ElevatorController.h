@@ -21,7 +21,10 @@ private:
 public:
 
     ElevatorController(Elevator& elevatorOne, Elevator& elevatorTwo);
-    void startElevatorController();
+    void runElevatorThreads();
+    void runElevatorController();
+    ElevatorRequest waitAndGetElevatorRequest();
+    void assignRequestToSuitableElevator(ElevatorRequest);
     void addRequestToQueue(ElevatorRequest request);
     void assignRequestToElevator(Elevator& elevator, ElevatorRequest& request);
     int calculateScore(Elevator& elevator, ElevatorRequest& request);

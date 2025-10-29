@@ -18,28 +18,40 @@ Elevator::Elevator(int elevatorId, ElevatorLogger& logger, std::mutex* loggerMut
     elevatorCV = new std::condition_variable;
 }
 
+int Elevator::getCurrentFloor() {
+    return currentFloor;
+}
+
+Elevator::ElevatorState Elevator::getElevatorState() {
+    return currentState;
+}
+
+int Elevator::getPendingStops() {
+    return floorsToVisitWhileGoingDown.size() + floorsToVisitWhileGoingUp.size();
+}
+
+bool Elevator::anyPendingRequests() {
+    return !(floorsToVisitWhileGoingDown.empty() && floorsToVisitWhileGoingUp.empty());     
+}
+
+void Elevator::waitForElevatorRequest() {
+    std::unique_lock<std::mutex> lock(*elevatorMutex);
+    elevatorCV->wait(lock, [&](){
+        return !elevatorQueue.empty() || anyPendingRequests();
+    });
+    ElevatorRequest request = elevatorQueue.front();
+    elevatorQueue.pop();
+    lock.unlock();
+    processRequestWhileMoving(request);
+}
+
 void Elevator::runElevator() {
     while (true) {
-
-        std::unique_lock<std::mutex> lock(*elevatorMutex);
-        elevatorCV->wait(lock, [&](){
-            return !elevatorQueue.empty() || pendingRequests();
-        });
-
-        while (!elevatorQueue.empty()) {
-            ElevatorRequest request = elevatorQueue.front();
-            elevatorQueue.pop();
-            lock.unlock();
-            processRequestWhileMoving(request);
-            lock.lock();
-        }
-        lock.unlock();
+        waitForElevatorRequest();
         determineNextDirection();
-
-        int nextFloorStop;
-
-        advanceElevatorToFirstRequestedFloor();
+        // advanceElevatorToFirstRequestedFloor();
         switch(currentState) {
+            int nextFloorStop;
             case GOING_UP:
                 while (!floorsToVisitWhileGoingUp.empty()) {
                     nextFloorStop = *floorsToVisitWhileGoingUp.begin();
@@ -47,7 +59,6 @@ void Elevator::runElevator() {
                     floorsToVisitWhileGoingUp.erase(nextFloorStop);
                 }
                 break;
-
             case GOING_DOWN:
                 while (!floorsToVisitWhileGoingDown.empty()) {
                     nextFloorStop = *floorsToVisitWhileGoingDown.rbegin();
@@ -55,26 +66,21 @@ void Elevator::runElevator() {
                     floorsToVisitWhileGoingDown.erase(nextFloorStop);
                 }
                 break;
-
             case IDLE:
                 std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 break;
         }
-
         currentState = IDLE;
     }
 }
 
 void Elevator::determineNextDirection() {
-
-    if (!pendingRequests()) {
+    if (!anyPendingRequests()) {
         currentState = IDLE;
         return;
     }
-
     if (currentState == GOING_UP && !floorsToVisitWhileGoingUp.empty()) return;
     if (currentState == GOING_DOWN && !floorsToVisitWhileGoingDown.empty()) return;
-
     if (floorsToVisitWhileGoingUp.empty() && !floorsToVisitWhileGoingDown.empty()) {
         currentState = GOING_DOWN;
     } else if (floorsToVisitWhileGoingDown.empty() && !floorsToVisitWhileGoingUp.empty()) {
@@ -82,15 +88,52 @@ void Elevator::determineNextDirection() {
     }
 }
 
-bool Elevator::pendingRequests() {
+void Elevator::openElevatorDoors() {
+    std::string logOpenDoor;
+    logOpenDoor = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "OPENING DOORS";
+    {
+        std::unique_lock<std::mutex> lock(*loggerMutex);
+        logger(logOpenDoor);
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+}
 
-    return !(floorsToVisitWhileGoingDown.empty() && floorsToVisitWhileGoingUp.empty());     
+void Elevator::closeElevatorDoors() {
+    std::string logCloseDoor;
+    logCloseDoor = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "CLOSING DOORS";
+    {
+        std::unique_lock<std::mutex> lock(*loggerMutex);
+        logger(logCloseDoor);
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+}
+
+void Elevator::performActionOnCurrentFloor() {
+    if (!floorData[currentFloor].empty()) {
+        openElevatorDoors();
+    }
+    std::string currentFloorAction;
+    std::vector<std::pair<int, PersonAction>>& actions = floorData[currentFloor];
+    for (std::pair<int, PersonAction>& p : actions) {
+        if (p.second == GETTING_IN) {
+            currentFloorAction = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "PERSON " + std::to_string(p.first) + " STEPPING IN";
+        } else if (p.second == GETTING_OUT) {
+            currentFloorAction = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "PERSON " + std::to_string(p.first) + " STEPPING OUT";
+        }
+        {
+            std::lock_guard<std::mutex> lock(*loggerMutex);
+            logger(currentFloorAction);
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+    if (!floorData[currentFloor].empty()) {
+        closeElevatorDoors();
+    }
+    actions.clear();
 }
 
 void Elevator::moveToFloor(int destinationFloor) {
-
     int directionToMove = (currentState == GOING_UP) ? 1 : -1;
-
     std::string floorLogs;
     while (currentFloor != destinationFloor) {
         currentFloor += directionToMove;
@@ -106,36 +149,7 @@ void Elevator::moveToFloor(int destinationFloor) {
             logger(floorLogs);
         }
     }
-
-    if (floorData[currentFloor].empty()) return;
-
-    floorLogs = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "OPENING DOORS";
-    {
-        std::unique_lock<std::mutex> lock(*loggerMutex);
-        logger(floorLogs);
-    }
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::vector<std::pair<int, PersonAction>>& actions = floorData[currentFloor];
-    for (std::pair<int, PersonAction>& p : actions) {
-        if (p.second == GETTING_IN) {
-            floorLogs = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "PERSON " + std::to_string(p.first) + " STEPPING IN";
-        } else if (p.second == GETTING_OUT) {
-            floorLogs = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "PERSON " + std::to_string(p.first) + " STEPPING OUT";
-        }
-        {
-            std::lock_guard<std::mutex> lock(*loggerMutex);
-            logger(floorLogs);
-        }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    }
-    actions.clear();
-    floorLogs = "[ELEVATOR " + std::to_string(elevatorId) + "]: " + "[FLOOR " + std::to_string(currentFloor) + "]: " + "CLOSING DOORS";
-    {
-        std::unique_lock<std::mutex> lock(*loggerMutex);
-        logger(floorLogs);
-    }
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    performActionOnCurrentFloor();
 }
 
 void Elevator::addRequestToQueue(ElevatorRequest& request) {
@@ -147,23 +161,9 @@ void Elevator::addRequestToQueue(ElevatorRequest& request) {
     elevatorCV->notify_one();
 }
 
-int Elevator::getCurrentFloor() {
-    return currentFloor;
-}
-
-Elevator::ElevatorState Elevator::getElevatorState() {
-    return currentState;
-}
-
-int Elevator::getPendingStops() {
-    return floorsToVisitWhileGoingDown.size() + floorsToVisitWhileGoingUp.size();
-}
-
 void Elevator::processRequestWhileMoving(ElevatorRequest& request) {
-
     floorData[request.sourceFloor].push_back({request.personId, GETTING_IN});
     floorData[request.destinationFloor].push_back({request.personId, GETTING_OUT});
-
     if (request.direction == ElevatorRequest::UP) {
         floorsToVisitWhileGoingUp.insert(request.sourceFloor);
         floorsToVisitWhileGoingUp.insert(request.destinationFloor);
@@ -174,7 +174,6 @@ void Elevator::processRequestWhileMoving(ElevatorRequest& request) {
 }
 
 void Elevator::advanceElevatorToFirstRequestedFloor() {
-
     if (!floorsToVisitWhileGoingUp.empty()) {
         int firstStop = *floorsToVisitWhileGoingUp.begin();
         if (firstStop != currentFloor) {

@@ -45,12 +45,16 @@ public:
     int getCurrentFloor();
     ElevatorState getElevatorState();
     void moveToFloor(int destinationFloor);
+    void performActionOnCurrentFloor();
+    void openElevatorDoors();
+    void closeElevatorDoors();
     void addRequestToQueue(ElevatorRequest& request);
     void determineNextDirection();
-    bool pendingRequests();
+    bool anyPendingRequests();
     int getPendingStops();
     void advanceElevatorToFirstRequestedFloor();
     void processRequestWhileMoving(ElevatorRequest& request);
+    void waitForElevatorRequest();
 };
 
 #endif
