@@ -6,101 +6,136 @@
 #include "ElevatorController.h"
 #include "Elevator.h"
 #include "ElevatorRequest.h"
+#include "ElevatorException.h"
 
-ElevatorController::ElevatorController(Elevator& elevatorOne, Elevator& elevatorTwo) : elevatorOne{elevatorOne}, elevatorTwo{elevatorTwo} {
+ElevatorController::ElevatorController(std::vector<Elevator*>& elevators) : elevators{elevators}, stopSignal{false}, storeRequest{ElevatorRequest::UP, 0, 0} {
 
-    controllerMutex = new std::mutex;
-    controllerCV = new std::condition_variable;
+    elevatorCount = this->elevators.size();
+}
+
+void ElevatorController::runElevatorController() {
+    runElevatorThreads();
+    while (true) {
+        bool receivedRequest = waitAndGetElevatorRequest(storeRequest);
+        if (!receivedRequest) {
+            break;
+        }
+        assignRequestToSuitableElevator(storeRequest);
+    }
+}
+
+void ElevatorController::addRequestToQueue(ElevatorRequest request) {
+    {
+        std::lock_guard<std::mutex> lock(controllerMutex);
+        commonElevatorQueue.push(request);
+    }
+    controllerCV.notify_all();
+}
+
+void ElevatorController::runElevatorThreads() {
+    for (int i = 0; i < elevatorCount; i++) {
+        elevatorThreads.emplace_back(&Elevator::runElevator, elevators[i]);
+    }
+}
+
+bool ElevatorController::waitAndGetElevatorRequest(ElevatorRequest& request) {
+    std::unique_lock<std::mutex> lock(controllerMutex);
+    controllerCV.wait(lock, [&]() {
+        return !commonElevatorQueue.empty() || stopSignal.load();
+    });
+
+    if (commonElevatorQueue.empty() && stopSignal.load()) {
+        return false;
+    }
+    request = commonElevatorQueue.front();
+    commonElevatorQueue.pop();
+    return true;
+}
+
+void ElevatorController::assignRequestToSuitableElevator(const ElevatorRequest& request) {
+    int mostSuitableScore = std::numeric_limits<int>::max();
+    int mostSuitableIndex = std::numeric_limits<int>::max();
+    for (int i = 0; i < elevatorCount; i++) {
+        Elevator* elevator = elevators[i];
+
+        if (!canAssignRequestToElevator(*elevator, request)) {
+            continue;
+        }
+        int elevatorIndex = i;
+        int elevatorScore = calculateScore(*elevator, request);
+        if ((elevatorScore < mostSuitableScore) || 
+        (elevatorScore == mostSuitableScore && elevatorIndex < mostSuitableIndex)) {
+            mostSuitableScore = elevatorScore;
+            mostSuitableIndex = elevatorIndex;
+        }
+    }
+    if (mostSuitableIndex != std::numeric_limits<int>::max()) {
+        elevators[mostSuitableIndex]->processElevatorRequest(request);
+    } else {
+        delayRequest(request);
+    }
+}
+
+int ElevatorController::calculateScore(Elevator& elevator, const ElevatorRequest& request) {
+    int elevatorScore = 0;
+    Elevator::ElevatorState currentState = elevator.getElevatorState();
+    elevatorScore += std::abs(elevator.getCurrentFloorNumber() - request.sourceFloor);
+
+    if (currentState == Elevator::IDLE) {
+        elevatorScore -= 1;
+    }  else if ((currentState == Elevator::GOING_UP && request.direction == ElevatorRequest::UP) || 
+        (currentState == Elevator::GOING_DOWN && request.direction == ElevatorRequest::DOWN)) {
+            elevatorScore -= 5;
+    } else {
+        elevatorScore += 3;
+    }
+
+    elevatorScore += elevator.pendingRequests();
+
+    return elevatorScore;
+}
+
+bool ElevatorController::canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request) {
+    Elevator::ElevatorState currentState = elevator.getElevatorState();
+    int currentFloorNumber = elevator.getCurrentFloorNumber();
+    if (currentState == Elevator::IDLE) return true;
+    if (currentState == Elevator::GOING_UP) {
+        return request.direction == ElevatorRequest::UP && request.sourceFloor >= currentFloorNumber;
+    }
+    if (currentState == Elevator::GOING_DOWN) {
+        return request.direction == ElevatorRequest::DOWN && request.sourceFloor < currentFloorNumber;
+    }
+    return false;
+}
+
+void ElevatorController::delayRequest(const ElevatorRequest& request) {
+    ElevatorRequest tempRequest = request;
+    {
+        std::lock_guard<std::mutex> lock(controllerMutex);
+        commonElevatorQueue.push(tempRequest);
+    }
+    controllerCV.notify_one();
+}
+
+void ElevatorController::changeDestinationFloor(int personId, int newDestinationFloor) {
+    for (int i = 0; i < elevatorCount; i++) {
+        if (elevators[i]->personExistsInsideElevator(personId)) {
+            elevators[i]->changePersonDestinationFloor(personId, newDestinationFloor);
+            return;
+        }
+    }
+    throw ElevatorException("Person " + std::to_string(personId) + " is not inside the elevator");
+}
+
+void ElevatorController::stopElevatorController() {
+    stopSignal.store(true);
+    for(int i = 0; i < elevatorCount; i++) {
+        elevators[i]->stopElevator();
+    }
 }
 
 ElevatorController::~ElevatorController() {
     std::for_each(elevatorThreads.begin(), elevatorThreads.end(), [&](std::thread& t){
         t.join();
     });
-}
-
-void ElevatorController::addRequestToQueue(ElevatorRequest request) {
-    {
-        std::lock_guard<std::mutex> lock(*controllerMutex);
-        commonElevatorQueue.push(request);
-    }
-    controllerCV->notify_one();
-}
-
-void ElevatorController::runElevatorThreads() {
-    elevatorThreads.emplace_back(&Elevator::runElevator, &elevatorOne);
-    elevatorThreads.emplace_back(&Elevator::runElevator, &elevatorTwo);
-}
-
-ElevatorRequest ElevatorController::waitAndGetElevatorRequest() {
-    std::unique_lock<std::mutex> lock(*controllerMutex);
-    controllerCV->wait(lock, [&]() {
-        return !commonElevatorQueue.empty();
-    });
-    ElevatorRequest request = commonElevatorQueue.front();
-    commonElevatorQueue.pop();
-    lock.unlock();
-    return request;
-}
-
-void ElevatorController::assignRequestToSuitableElevator(ElevatorRequest request) {
-
-    int elevatorOneScore = calculateScore(elevatorOne, request);
-    int elevatorTwoScore = calculateScore(elevatorTwo, request);
-
-    bool canAssignRequestToElevatorOne = canAssignRequestToElevator(elevatorOne, request);
-    bool canAssignRequestToElevatorTwo = canAssignRequestToElevator(elevatorTwo, request);
-
-    if (canAssignRequestToElevatorOne && (!canAssignRequestToElevatorTwo || (elevatorOneScore <= elevatorTwoScore))) {
-        assignRequestToElevator(elevatorOne, request);
-    } else if (canAssignRequestToElevatorTwo && (!canAssignRequestToElevatorOne || (elevatorTwoScore < elevatorOneScore))) {
-        assignRequestToElevator(elevatorTwo, request);
-    } else {
-        delayRequest(request);
-    }
-}
-
-void ElevatorController::runElevatorController() {
-    while (true) {
-        ElevatorRequest request = waitAndGetElevatorRequest();
-        assignRequestToSuitableElevator(request);
-    }
-}
-
-void ElevatorController::assignRequestToElevator(Elevator& elevator, ElevatorRequest& request) {
-    elevator.addRequestToQueue(request);
-}
-
-int ElevatorController::calculateScore(Elevator& elevator, ElevatorRequest& request) {
-    int score = 0;
-    score += std::abs(elevator.getCurrentFloor() - request.sourceFloor);
-    if (elevator.getElevatorState() == Elevator::IDLE) {
-        score -= 1;
-    } else if ((elevator.getElevatorState() == Elevator::GOING_UP && request.direction == ElevatorRequest::UP) ||
-        (elevator.getElevatorState() == Elevator::GOING_DOWN && request.direction == ElevatorRequest::DOWN)) {
-        score -= 2;
-    } else {
-        score += 3;
-    }
-    score += elevator.getPendingStops();
-    return score;
-}
-
-bool ElevatorController::canAssignRequestToElevator(Elevator& elevator, ElevatorRequest& request) {
-    if (elevator.getElevatorState() == Elevator::IDLE) return true;
-    if (elevator.getElevatorState() == Elevator::GOING_UP) {
-        return request.direction == ElevatorRequest::UP && request.sourceFloor >= elevator.getCurrentFloor();
-    }
-    if (elevator.getElevatorState() == Elevator::GOING_DOWN) {
-        return request.direction == ElevatorRequest::DOWN && request.sourceFloor < elevator.getCurrentFloor();
-    }
-    return false;
-}
-
-void ElevatorController::delayRequest(ElevatorRequest request) {
-    {
-        std::lock_guard<std::mutex> lock(*controllerMutex);
-        commonElevatorQueue.push(request);
-    }
-    controllerCV->notify_one();
 }

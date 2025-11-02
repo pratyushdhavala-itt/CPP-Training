@@ -1,6 +1,8 @@
 #ifndef ELEVATOR_CONTROLLER_H
 #define ELEVATOR_CONTROLLER_H
 
+#include <atomic>
+#include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <queue>
@@ -11,25 +13,29 @@ class ElevatorController {
 
 private:
 
-    std::mutex* controllerMutex;
-    std::condition_variable* controllerCV;
-    Elevator& elevatorOne;
-    Elevator& elevatorTwo;
+    int elevatorCount;
+    std::mutex controllerMutex;
+    std::condition_variable controllerCV;
+    std::vector<Elevator*>& elevators;
     std::vector<std::thread> elevatorThreads;
     std::queue<ElevatorRequest> commonElevatorQueue;
+    std::atomic<bool> stopSignal;
+    ElevatorRequest storeRequest;
 
 public:
 
-    ElevatorController(Elevator& elevatorOne, Elevator& elevatorTwo);
+    ElevatorController(std::vector<Elevator*>& elevators);
     void runElevatorThreads();
     void runElevatorController();
-    ElevatorRequest waitAndGetElevatorRequest();
-    void assignRequestToSuitableElevator(ElevatorRequest);
+    bool waitAndGetElevatorRequest(ElevatorRequest& request);
+    void assignRequestToSuitableElevator(const ElevatorRequest& request);
     void addRequestToQueue(ElevatorRequest request);
-    void assignRequestToElevator(Elevator& elevator, ElevatorRequest& request);
-    int calculateScore(Elevator& elevator, ElevatorRequest& request);
-    bool canAssignRequestToElevator(Elevator& elevator, ElevatorRequest& request);
-    void delayRequest(ElevatorRequest request);
+    int calculateScore(Elevator& elevator, const ElevatorRequest& request);
+    bool canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request);
+    void delayRequest(const ElevatorRequest& request);
+    void changeDestinationFloor(int personId, int newDestinationFloor);
+    void stopElevatorController();
+    
     ~ElevatorController();
 };
 

@@ -1,14 +1,17 @@
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
+#include <atomic>
 #include <mutex>
 #include <condition_variable>
 #include <vector>
 #include <queue>
 #include <map>
+#include <list>
 #include <set>
 #include "ElevatorLogger.h"
 #include "ElevatorRequest.h"
+#include "Floor.h"
 
 class Elevator {
 
@@ -19,42 +22,42 @@ public:
         IDLE = 3,
     };
 
-    enum PersonAction {
-        GETTING_IN = 1,
-        GETTING_OUT = 2,
-    };
-
 private:
 
     int elevatorId;
     ElevatorLogger& logger;
-    ElevatorState currentState;
-    int currentFloor;
-    std::mutex* elevatorMutex;
-    std::mutex* loggerMutex;
-    std::condition_variable* elevatorCV;
-    std::queue<ElevatorRequest> elevatorQueue;
-    std::map<int, std::vector<std::pair<int, PersonAction>>> floorData;
-    std::set<int> floorsToVisitWhileGoingUp;
-    std::set<int> floorsToVisitWhileGoingDown;
+    ElevatorState currentElevatorState;
+    std::vector<Floor>::iterator currentFloorIterator;
+    std::mutex loggerMutex;
+    std::mutex elevatorMutex;
+    std::condition_variable elevatorCV;
+    std::vector<int> personsInsideElevator;
+    std::vector<Floor> floors;
+    std::set<int> upQueue;
+    std::set<int, std::greater<int>> downQueue;
+    std::atomic<bool> stopSignal;
 
 public:
 
-    Elevator(int elevatorId, ElevatorLogger& logger, std::mutex* loggerMutex);  
+    Elevator(int elevatorId, ElevatorLogger& logger);  
     void runElevator();
-    int getCurrentFloor();
     ElevatorState getElevatorState();
-    void moveToFloor(int destinationFloor);
     void performActionOnCurrentFloor();
     void openElevatorDoors();
     void closeElevatorDoors();
-    void addRequestToQueue(ElevatorRequest& request);
-    void determineNextDirection();
-    bool anyPendingRequests();
-    int getPendingStops();
-    void advanceElevatorToFirstRequestedFloor();
-    void processRequestWhileMoving(ElevatorRequest& request);
+    template <typename SetType>
+    void moveElevator(SetType& queue);
+    int getCurrentFloorNumber();
+    std::vector<std::pair<int, Floor::PersonAction>>& getCurrentFloorPersonActions();
+    void addPersonActionToFloor(int floorNumber, int personId, Floor::PersonAction action);
+    void processElevatorRequest(const ElevatorRequest& request);
+    void changePersonDestinationFloor(int personId, int newDestinationFloor);
+    bool personExistsInsideElevator(int personId);
+    void removePersonFromElevator(int personId);
+    int pendingRequests();
+    void stopElevator();
     void waitForElevatorRequest();
+    void setCurrentElevatorState(ElevatorState elevatorState);
 };
 
 #endif

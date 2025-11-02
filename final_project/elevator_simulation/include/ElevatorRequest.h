@@ -8,7 +8,7 @@ struct ElevatorRequest {
         DOWN = 2,
     };
 
-    static inline int totalPersonCount = 0;
+    static inline int totalPersonCount = -1;
     Direction direction;
     int personId;
     int sourceFloor;
