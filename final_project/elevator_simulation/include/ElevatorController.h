@@ -30,9 +30,9 @@ public:
     bool waitAndGetElevatorRequest(ElevatorRequest& request);
     void assignRequestToSuitableElevator(const ElevatorRequest& request);
     void addRequestToQueue(ElevatorRequest request);
-    int calculateScore(Elevator& elevator, const ElevatorRequest& request);
-    bool canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request);
-    void delayRequest(const ElevatorRequest& request);
+    virtual int calculateScore(Elevator& elevator, const ElevatorRequest& request);
+    virtual bool canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request);
+    virtual void delayRequest(const ElevatorRequest& request);
     void changeDestinationFloor(int personId, int newDestinationFloor);
     void stopElevatorController();
     

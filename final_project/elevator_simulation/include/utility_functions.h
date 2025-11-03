@@ -7,6 +7,5 @@ void processElevatorRequest(ElevatorController& elevatorController);
 void changeDestinationFloor(ElevatorController& elevatorController);
 int inputChoice(int min, int max);
 void inputElevatorRequest(ElevatorController& elevatorController);
-bool isValidInput(int directionChoice, int sourceFloor, int destinationFloor);
 
 #endif

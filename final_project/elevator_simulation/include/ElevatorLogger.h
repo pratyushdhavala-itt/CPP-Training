@@ -25,9 +25,15 @@ private:
 
 public:
     ElevatorLogger();
-    void operator()(int elevatorId, int currentFloor, std::string content);
-    void filterAndInsertLogs(std::string content);
-    void convertToStructuredString();
+    virtual void operator()(int elevatorId, int currentFloor, std::string content);
+    virtual void filterAndInsertLogs(std::string content);
+    virtual void convertToStructuredString();
+    std::vector<std::string>& getElevatorOneLogs();
+    std::vector<std::string>& getElevatorTwoLogs();
+    int& getMaxLogSize();
+    std::string& getPrettyString();
+    int& getElevatorOneCurrentFloor();
+    int& getElevatorTwoCurrentFloor();
 };
 
 #endif

@@ -20,6 +20,7 @@ public:
         GOING_UP = 1,
         GOING_DOWN = 2,
         IDLE = 3,
+        DEFAULT = 4,
     };
 
 private:
@@ -41,23 +42,39 @@ public:
 
     Elevator(int elevatorId, ElevatorLogger& logger);  
     void runElevator();
-    ElevatorState getElevatorState();
+    virtual ElevatorState getElevatorState();
     void performActionOnCurrentFloor();
     void openElevatorDoors();
     void closeElevatorDoors();
     template <typename SetType>
     void moveElevator(SetType& queue);
-    int getCurrentFloorNumber();
-    std::vector<std::pair<int, Floor::PersonAction>>& getCurrentFloorPersonActions();
-    void addPersonActionToFloor(int floorNumber, int personId, Floor::PersonAction action);
-    void processElevatorRequest(const ElevatorRequest& request);
-    void changePersonDestinationFloor(int personId, int newDestinationFloor);
-    bool personExistsInsideElevator(int personId);
+    virtual int getCurrentFloorNumber();
+    virtual void addPersonActionToFloor(int floorNumber, int personId, Floor::PersonAction action);
+    virtual void processElevatorRequest(const ElevatorRequest& request);
+    virtual void changePersonDestinationFloor(int personId, int newDestinationFloor);
+    virtual bool personExistsInsideElevator(int personId);
     void removePersonFromElevator(int personId);
-    int pendingRequests();
-    void stopElevator();
-    void waitForElevatorRequest();
-    void setCurrentElevatorState(ElevatorState elevatorState);
+    virtual int pendingRequests();
+    virtual void stopElevator();
+    virtual void waitForElevatorRequest();
+    virtual void setCurrentElevatorState(ElevatorState elevatorState);
+    virtual void addToUpQueue(int floorNumber);
+    virtual void addToDownQueue(int floorNumber);
+    virtual void removeFromUpQueue(int floorNumber);
+    virtual void removeFromDownQueue(int floorNumber);
+    virtual bool existsInUpQueue(int floorNumber);
+    virtual bool existsInDownQueue(int floorNumber);
+    virtual int getUpQueueSize();
+    virtual int getDownQueueSize();
+    virtual void moveElevatorUp();
+    virtual void moveElevatorDown();
+    Floor& getFloorByNumber(int floorNumber);
+    std::vector<Floor>::iterator& getFloorIterator();
+    std::condition_variable& getElevatorCV();
+    std::vector<int>& getPersonArray();
+    virtual ~Elevator();
+    Elevator(const Elevator&) = delete;
+    Elevator& operator=(const Elevator&) = delete;
 };
 
 #endif

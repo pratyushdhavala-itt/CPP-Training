@@ -7,6 +7,7 @@
 #include "Elevator.h"
 #include "ElevatorRequest.h"
 #include "ElevatorException.h"
+#include"constants.h"
 
 ElevatorController::ElevatorController(std::vector<Elevator*>& elevators) : elevators{elevators}, stopSignal{false}, storeRequest{ElevatorRequest::UP, 0, 0} {
 
@@ -98,7 +99,7 @@ int ElevatorController::calculateScore(Elevator& elevator, const ElevatorRequest
 bool ElevatorController::canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request) {
     Elevator::ElevatorState currentState = elevator.getElevatorState();
     int currentFloorNumber = elevator.getCurrentFloorNumber();
-    if (currentState == Elevator::IDLE) return true;
+    if (currentState == Elevator::IDLE || currentState == Elevator::DEFAULT) return true;
     if (currentState == Elevator::GOING_UP) {
         return request.direction == ElevatorRequest::UP && request.sourceFloor >= currentFloorNumber;
     }
@@ -124,14 +125,16 @@ void ElevatorController::changeDestinationFloor(int personId, int newDestination
             return;
         }
     }
-    throw ElevatorException("Person " + std::to_string(personId) + " is not inside the elevator");
+    throw ElevatorException(PRINT_PERSON + std::to_string(personId) + PRINT_PERSON_NOT_INSIDE_ELEVATOR);
 }
 
 void ElevatorController::stopElevatorController() {
+    std::unique_lock<std::mutex> lock(controllerMutex);
     stopSignal.store(true);
     for(int i = 0; i < elevatorCount; i++) {
         elevators[i]->stopElevator();
     }
+    controllerCV.notify_all();
 }
 
 ElevatorController::~ElevatorController() {

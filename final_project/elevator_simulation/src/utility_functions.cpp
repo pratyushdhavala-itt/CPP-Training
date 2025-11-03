@@ -3,6 +3,7 @@
 #include "utility_functions.h"
 #include "ElevatorController.h"
 #include "ElevatorException.h"
+#include "constants.h"
 
 void processElevatorRequest(ElevatorController& elevatorController) {
     int directionChoice;
@@ -10,10 +11,10 @@ void processElevatorRequest(ElevatorController& elevatorController) {
     int destinationFloor;
     while (true) {
 
-        std::cout << "Enter your current floor: ";
+        std::cout << PRINT_ENTER_CURRENT_FLOOR;
         sourceFloor = inputChoice(-2, 8);
 
-        std::cout << "Enter your destination floor: ";
+        std::cout << PRINT_ENTER_DESTINATION_FLOOR;
         destinationFloor = inputChoice(-2, 8);
 
         break;
@@ -28,9 +29,9 @@ void processElevatorRequest(ElevatorController& elevatorController) {
 void changeDestinationFloor(ElevatorController& elevatorController) {
     int personId;
     int destinationFloor;
-    std::cout << "Please enter the person ID: ";
+    std::cout << PRINT_ENTER_PERSON_ID;
     personId = inputChoice(1, ElevatorRequest::totalPersonCount);
-    std::cout << "Enter the floor you want to change: ";
+    std::cout << PRINT_ENTER_NEW_DESTINATION_FLOOR;
     destinationFloor = inputChoice(-2, 8);
     try {
         elevatorController.changeDestinationFloor(personId, destinationFloor);
@@ -40,7 +41,7 @@ void changeDestinationFloor(ElevatorController& elevatorController) {
 }
 void inputElevatorRequest(ElevatorController& elevatorController) {
     while (true) {
-        std::cout << "User Menu: \n   1. Travel in the elevator\n   2. Change destination floor\n   3. Exit\nYour option: ";
+        std::cout << PRINT_ENTER_USER_MENU;
         int choice = inputChoice(1, 3);
         switch (choice) {
             case 1: 
@@ -50,7 +51,7 @@ void inputElevatorRequest(ElevatorController& elevatorController) {
                 changeDestinationFloor(elevatorController);
                 break;
             case 3:
-                std::cout << "Exiting elevator simulation ! ! !" << std::endl;
+                std::cout << PRINT_EXIT_SIMULATION << std::endl;
                 elevatorController.stopElevatorController();
                 return;
         }
@@ -63,7 +64,7 @@ int inputChoice(int min, int max) {
     while (true) {
         std::cin.getline(c, 3);
         if (std::cin.fail()) {
-            std::cout << "Input is too long or invalid\nTry again: ";
+            std::cout << PRINT_INVALID_INPUT_ONE;
             std::cin.clear();
             std::cin.ignore(1000, '\n');
             continue;
@@ -72,7 +73,7 @@ int inputChoice(int min, int max) {
         choice = atof(c);
 
         if (choice < min || choice > max || std::floor(choice) != choice) {
-            std::cout << "Input value is too large or small\nTry again: ";
+            std::cout << PRINT_INVALID_INPUT_TWO;
             continue;
         }
         break;
