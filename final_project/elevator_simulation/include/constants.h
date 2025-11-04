@@ -26,8 +26,8 @@ inline const char* PRINT_LOG_FOUR = "]: ";
 inline const char* PRINT_OPEN_DOORS = "OPENING DOORS";
 inline const char* PRINT_CLOSE_DOORS = "CLOSING DOORS";
 inline const char* PRINT_PERSON_LOG = "PERSON ";
-inline const char* PRINT_STEPPING_IN = "STEPPING IN";
-inline const char* PRINT_STEPPING_OUT = "STEPPING OUT";
+inline const char* PRINT_STEPPING_IN = " STEPPING IN";
+inline const char* PRINT_STEPPING_OUT = " STEPPING OUT";
 
 
 #endif

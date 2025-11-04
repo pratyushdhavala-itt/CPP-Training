@@ -22,7 +22,6 @@ public:
     void addPersonAction(int personId, PersonAction action);
     bool isFloorEmpty();
     bool checkAndRemovePersonAction(int personId);
-    void removePersonAction(std::pair<int, PersonAction>& action);
     int getPersonActionCount();
 };
 

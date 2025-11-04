@@ -31,11 +31,6 @@ void Floor::addPersonAction(int personId, PersonAction action) {
     personActions.push_back({personId, action});
 }
 
-void Floor::removePersonAction(std::pair<int, Floor::PersonAction>& action) {
-    std::vector<std::pair<int, Floor::PersonAction>>::iterator it = std::find(personActions.begin(), personActions.end(), action);
-    personActions.erase(it);
-}
-
 int Floor::getPersonActionCount() {
     return personActions.size();
 }

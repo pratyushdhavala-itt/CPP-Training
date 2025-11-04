@@ -29,7 +29,7 @@ public:
     void runElevatorController();
     bool waitAndGetElevatorRequest(ElevatorRequest& request);
     void assignRequestToSuitableElevator(const ElevatorRequest& request);
-    void addRequestToQueue(ElevatorRequest request);
+    virtual void addRequestToQueue(ElevatorRequest request);
     virtual int calculateScore(Elevator& elevator, const ElevatorRequest& request);
     virtual bool canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request);
     virtual void delayRequest(const ElevatorRequest& request);
