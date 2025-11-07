@@ -1,0 +1,155 @@
+@startuml
+
+enum ElevatorState {
+    GOING_UP
+    GOING_DOWN
+    IDLE
+    DEFAULT
+}
+
+enum PersonAction {
+    GETTING_IN
+    GETTING_OUT
+}
+
+enum Direction {
+    UP
+    DOWN
+}
+
+
+class Elevator {
+    - int elevatorId
+    - ElevatorLogger& logger
+    - ElevatorState currentElevatorState
+    - vector<Floor>::iterator currentFloorIterator
+    - mutex loggerMutex
+    - mutex elevatorMutex
+    - condition_variable elevatorCV
+    - vector<int> personsInsideElevator
+    - vector<Floor> floors
+    - set<int> upQueue
+    - set<int, greater<int>> downQueue
+    - atomic<bool> stopSignal
+
+    + Elevator(int elevatorId, ElevatorLogger& logger)
+    + void runElevator()
+    + ElevatorState getElevatorState()
+    + void performActionOnCurrentFloor()
+    + void openElevatorDoors()
+    + void closeElevatorDoors()
+    + template<typename SetType> void moveElevator(SetType& queue)
+    + int getCurrentFloorNumber()
+    + void addPersonActionToFloor(int floorNumber, int personId, Floor::PersonAction action)
+    + void processElevatorRequest(const ElevatorRequest& request)
+    + void changePersonDestinationFloor(int personId, int newDestinationFloor)
+    + bool personExistsInsideElevator(int personId)
+    + void removePersonFromElevator(int personId)
+    + int pendingRequests()
+    + void stopElevator()
+    + void waitForElevatorRequest()
+    + void setCurrentElevatorState(ElevatorState elevatorState)
+    + void addToUpQueue(int floorNumber)
+    + void addToDownQueue(int floorNumber)
+    + void removeFromUpQueue(int floorNumber)
+    + void removeFromDownQueue(int floorNumber)
+    + bool existsInUpQueue(int floorNumber)
+    + bool existsInDownQueue(int floorNumber)
+    + int getUpQueueSize()
+    + int getDownQueueSize()
+    + void moveElevatorUp()
+    + void moveElevatorDown()
+    + Floor& getFloorByNumber(int floorNumber)
+    + vector<Floor>::iterator& getFloorIterator()
+    + condition_variable& getElevatorCV()
+    + vector<int>& getPersonArray()
+    + ~Elevator()
+}
+
+class ElevatorController {
+    - int elevatorCount
+    - mutex controllerMutex
+    - condition_variable controllerCV
+    - vector<Elevator*>& elevators
+    - vector<thread> elevatorThreads
+    - queue<ElevatorRequest> commonElevatorQueue
+    - atomic<bool> stopSignal
+    - ElevatorRequest storeRequest
+
+    + ElevatorController(vector<Elevator*>& elevators)
+    + void runElevatorThreads()
+    + void runElevatorController()
+    + bool waitAndGetElevatorRequest(ElevatorRequest& request)
+    + void assignRequestToSuitableElevator(const ElevatorRequest& request)
+    + void addRequestToQueue(ElevatorRequest request)
+    + int calculateScore(Elevator& elevator, const ElevatorRequest& request)
+    + bool canAssignRequestToElevator(Elevator& elevator, const ElevatorRequest& request)
+    + void delayRequest(const ElevatorRequest& request)
+    + void changeDestinationFloor(int personId, int newDestinationFloor)
+    + void stopElevatorController()
+    + ~ElevatorController()
+}
+
+class ElevatorLogger {
+    - mutex loggerMutex
+    - string filename
+    - int elevatorOneCurrentFloor
+    - int elevatorTwoCurrentFloor
+    - int maxLogSize
+    - string elevatorLogs
+    - string prettyString
+    - string elevatorTitle
+    - vector<string> elevatorOneLogs
+    - vector<string> elevatorTwoLogs
+
+    + ElevatorLogger()
+    + void operator()(int elevatorId, int currentFloor, string content)
+    + void filterAndInsertLogs(string content)
+    + void convertToStructuredString()
+    + vector<string>& getElevatorOneLogs()
+    + vector<string>& getElevatorTwoLogs()
+    + int& getMaxLogSize()
+    + string& getPrettyString()
+    + int& getElevatorOneCurrentFloor()
+    + int& getElevatorTwoCurrentFloor()
+}
+
+class Floor {
+    - int floorNumber
+    - vector<pair<int, PersonAction>> personActions
+
+    + Floor(int floorNumber)
+    + int getFloorNumber()
+    + vector<pair<int, PersonAction>>& getPersonActions()
+    + void addPersonAction(int personId, PersonAction action)
+    + bool isFloorEmpty()
+    + bool checkAndRemovePersonAction(int personId)
+    + int getPersonActionCount()
+}
+
+class ElevatorRequest {
+    + Direction direction
+    + int personId
+    + int sourceFloor
+    + int destinationFloor
+    + static inline int totalPersonCount = -1
+    + ElevatorRequest(Direction direction, int sourceFloor, int destinationFloor)
+}
+
+class ElevatorException {
+    - string message
+    + ElevatorException(const string& message)
+    + const char* what() const noexcept
+}
+
+
+ElevatorController "1" --> "many" Elevator 
+Elevator --> ElevatorLogger
+Elevator --> "many" Floor 
+ElevatorController --> ElevatorRequest 
+ElevatorController --> ElevatorException 
+Floor --> PersonAction
+ElevatorRequest --> Direction
+Elevator --> ElevatorState
+
+@enduml
