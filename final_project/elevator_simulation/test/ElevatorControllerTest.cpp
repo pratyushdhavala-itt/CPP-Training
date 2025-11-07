@@ -103,13 +103,13 @@ TEST_F(ElevatorControllerTest, GivenElevator_WhenReceivedRequest_ThenAddDistance
     EXPECT_EQ(score, expected);
 }
 
-TEST_F(ElevatorControllerTest, GivenElevatorGoingUp_WhenReceivedRequestInSameDirection_ThenScoreIsSubtractedByFive) {
+TEST_F(ElevatorControllerTest, GivenElevatorGoingUp_WhenReceivedRequestInSameDirection_ThenScoreIsSubtractedByFour) {
     ElevatorRequest req(ElevatorRequest::UP, 3, 8);
     EXPECT_CALL(mockElevatorOne, getElevatorState()).WillOnce(::testing::Return(Elevator::GOING_UP));
     EXPECT_CALL(mockElevatorOne, getCurrentFloorNumber()).WillOnce(::testing::Return(1));
     EXPECT_CALL(mockElevatorOne, pendingRequests()).WillOnce(::testing::Return(0));
 
-    int expected = std::abs(1 - 3) - 5;
+    int expected = std::abs(1 - 3) - 4;
     int score = controller->calculateScore(mockElevatorOne, req);
     EXPECT_EQ(score, expected);
 }
@@ -125,13 +125,13 @@ TEST_F(ElevatorControllerTest, GivenElevatorGoingUp_WhenReceivedRequestInOpposit
     EXPECT_EQ(score, expected);
 }
 
-TEST_F(ElevatorControllerTest, GivenElevatorGoingDown_WhenReceivedRequestInSameDirection_ThenScoreIsSubtractedByFive) {
+TEST_F(ElevatorControllerTest, GivenElevatorGoingDown_WhenReceivedRequestInSameDirection_ThenScoreIsSubtractedByFour) {
     ElevatorRequest req(ElevatorRequest::DOWN, 7, 1);
     EXPECT_CALL(mockElevatorOne, getElevatorState()).WillOnce(::testing::Return(Elevator::GOING_DOWN));
     EXPECT_CALL(mockElevatorOne, getCurrentFloorNumber()).WillOnce(::testing::Return(9));
     EXPECT_CALL(mockElevatorOne, pendingRequests()).WillOnce(::testing::Return(0));
 
-    int expected = std::abs(9 - 7) - 5;
+    int expected = std::abs(9 - 7) - 4;
     int score = controller->calculateScore(mockElevatorOne, req);
     EXPECT_EQ(score, expected);
 }

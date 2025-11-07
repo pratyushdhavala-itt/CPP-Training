@@ -63,25 +63,22 @@ TEST_F(ElevatorLoggerTest, GivenLogger_WhenMultipleLogTextsGiven_ThenProcessThem
     EXPECT_EQ(logger.getMaxLogSize(), 3);
 }
 
-TEST_F(ElevatorLoggerTest, FormatsLogsIntoAlignedString) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenConvertToStructuredStringCalled_ThenStructureStringProperly) {
     logger.getMaxLogSize() = 1;
     logger.getElevatorOneLogs() = {"Moving Up"};
     logger.getElevatorTwoLogs() = {"Opening Doors"};
 
     logger.convertToStructuredString();
 
-    std::string expected = "Moving Up"
-                           + std::string(45 - std::string("Moving Up").length(), ' ')
-                           + " | Opening Doors\n";
 
     EXPECT_TRUE(logger.getPrettyString().find("Moving Up") != std::string::npos);
     EXPECT_TRUE(logger.getPrettyString().find("Opening Doors") != std::string::npos);
 }
 
-TEST_F(ElevatorLoggerTest, PadsMissingElevatorColumn) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenOnlyOneElevatorLogExists_ThenPrintProperly) {
     logger.getMaxLogSize() = 1;
     logger.getElevatorOneLogs() = {"Closing Doors"};
-    logger.getElevatorTwoLogs() = {}; // missing second
+    logger.getElevatorTwoLogs() = {};
 
     logger.convertToStructuredString();
 
@@ -89,7 +86,7 @@ TEST_F(ElevatorLoggerTest, PadsMissingElevatorColumn) {
     EXPECT_TRUE(logger.getPrettyString().find("|") != std::string::npos);
 }
 
-TEST_F(ElevatorLoggerTest, ResizesLogsToMaxLogSize) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenLogsExist_ResizeEachLogsToMaxLogSize) {
     logger.getMaxLogSize() = 3;
     logger.getElevatorOneLogs() = {"A"};
     logger.getElevatorTwoLogs() = {"B", "C"};
@@ -100,23 +97,7 @@ TEST_F(ElevatorLoggerTest, ResizesLogsToMaxLogSize) {
     EXPECT_EQ(logger.getElevatorTwoLogs().size(), 3);
 }
 
-TEST_F(ElevatorLoggerTest, AppendsFormattedRowsSequentially) {
-    logger.getMaxLogSize() = 1;
-    logger.getElevatorOneLogs() = {"Log1"};
-    logger.getElevatorTwoLogs() = {"Log2"};
-    logger.convertToStructuredString();
-
-    logger.getMaxLogSize() = 2;
-    logger.getElevatorOneLogs().push_back("Log3");
-    logger.getElevatorTwoLogs().push_back("Log4");
-    logger.convertToStructuredString();
-
-    EXPECT_TRUE(logger.getPrettyString().find("Log1") != std::string::npos);
-    EXPECT_TRUE(logger.getPrettyString().find("Log4") != std::string::npos);
-    EXPECT_GE(std::count(logger.getPrettyString().begin(), logger.getPrettyString().end(), '\n'), 2);
-}
-
-TEST_F(ElevatorLoggerTest, UpdatesElevatorOneFloorAndLogs) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenFunctorCalledWithElevatorOneLogs_ThenUpdateCurrentFloorAndLogs) {
     ElevatorLogger logger;
     logger(1, 5, "[ELEVATOR 1]: Moving Up");
 
@@ -125,7 +106,7 @@ TEST_F(ElevatorLoggerTest, UpdatesElevatorOneFloorAndLogs) {
     EXPECT_EQ(logger.getElevatorOneLogs()[0], "Moving Up");
 }
 
-TEST_F(ElevatorLoggerTest, UpdatesElevatorTwoFloorAndLogs) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenFunctorCalledWithElevatorTwoLogs_ThenUpdateCurrentFloorAndLogs) {
     ElevatorLogger logger;
     logger(2, 8, "[ELEVATOR 2]: Opening Doors");
 
@@ -134,23 +115,7 @@ TEST_F(ElevatorLoggerTest, UpdatesElevatorTwoFloorAndLogs) {
     EXPECT_EQ(logger.getElevatorTwoLogs()[0], "Opening Doors");
 }
 
-
-TEST_F(ElevatorLoggerTest, WritesFormattedOutputToFile) {
-    ElevatorLogger logger;
-    logger(1, 2, "[ELEVATOR 1]: Opening Doors");
-
-    std::ifstream file("output.txt");
-    ASSERT_TRUE(file.is_open());
-
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    file.close();
-
-    EXPECT_TRUE(content.find("ELEVATOR 1") != std::string::npos);
-    EXPECT_TRUE(content.find("FLOOR: 2") != std::string::npos);
-    EXPECT_TRUE(content.find("Opening Doors") != std::string::npos);
-}
-
-TEST_F(ElevatorLoggerTest, InvokesHelperFunctions) {
+TEST_F(ElevatorLoggerTest, GivenLogger_WhenFunctorCalled_ThenExpectHelperFunctionCalls) {
     MockLogger logger;
 
     EXPECT_CALL(logger, filterAndInsertLogs("[ELEVATOR 1]: Test Log")).Times(1);

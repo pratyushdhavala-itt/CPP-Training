@@ -26,6 +26,7 @@ public:
 private:
 
     int elevatorId;
+    int liftDelay;
     ElevatorLogger& logger;
     ElevatorState currentElevatorState;
     std::vector<Floor>::iterator currentFloorIterator;
@@ -72,6 +73,8 @@ public:
     std::vector<Floor>::iterator& getFloorIterator();
     std::condition_variable& getElevatorCV();
     std::vector<int>& getPersonArray();
+    void handleGoingUp();
+    void handleGoingDown();
     virtual ~Elevator();
     Elevator(const Elevator&) = delete;
     Elevator& operator=(const Elevator&) = delete;

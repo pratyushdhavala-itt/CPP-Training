@@ -28,7 +28,6 @@ void ElevatorLogger::operator()(int elevatorId, int currentFloor, std::string co
     std::string currentFloorString = oss.str();
     std::fstream file;
     file.open(filename, std::ios::out);
-    elevatorLogs += content;
     filterAndInsertLogs(content);
     convertToStructuredString();
     std::string finalString = elevatorTitle + currentFloorString + prettyString;
@@ -41,19 +40,24 @@ void ElevatorLogger::operator()(int elevatorId, int currentFloor, std::string co
 
 void ElevatorLogger::filterAndInsertLogs(std::string content) {
     if (content.find(PRINT_ELEVATOR_ONE_LOG) != std::string::npos) {
-        elevatorOneLogs.push_back(content.substr(content.find("]: ") + 3));
+        // elevatorOneLogs.push_back(content.substr(content.find("]: ") + 3));
+        elevatorOneLog = content.substr(content.find("]: ") + 3);
     } else if (content.find(PRINT_ELEVATOR_TWO_LOG) != std::string::npos) {
-        elevatorTwoLogs.push_back(content.substr(content.find("]: ") + 3));
+        // elevatorTwoLogs.push_back(content.substr(content.find("]: ") + 3));
+         elevatorTwoLog = content.substr(content.find("]: ") + 3);
+
     }
     maxLogSize++;
 }
 
 void ElevatorLogger::convertToStructuredString() {
-    elevatorOneLogs.resize(maxLogSize, "");
-    elevatorTwoLogs.resize(maxLogSize, "");
+    // elevatorOneLogs.resize(maxLogSize, "");
+    // elevatorTwoLogs.resize(maxLogSize, "");
     std::ostringstream oss;
-    oss << std::left << std::setw(45) << elevatorOneLogs[maxLogSize - 1] << " | " << elevatorTwoLogs[maxLogSize - 1] << "\n";
-    prettyString += oss.str();
+    // oss << std::left << std::setw(45) << elevatorOneLogs[maxLogSize - 1] << " | " << elevatorTwoLogs[maxLogSize - 1] << "\n";
+        oss << std::left << std::setw(45) << elevatorOneLog << " | " << elevatorTwoLog << "\n";
+
+    prettyString = oss.str();
     oss.clear();
 }
 

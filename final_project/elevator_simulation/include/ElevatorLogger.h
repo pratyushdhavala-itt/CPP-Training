@@ -17,9 +17,10 @@ private:
     int elevatorOneCurrentFloor;
     int elevatorTwoCurrentFloor;
     int maxLogSize;
-    std::string elevatorLogs;
     std::string prettyString;
     std::string elevatorTitle;
+    std::string elevatorOneLog;
+    std::string elevatorTwoLog;
     std::vector<std::string> elevatorOneLogs;
     std::vector<std::string> elevatorTwoLogs;
 

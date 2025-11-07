@@ -11,7 +11,7 @@
 #include "ElevatorLogger.h"
 #include "constants.h"
 
-Elevator::Elevator(int elevatorId, ElevatorLogger& logger) : elevatorId{elevatorId}, logger{logger}, currentElevatorState{IDLE} {
+Elevator::Elevator(int elevatorId, ElevatorLogger& logger) : elevatorId{elevatorId}, logger{logger}, currentElevatorState{IDLE}, stopSignal{false}, liftDelay{3} {
     for (int i = -2; i < 9; i++) {
         floors.emplace_back(i);
     }
@@ -27,38 +27,45 @@ void Elevator::runElevator() {
         waitForElevatorRequest();
         switch(currentElevatorState) {
             case GOING_UP:
-                if (getUpQueueSize() == 0) {
-                    if (getDownQueueSize() != 0) {
-                        setCurrentElevatorState(GOING_DOWN);
-                    } else {
-                        setCurrentElevatorState(IDLE);
-                        continue;
-                    }
-                } else {
-                    moveElevatorUp();
-                }
+                handleGoingUp();
                 break;
 
             case GOING_DOWN:
-                if (getDownQueueSize() == 0) {
-                    if (getUpQueueSize() != 0) {
-                        setCurrentElevatorState(GOING_UP);
-                    } else {
-                        setCurrentElevatorState(IDLE);
-                        continue;
-                    }
-                } else {
-                    moveElevatorDown();
-                }
+                handleGoingDown();
                 break;
 
             case DEFAULT:
                 moveElevatorDown();
+                break;
 
             default:
                 std::this_thread::sleep_for(std::chrono::seconds(1));
                 break;
         }
+    }
+}
+
+void Elevator::handleGoingUp() {
+    if (getUpQueueSize() == 0) {
+        if (getDownQueueSize() != 0) {
+            setCurrentElevatorState(GOING_DOWN);
+        } else {
+            setCurrentElevatorState(IDLE);
+        }
+    } else {
+        moveElevatorUp();
+    }
+}
+
+void Elevator::handleGoingDown() {
+    if (getDownQueueSize() == 0) {
+        if (getUpQueueSize() != 0) {
+            setCurrentElevatorState(GOING_UP);
+        } else {
+            setCurrentElevatorState(IDLE);
+        }
+    } else {
+        moveElevatorDown();
     }
 }
 
@@ -149,7 +156,7 @@ void Elevator::moveElevator(SetType& queue) {
         }
     
         logger(elevatorId, getCurrentFloorNumber(), floorLogs);
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::this_thread::sleep_for(std::chrono::seconds(liftDelay));
     }
 }
 

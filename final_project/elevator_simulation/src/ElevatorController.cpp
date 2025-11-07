@@ -86,7 +86,7 @@ int ElevatorController::calculateScore(Elevator& elevator, const ElevatorRequest
         elevatorScore -= 1;
     }  else if ((currentState == Elevator::GOING_UP && request.direction == ElevatorRequest::UP) || 
         (currentState == Elevator::GOING_DOWN && request.direction == ElevatorRequest::DOWN)) {
-            elevatorScore -= 5;
+            elevatorScore -= 4;
     } else {
         elevatorScore += 3;
     }
